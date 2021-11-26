@@ -271,7 +271,7 @@ void ConfiguracionesAdministrador() {
             break;
         case 3:
             system("cls");
-            ExportarDatos();
+            ExportarDatos();///OK
             break;
 
         case 0:
@@ -297,7 +297,7 @@ void CopiaSeguridad() {
         cout << "¿DE QUE ARCHIVO DE DESEA REALIZAR LA COPIA?" << endl;
         cout << "1-PACIENTES" << endl;
         cout << "2-TURNOS" << endl;
-        cout << "3-PAGOS CONSULTAS" << endl;
+        cout << "3-PAGOS" << endl;
         cout << "4-HISTORIAS CLINICAS" << endl;
         cout << "5-EMPLEADOS" << endl;
         cout << "6-TODOS LOS ARCHIVOS" << endl;
@@ -310,30 +310,30 @@ void CopiaSeguridad() {
         {
         case 1:
             system("cls");
-
+            CopiaSeguridadPacientes();
             break;
         case 2:
             system("cls");
-
+            CopiaSeguridadTurnos();
             break;
         case 3:
             system("cls");
-
+            CopiaSeguridadPagos();
             break;
 
         case 4:
             system("cls");
-
+            CopiaSeguridadHC();
             break;
 
         case 5:
             system("cls");
-
+            CopiaSeguridadPEmpleados();
             break;
 
         case 6:
             system("cls");
-
+            CopiaSeguridadTodos();
             break;
 
         case 0:

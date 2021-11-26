@@ -20,6 +20,7 @@ using namespace std;
 
 int main()
 {
+    //ExportarEmpleados();
     //char c[2] = { 92 };
     //cout << c;
     //AgregarPaciente();
@@ -38,17 +39,24 @@ int main()
     //Hora h1(8, 0), h2(18, 0);
     //HorarioEmpleado horaLaboral;
     //horaLaboral.setHoraEntrada(h1);
-    /*Empleado reg;
-    reg.setDNI(123456);
-    reg.setNombres("Ana");
-    reg.setApellidos("Gonzalez");
-    reg.setLegajo(3333);
-    char pass[30];
-    strcpy(pass, "AnaGonzalez");
-    reg.setPassword(pass);
-    reg.setEmail("leandro.gomez3@alumnos.frgp.utn.edu.ar");
-    reg.setTipoEmpleado(2);
-    reg.grabarEnDisco();*/
+    /*for (int i = 3; i < 10; i++)
+    {
+        Empleado reg;
+        Especialidad e;
+        reg.setDNI(123456);
+        reg.setNombres("Ana");
+        reg.setApellidos("Gutierrez");
+        reg.setLegajo(3333);
+        char pass[30];
+        strcpy(pass, "AnaMartinez");
+        reg.setPassword(pass);
+        reg.setEmail("leandro.gomez3@alumnos.frgp.utn.edu.ar");
+        reg.setTipoEmpleado(2);
+        e.setNEspecialidades(i);
+        reg.setEspecialidad(e);
+        reg.grabarEnDisco();
+    }*/
+
     //reg.setEspecialidad(0);
 
     /*Empleado obj;

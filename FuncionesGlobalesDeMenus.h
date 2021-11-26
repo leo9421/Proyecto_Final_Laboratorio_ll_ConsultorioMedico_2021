@@ -91,6 +91,14 @@ void RecaudacionPorEspecialidad();
 	void mostrarRecaudacion(float* vTotalPorEspecialidad);
 
 
+///COPIA DE SEGURIDAD
+void CopiaSeguridadPacientes();
+void CopiaSeguridadTurnos();
+void CopiaSeguridadPagos();
+void CopiaSeguridadHC();
+void CopiaSeguridadPEmpleados();
+void CopiaSeguridadTodos();
+
 ///Administrador > Configuraciones > Exportar datos
 void ExportarPacientes(); ///Esta funcion pertenece a configuracion > exportar datos > pacientes
 

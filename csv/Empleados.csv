@@ -1,1 +1,8 @@
-;Legajo;Password;Email;TipoEmpleado;IDEmpleado;Especialidades;NEspecialidades
+Legajo;Password;Email;Tipo de Empleado;Especialidad
+3333;AnaMartinez;leandro.gomez3@alumnos.frgp.utn.edu.ar;Medico;Pediatria
+3333;AnaMartinez;leandro.gomez3@alumnos.frgp.utn.edu.ar;Medico;Kinesiologia
+3333;AnaMartinez;leandro.gomez3@alumnos.frgp.utn.edu.ar;Medico;Oftalmologia
+3333;AnaMartinez;leandro.gomez3@alumnos.frgp.utn.edu.ar;Medico;Traumatologia
+3333;AnaMartinez;leandro.gomez3@alumnos.frgp.utn.edu.ar;Medico;Obstetricia
+3333;AnaMartinez;leandro.gomez3@alumnos.frgp.utn.edu.ar;Medico;Psicologia
+3333;AnaMartinez;leandro.gomez3@alumnos.frgp.utn.edu.ar;Medico;Nutricion

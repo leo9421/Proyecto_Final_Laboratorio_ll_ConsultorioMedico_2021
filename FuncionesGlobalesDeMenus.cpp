@@ -18,6 +18,7 @@
 #include <fstream>
 #include <Windows.h>
 ///ESTA ES UNA PRUEBA DE USO DE GITHUB DESDE VISUAL STUDIO 2019
+///ESTA ES UNA PRUEBA DE USO DE GITHUB DESDE VISUAL STUDIO 2019
 using namespace std;
 //---------------------------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------------------------------
@@ -2357,6 +2358,37 @@ void RecaudacionPorEspecialidad() {
 ///----------------------------------------------------------------------------------------------
 ///----------------------------------------------------------------------------------------------
 ///----------------------------------------------------------------------------------------------
+///ESTAS FUNCIONES PERTENECEN A COPIA DE SEGURIDAD
+void CopiaSeguridadPacientes() {
+    int pos = 0;
+    Paciente paciente;
+
+    FILE* copia;
+    copia = fopen("../Pacientes.dat", "wb");
+    if (copia == NULL) {
+        cout << "ERROR DE ARCHIVO" << endl;
+        return;
+    }
+    while (paciente.leerDeDisco(pos++))
+    {
+        fwrite(&paciente, sizeof(Paciente), 1, copia);
+    }
+
+    fclose(copia);
+}
+///----------------------------------------------------------------------------------------------
+void CopiaSeguridadTurnos(){}
+///----------------------------------------------------------------------------------------------
+void CopiaSeguridadPagos(){}
+///----------------------------------------------------------------------------------------------
+void CopiaSeguridadHC(){}
+///----------------------------------------------------------------------------------------------
+void CopiaSeguridadPEmpleados(){}
+///----------------------------------------------------------------------------------------------
+void CopiaSeguridadTodos(){}
+
+///----------------------------------------------------------------------------------------------
+///----------------------------------------------------------------------------------------------
 ///ESTA FUNCION PERTENECE A Configuracion > ExportarDatos
 void ExportarPacientes()
 {
@@ -2495,10 +2527,11 @@ void ExportarHistoriasClinicas()
 
 void ExportarEmpleados()
 {
-
+    int pos = 0;
+    Cadena especialidad[3] = { "Administrativo","Medico","Administrador" };
+    Cadena especialidades[12] = { "Administrador","Administrativo","Pediatria", "Kinesiologia", "Oftalmologia", 
+        "Traumatologia", "Obstetricia", "Psicologia", "Nutricion", "Psiquiatria", "Dermatologia", "Cardiologia" };
     Empleado reg;
-    //reg.grabarEnDisco(0);  ///Esta linea la use para grabar un objeto de tipo Empleado a un archivo de Empleado
-
     ofstream File;
     File.open("csv/Empleados.csv"); //Este es el direcctorio adonde se guarda el archivo csv
     if (!File.is_open()) {
@@ -2532,9 +2565,21 @@ void ExportarEmpleados()
         bool _estado; */
 
         ///Aca tengo un problema con _especialidad > Esoecialidades
-    File << "Legajo" << ";" << "Password" << ";" << "Email" << ";" << "TipoEmpleado";
-    File << ";" << "IDEmpleado" << ";" << "NEspecialidades";
-    //File <<";"<<"IDempleado"<<";"<<"Dias"<<";"<<"DiasAtrabajar"<<";"<<
+    File << "Legajo" << ";" << "Password" << ";" << "Email" << ";" << "Tipo de Empleado";
+    File << ";" << "Especialidad" << endl;
+    while (reg.leerDeDisco(pos))
+    {
+        if (reg.getTipoEmpleado() == 99) {
+            File << reg.getLegajo() << ";" << reg.getPassword() <<";"<<reg.getEmail()<<";"<< especialidad[2].getCadena()<<";"
+                <<especialidades[reg.getEspecialidad().getNEspecialidades()].getCadena() << endl;
+        }
+        else {
+            File << reg.getLegajo() << ";" << reg.getPassword() << ";" << reg.getEmail() << ";" << 
+                especialidad[reg.getTipoEmpleado()-1].getCadena() << ";" <<
+                especialidades[reg.getEspecialidad().getNEspecialidades()-1].getCadena() << endl;
+        }
+        pos++;
+    }
     File.flush();
     File.close();
 }
