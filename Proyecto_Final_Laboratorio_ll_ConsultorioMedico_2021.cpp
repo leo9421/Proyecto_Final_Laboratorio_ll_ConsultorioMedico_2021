@@ -20,7 +20,6 @@ using namespace std;
 
 int main()
 {
-    //HOLAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
     //char c[2] = { 92 };
     //cout << c;
     //AgregarPaciente();
