@@ -134,3 +134,25 @@ bool Paciente::GrabarEnDisco(int pos) {
 		return ok;
 	}
 }
+/*bool Paciente::leerCopiaDeDisco(int pos) {
+	FILE* p;
+	p = fopen("Backup/Pacientes.dat", "rb");
+	if (p == NULL) {
+		return false;
+	}
+	fseek(p, sizeof(Paciente) * pos, 0);
+	bool ok;
+	ok = fread(this, sizeof(Paciente), 1, p);
+	fclose(p);
+	return ok;
+}
+bool Paciente::GrabarCopiaEnDisco() {
+	FILE* p;
+	p = fopen("Backup/Pacientes.dat", "wb");
+	if (p == NULL) {
+		return false;
+	}
+	bool ok = fwrite(this, sizeof(Paciente), 1, p);
+	fclose(p);
+	return ok;
+}*/

@@ -96,8 +96,15 @@ void CopiaSeguridadPacientes();
 void CopiaSeguridadTurnos();
 void CopiaSeguridadPagos();
 void CopiaSeguridadHC();
-void CopiaSeguridadPEmpleados();
+void CopiaSeguridadEmpleados();
 void CopiaSeguridadTodos();
+
+void RestaurarCopiaSeguridadPacientes();
+void RestaurarCopiaSeguridadTurnos();
+void RestaurarCopiaSeguridadPagos();
+void RestaurarCopiaSeguridadHC();
+void RestaurarCopiaSeguridadEmpleados();
+void RestaurarCopiaSeguridadTodos();
 
 ///Administrador > Configuraciones > Exportar datos
 void ExportarPacientes(); ///Esta funcion pertenece a configuracion > exportar datos > pacientes

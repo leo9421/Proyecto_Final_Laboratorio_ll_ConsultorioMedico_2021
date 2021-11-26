@@ -30,6 +30,9 @@ public:
 	bool leerDeDisco(int pos);
 	bool GrabarEnDisco(int pos = 0);
 
+	///bool leerCopiaDeDisco(int pos);
+	///bool GrabarCopiaEnDisco();
+
 private:
 	int _ID;
 	char _telefono[30];

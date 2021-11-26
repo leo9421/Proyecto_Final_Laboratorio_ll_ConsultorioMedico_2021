@@ -2363,30 +2363,130 @@ void CopiaSeguridadPacientes() {
     int pos = 0;
     Paciente paciente;
 
-    FILE* copia;
-    copia = fopen("../Pacientes.dat", "wb");
-    if (copia == NULL) {
+    FILE* p;
+    p = fopen("backup/Pacientes.dat", "wb");
+    if (p == NULL) {
         cout << "ERROR DE ARCHIVO" << endl;
         return;
     }
     while (paciente.leerDeDisco(pos++))
     {
-        fwrite(&paciente, sizeof(Paciente), 1, copia);
+        fwrite(&paciente, sizeof(Paciente), 1, p);
     }
 
-    fclose(copia);
+    fclose(p);
 }
 ///----------------------------------------------------------------------------------------------
-void CopiaSeguridadTurnos(){}
-///----------------------------------------------------------------------------------------------
-void CopiaSeguridadPagos(){}
-///----------------------------------------------------------------------------------------------
-void CopiaSeguridadHC(){}
-///----------------------------------------------------------------------------------------------
-void CopiaSeguridadPEmpleados(){}
-///----------------------------------------------------------------------------------------------
-void CopiaSeguridadTodos(){}
+void CopiaSeguridadTurnos() {
+    int pos = 0;
+    Turno turno;
 
+    FILE* p;
+    p = fopen("backup/Turnos.dat", "wb");
+    if (p == NULL) {
+        cout << "ERROR DE ARCHIVO" << endl;
+        return;
+    }
+    while (turno.leerDeDisco(pos++))
+    {
+        fwrite(&turno, sizeof(Turno), 1, p);
+    }
+
+    fclose(p);
+}
+///----------------------------------------------------------------------------------------------
+void CopiaSeguridadPagos() {
+    int pos = 0;
+    FacturaConsulta facturaConsulta;
+
+    FILE* p;
+    p = fopen("backup/FacturasConsultas.dat", "wb");
+    if (p == NULL) {
+        cout << "ERROR DE ARCHIVO" << endl;
+        return;
+    }
+    while (facturaConsulta.leerDeDisco(pos++))
+    {
+        fwrite(&facturaConsulta, sizeof(FacturaConsulta), 1, p);
+    }
+
+    fclose(p);
+}
+///----------------------------------------------------------------------------------------------
+void CopiaSeguridadHC() {
+    int pos = 0;
+    HistoriaClinica historiaClinica;
+
+    FILE* p;
+    p = fopen("backup/HistoriasClinicas.dat", "wb");
+    if (p == NULL) {
+        cout << "ERROR DE ARCHIVO" << endl;
+        return;
+    }
+    while (historiaClinica.leerDeDisco(pos++))
+    {
+        fwrite(&historiaClinica, sizeof(HistoriaClinica), 1, p);
+    }
+
+    fclose(p);
+}
+///----------------------------------------------------------------------------------------------
+void CopiaSeguridadEmpleados() {
+    int pos = 0;
+    Empleado empleado;
+
+    FILE* p;
+    p = fopen("backup/Empleados.dat", "wb");
+    if (p == NULL) {
+        cout << "ERROR DE ARCHIVO" << endl;
+        return;
+    }
+    while (empleado.leerDeDisco(pos++))
+    {
+        fwrite(&empleado, sizeof(Empleado), 1, p);
+    }
+
+    fclose(p);
+}
+///----------------------------------------------------------------------------------------------
+void CopiaSeguridadTodos() {
+    CopiaSeguridadPacientes();
+    CopiaSeguridadTurnos();
+    CopiaSeguridadPagos();
+    CopiaSeguridadHC();
+    CopiaSeguridadEmpleados();
+}
+
+//-----------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------
+//todo:hacer desde aca..restaurar copias de seguridad
+void RestaurarCopiaSeguridadPacientes() {
+    int pos = 0;
+    Paciente paciente;
+
+    FILE* p;
+    p = fopen("backup/Pacientes.dat", "rb");
+    if (p == NULL) {
+        cout << "ERROR DE ARCHIVO" << endl;
+        return;
+    }
+    while (paciente.leerDeDisco(pos++))
+    {
+        fwrite(&paciente, sizeof(Paciente), 1, p);
+    }
+
+    fclose(p);
+}
+//-----------------------------------------------------------------------------------------------
+void RestaurarCopiaSeguridadTurnos(){}
+//-----------------------------------------------------------------------------------------------
+void RestaurarCopiaSeguridadPagos(){}
+//-----------------------------------------------------------------------------------------------
+void RestaurarCopiaSeguridadHC(){}
+//-----------------------------------------------------------------------------------------------
+void RestaurarCopiaSeguridadEmpleados(){}
+//-----------------------------------------------------------------------------------------------
+void RestaurarCopiaSeguridadTodos(){}
 ///----------------------------------------------------------------------------------------------
 ///----------------------------------------------------------------------------------------------
 ///ESTA FUNCION PERTENECE A Configuracion > ExportarDatos

@@ -263,7 +263,7 @@ void ConfiguracionesAdministrador() {
         {
         case 1:
             system("cls");
-            CopiaSeguridad();
+            CopiaSeguridad();///OK
             break;
         case 2:
             system("cls");
@@ -310,30 +310,30 @@ void CopiaSeguridad() {
         {
         case 1:
             system("cls");
-            CopiaSeguridadPacientes();
+            CopiaSeguridadPacientes();///OK
             break;
         case 2:
             system("cls");
-            CopiaSeguridadTurnos();
+            CopiaSeguridadTurnos();///OK
             break;
         case 3:
             system("cls");
-            CopiaSeguridadPagos();
+            CopiaSeguridadPagos();///OK
             break;
 
         case 4:
             system("cls");
-            CopiaSeguridadHC();
+            CopiaSeguridadHC();///OK
             break;
 
         case 5:
             system("cls");
-            CopiaSeguridadPEmpleados();
+            CopiaSeguridadEmpleados();///OK
             break;
 
         case 6:
             system("cls");
-            CopiaSeguridadTodos();
+            CopiaSeguridadTodos();///OK
             break;
 
         case 0:
@@ -372,30 +372,30 @@ void RestaurarCopiasSeguridad() {
         {
         case 1:
             system("cls");
-
+            RestaurarCopiaSeguridadPacientes();
             break;
         case 2:
             system("cls");
-
+            RestaurarCopiaSeguridadTurnos();
             break;
         case 3:
             system("cls");
-
+            RestaurarCopiaSeguridadPagos();
             break;
 
         case 4:
             system("cls");
-
+            RestaurarCopiaSeguridadHC();
             break;
 
         case 5:
             system("cls");
-
+            RestaurarCopiaSeguridadEmpleados();
             break;
 
         case 6:
             system("cls");
-
+            RestaurarCopiaSeguridadTodos();
             break;
 
         case 0:

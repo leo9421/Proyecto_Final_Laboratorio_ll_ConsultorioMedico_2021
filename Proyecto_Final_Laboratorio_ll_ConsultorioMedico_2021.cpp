@@ -20,6 +20,7 @@ using namespace std;
 
 int main()
 {
+    //CopiaSeguridadPacientes();
     //ExportarEmpleados();
     //char c[2] = { 92 };
     //cout << c;
@@ -71,7 +72,7 @@ int main()
     //Empleado reg(horaEntrada, horaSalida, 123456, "Tobias", "Iaconis", 321, "321", "tobias.iaconis@alumnos.frgp.utn.edu.ar", 1, 0, true);
     //reg.grabarEnDisco(0);
     //obj.grabarEnDisco(0);
-    /*Turno t;
+    /*Paciente t;
     int pos = 0;
 
     while (t.leerDeDisco(pos++)) {
