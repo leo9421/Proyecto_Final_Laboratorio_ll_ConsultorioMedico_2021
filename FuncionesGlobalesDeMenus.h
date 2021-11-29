@@ -17,6 +17,8 @@
 #include <ctime> 
 #include <fstream>
 
+using namespace std;
+
 void AsignarTurno();
 bool esBisiesto(int anio);
 int dias_mes(int mes, int anio);
@@ -99,12 +101,17 @@ void CopiaSeguridadHC();
 void CopiaSeguridadEmpleados();
 void CopiaSeguridadTodos();
 
+int generarCod();
+void generarNombreBK(string& nombre);
+void grabarCopia(const char *ruta, Paciente& paciente);
+void guardarNombre(const char* ruta);
 void RestaurarCopiaSeguridadPacientes();
 void RestaurarCopiaSeguridadTurnos();
 void RestaurarCopiaSeguridadPagos();
 void RestaurarCopiaSeguridadHC();
 void RestaurarCopiaSeguridadEmpleados();
 void RestaurarCopiaSeguridadTodos();
+
 
 ///Administrador > Configuraciones > Exportar datos
 void ExportarPacientes(); ///Esta funcion pertenece a configuracion > exportar datos > pacientes

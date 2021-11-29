@@ -2359,22 +2359,93 @@ void RecaudacionPorEspecialidad() {
 ///----------------------------------------------------------------------------------------------
 ///----------------------------------------------------------------------------------------------
 ///ESTAS FUNCIONES PERTENECEN A COPIA DE SEGURIDAD
-void CopiaSeguridadPacientes() {
-    int pos = 0;
-    Paciente paciente;
+int generarCod() {
+    int nro, desde = 10000, hasta = 99999;
+    nro = desde + rand() % (hasta + 1 - desde);
+    return nro;
+}
 
+void generarNombreBK(string& nombre) {
+    int hora, minuto;
+    Fecha f;
+    Fecha_Hora FH;
+    time_t currentTime = time(NULL);
+    time(&currentTime);
+    struct tm* myTime = localtime(&currentTime);
+    hora = myTime->tm_hour;
+    minuto = myTime->tm_min;
+    cargarFechaHoy(f);
+    FH.setFechaHora(hora, minuto, f.getDia(), f.getMes(), f.getAnio());
+    //string n("BK_");
+    nombre += "BK_";
+    nombre += (FH.getFechaHora());
+    nombre.replace(nombre.find(" "), 1, "_");
+    nombre.replace(nombre.find("/"), 1, "-");
+    nombre.replace(nombre.find("/"), 1, "-");
+    nombre.replace(nombre.find(":"), 1, "_");
+}
+
+void grabarCopia(const char* ruta, Paciente& paciente) {
+    int pos = 0;
     FILE* p;
-    p = fopen("backup/Pacientes.dat", "wb");
+    p = fopen(ruta, "wb");
     if (p == NULL) {
-        cout << "ERROR DE ARCHIVO" << endl;
+        cout << "ERROR DE ARCHIVO." << endl;
         return;
     }
     while (paciente.leerDeDisco(pos++))
     {
         fwrite(&paciente, sizeof(Paciente), 1, p);
     }
-
     fclose(p);
+}
+
+void guardarNombre(const char* ruta) {
+    ofstream nombresArchivo;
+    bool estado;
+    nombresArchivo.open("Backup/Pacientes");
+    if (!nombresArchivo.is_open()) {
+        cout << "ERROR DE ARCHIVO" << endl;
+        return;
+    }
+    estado = true;
+    nombresArchivo << ruta << estado << endl;
+    nombresArchivo.close();
+}
+
+void CopiaSeguridadPacientes() {
+    int codigo, hora, minuto;
+    /*while (true) {
+        system("cls");
+        int cod = generarCod();
+        cout << "PARA CONTINUAR INGRESE EL SIGUIENTE CODIGO: " << cod << endl;
+        cout << "CODIGO DE CONFIRMACION: ";
+        cin >> codigo;
+        if (cod == codigo) break;
+        else {
+            cout << "ERROR. VUELVA A INTENTAR." << endl;
+            system("pause");
+        }
+        
+    }*/
+    Paciente paciente;
+    string carpeta("Backup/Pacientes/");
+    string nombre;
+    generarNombreBK(nombre);
+    string extension(".dat");
+    string r;
+    char ruta[41];
+    r += carpeta;
+    r += nombre;
+    r += extension;
+    strcpy(ruta, r.c_str());
+    //strcpy(nombre, generarNombreBK());
+    //strcpy(ruta, carpeta);
+    //strcat(ruta, nombre);
+    //strcat(ruta, extension);
+    cout << ruta << endl;
+    grabarCopia(ruta, paciente);
+    guardarNombre(ruta);
 }
 ///----------------------------------------------------------------------------------------------
 void CopiaSeguridadTurnos() {
@@ -2461,7 +2532,7 @@ void CopiaSeguridadTodos() {
 //-----------------------------------------------------------------------------------------------
 //todo:hacer desde aca..restaurar copias de seguridad
 void RestaurarCopiaSeguridadPacientes() {
-    int pos = 0;
+    int pos = 0, cantReg;
     Paciente paciente;
 
     FILE* p;
@@ -2470,11 +2541,10 @@ void RestaurarCopiaSeguridadPacientes() {
         cout << "ERROR DE ARCHIVO" << endl;
         return;
     }
-    while (paciente.leerDeDisco(pos++))
-    {
-        fwrite(&paciente, sizeof(Paciente), 1, p);
+    cantReg = ftell(p) / sizeof(Paciente);
+    for (int i = 0; i < cantReg; i++){
+        paciente.GrabarEnDisco(i);
     }
-
     fclose(p);
 }
 //-----------------------------------------------------------------------------------------------

@@ -15,11 +15,13 @@
 #include "HorarioEmpleado.h"
 #include <cstdlib>
 #include <ctime>
+#include <string>
 
 using namespace std;
 
 int main()
 {
+    
     //CopiaSeguridadPacientes();
     //ExportarEmpleados();
     //char c[2] = { 92 };

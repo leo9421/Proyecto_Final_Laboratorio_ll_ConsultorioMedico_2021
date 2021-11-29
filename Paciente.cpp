@@ -134,7 +134,7 @@ bool Paciente::GrabarEnDisco(int pos) {
 		return ok;
 	}
 }
-/*bool Paciente::leerCopiaDeDisco(int pos) {
+bool Paciente::leerCopiaDeDisco(int pos) {
 	FILE* p;
 	p = fopen("Backup/Pacientes.dat", "rb");
 	if (p == NULL) {
@@ -148,11 +148,11 @@ bool Paciente::GrabarEnDisco(int pos) {
 }
 bool Paciente::GrabarCopiaEnDisco() {
 	FILE* p;
-	p = fopen("Backup/Pacientes.dat", "wb");
+	p = fopen("Pacientes.dat", "wb");
 	if (p == NULL) {
 		return false;
 	}
 	bool ok = fwrite(this, sizeof(Paciente), 1, p);
 	fclose(p);
 	return ok;
-}*/
+}
