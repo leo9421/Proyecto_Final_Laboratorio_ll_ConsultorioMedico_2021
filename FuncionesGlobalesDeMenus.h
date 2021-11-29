@@ -103,9 +103,10 @@ void CopiaSeguridadTodos();
 
 int generarCod();
 void generarNombreBK(string& nombre);
-void grabarCopia(const char *ruta, Paciente& paciente);
-void guardarNombre(const char* ruta);
+void grabarCopiaPacientes(const char* ruta, Paciente& paciente);
+void guardarNombreArchivoPacientes(const char* ruta);
 void RestaurarCopiaSeguridadPacientes();
+
 void RestaurarCopiaSeguridadTurnos();
 void RestaurarCopiaSeguridadPagos();
 void RestaurarCopiaSeguridadHC();

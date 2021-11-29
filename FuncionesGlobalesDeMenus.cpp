@@ -2385,7 +2385,7 @@ void generarNombreBK(string& nombre) {
     nombre.replace(nombre.find(":"), 1, "_");
 }
 
-void grabarCopia(const char* ruta, Paciente& paciente) {
+void grabarCopiaPacientes(const char* ruta, Paciente& paciente) {
     int pos = 0;
     FILE* p;
     p = fopen(ruta, "wb");
@@ -2400,7 +2400,7 @@ void grabarCopia(const char* ruta, Paciente& paciente) {
     fclose(p);
 }
 
-void guardarNombre(const char* ruta) {
+void guardarNombreArchivoPacientes(const char* ruta) {
     ofstream nombresArchivo;
     bool estado;
     nombresArchivo.open("Backup/Pacientes");
@@ -2415,7 +2415,7 @@ void guardarNombre(const char* ruta) {
 
 void CopiaSeguridadPacientes() {
     int codigo, hora, minuto;
-    /*while (true) {
+    while (true) {
         system("cls");
         int cod = generarCod();
         cout << "PARA CONTINUAR INGRESE EL SIGUIENTE CODIGO: " << cod << endl;
@@ -2427,7 +2427,7 @@ void CopiaSeguridadPacientes() {
             system("pause");
         }
         
-    }*/
+    }
     Paciente paciente;
     string carpeta("Backup/Pacientes/");
     string nombre;
@@ -2444,8 +2444,8 @@ void CopiaSeguridadPacientes() {
     //strcat(ruta, nombre);
     //strcat(ruta, extension);
     cout << ruta << endl;
-    grabarCopia(ruta, paciente);
-    guardarNombre(ruta);
+    grabarCopiaPacientes(ruta, paciente);
+    guardarNombreArchivoPacientes(ruta);
 }
 ///----------------------------------------------------------------------------------------------
 void CopiaSeguridadTurnos() {
