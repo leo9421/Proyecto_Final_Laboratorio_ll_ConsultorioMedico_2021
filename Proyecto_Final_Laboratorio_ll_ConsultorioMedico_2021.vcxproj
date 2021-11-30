@@ -139,6 +139,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Archivo.cpp" />
     <ClCompile Include="Cadena.cpp" />
     <ClCompile Include="Direccion.cpp" />
     <ClCompile Include="Empleado.cpp" />
@@ -158,6 +159,7 @@
     <ClCompile Include="Turno.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Archivo.h" />
     <ClInclude Include="Cadena.h" />
     <ClInclude Include="Direccion.h" />
     <ClInclude Include="Empleado.h" />

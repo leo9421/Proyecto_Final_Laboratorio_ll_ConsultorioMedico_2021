@@ -13,6 +13,7 @@
 #include "TemplatesHTML.h"
 #include "Fecha_Hora.h"
 #include "HorarioEmpleado.h"
+#include "Archivo.h"
 #include <cstdlib>
 #include <ctime>
 #include <string>
@@ -21,7 +22,12 @@ using namespace std;
 
 int main()
 {
-    
+    //RestaurarCopiaSeguridadPacientes();
+    /*Archivo reg;
+    int pos = 0;
+    while (reg.leerDeDisco(pos++,"Backup/Pacientes/rutas.dat")) {
+        reg.Mostrar();
+    }*/
     //CopiaSeguridadPacientes();
     //ExportarEmpleados();
     //char c[2] = { 92 };

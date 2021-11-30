@@ -10,6 +10,7 @@
 #include "Persona.h"
 #include "Turno.h"
 #include "Cadena.h"
+#include "Archivo.h"
 #include <iostream>
 #include <cstdio>
 #include <vector>
@@ -2401,16 +2402,10 @@ void grabarCopiaPacientes(const char* ruta, Paciente& paciente) {
 }
 
 void guardarNombreArchivoPacientes(const char* ruta) {
-    ofstream nombresArchivo;
-    bool estado;
-    nombresArchivo.open("Backup/Pacientes");
-    if (!nombresArchivo.is_open()) {
-        cout << "ERROR DE ARCHIVO" << endl;
-        return;
-    }
-    estado = true;
-    nombresArchivo << ruta << estado << endl;
-    nombresArchivo.close();
+    Archivo reg;
+    reg.setNombre(ruta);
+    reg.setEstado(true);
+    reg.grabarEnDisco("Backup/Pacientes/rutas.dat");
 }
 
 void CopiaSeguridadPacientes() {
@@ -2439,11 +2434,7 @@ void CopiaSeguridadPacientes() {
     r += nombre;
     r += extension;
     strcpy(ruta, r.c_str());
-    //strcpy(nombre, generarNombreBK());
-    //strcpy(ruta, carpeta);
-    //strcat(ruta, nombre);
-    //strcat(ruta, extension);
-    cout << ruta << endl;
+    //cout << ruta << endl;
     grabarCopiaPacientes(ruta, paciente);
     guardarNombreArchivoPacientes(ruta);
 }
@@ -2531,21 +2522,76 @@ void CopiaSeguridadTodos() {
 //-----------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------------
 //todo:hacer desde aca..restaurar copias de seguridad
-void RestaurarCopiaSeguridadPacientes() {
-    int pos = 0, cantReg;
-    Paciente paciente;
 
+int cantRutasOk(const char* ruta) {
+    Archivo reg;
+    int pos = 0, cont=0;
+    while (reg.leerDeDisco(pos++, ruta))
+    {
+        if (reg.getEstado()) cont++;
+    }
+    return cont;
+}
+
+void cargarVArchivo(Archivo* vA, int cant) {
+    Archivo aux;
+    int pos = 0;
+    for (int i = 0; i < cant; i++)
+    {
+        aux.leerDeDisco(i, "Backup/Pacientes/rutas.dat");
+        if(aux.getEstado()) vA[i] = aux;
+    }
+}
+
+void migrarBK(Archivo& ruta, int cant, const char *nombre) {
+    Paciente reg;
+    int pos = 0;
     FILE* p;
-    p = fopen("backup/Pacientes.dat", "rb");
+    p = fopen("Pacientes.dat", "wb");
     if (p == NULL) {
         cout << "ERROR DE ARCHIVO" << endl;
         return;
     }
-    cantReg = ftell(p) / sizeof(Paciente);
-    for (int i = 0; i < cantReg; i++){
-        paciente.GrabarEnDisco(i);
+    while (reg.leerCopiaDeDisco(pos++,ruta.getNombre())){
+        reg.GrabarEnDisco();
     }
     fclose(p);
+}
+
+void RestaurarCopiaSeguridadPacientes() {
+    Paciente reg;
+    int pos = 0, opcion;
+    int cant = cantRutasOk("Backup/Pacientes/rutas.dat");
+    if (cant == 0) {
+        cout << "No existen copias de seguridad" << endl;
+        system("pause");
+        return;
+    }
+    Archivo* vA = new Archivo[cant];
+    cargarVArchivo(vA,cant);
+    //cout << cant;
+    while (true) {
+        system("cls");
+        for (int i = 1; i <= cant; i++)
+        {
+            cout << i << ". " << vA[i-1].getNombre() << endl;
+        }
+        cout << "Ingrese una opcion para restaurar: ";
+        cin >> opcion;
+        if (opcion > 0 && opcion <= cant) {
+            migrarBK(vA[opcion-1], cant, "Pacientes.dat");
+            cout << "El archivo ha sido restaurado" << endl;
+            delete[] vA;
+            return;
+        }
+        else {
+            cout << "Opcion incorrecta. Vuelva a intentar." << endl;
+            system("pause");
+        }
+
+    }
+
+    //delete vA;
 }
 //-----------------------------------------------------------------------------------------------
 void RestaurarCopiaSeguridadTurnos(){}

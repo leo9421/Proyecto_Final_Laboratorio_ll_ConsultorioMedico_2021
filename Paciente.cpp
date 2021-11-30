@@ -134,9 +134,9 @@ bool Paciente::GrabarEnDisco(int pos) {
 		return ok;
 	}
 }
-bool Paciente::leerCopiaDeDisco(int pos) {
+bool Paciente::leerCopiaDeDisco(int pos, const char* ruta) {
 	FILE* p;
-	p = fopen("Backup/Pacientes.dat", "rb");
+	p = fopen(ruta, "rb");
 	if (p == NULL) {
 		return false;
 	}
@@ -146,9 +146,9 @@ bool Paciente::leerCopiaDeDisco(int pos) {
 	fclose(p);
 	return ok;
 }
-bool Paciente::GrabarCopiaEnDisco() {
+bool Paciente::GrabarCopiaEnDisco(const char* ruta) {
 	FILE* p;
-	p = fopen("Pacientes.dat", "wb");
+	p = fopen(ruta, "wb");
 	if (p == NULL) {
 		return false;
 	}
