@@ -22,7 +22,7 @@ using namespace std;
 
 int main()
 {
-    //RestaurarCopiaSeguridadPacientes();
+    RestaurarCopiaSeguridadPacientes();
     /*Archivo reg;
     int pos = 0;
     while (reg.leerDeDisco(pos++,"Backup/Pacientes/rutas.dat")) {

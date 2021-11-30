@@ -201,7 +201,7 @@ void menuAdministrador() {
         cout << "2-ELIMINAR UN USUARIO. " << endl;
         cout << "3-MODIFICAR UN USUARIO. " << endl;
         cout << "4-CONFIGURACIONES." << endl;
-        cout << "5-ASIGNACION DE LIMITE DE TURNOS." << endl;
+        //cout << "5-ASIGNACION DE LIMITE DE TURNOS." << endl;
         cout << "0- VOLVER AL MENU PRINCIPAL" << endl << endl;
         cout << "INGRESE UNA OPCION ";
         cin >> opc;

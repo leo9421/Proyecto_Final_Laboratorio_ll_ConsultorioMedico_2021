@@ -2523,13 +2523,47 @@ void CopiaSeguridadTodos() {
 //-----------------------------------------------------------------------------------------------
 //todo:hacer desde aca..restaurar copias de seguridad
 
+bool existe(Archivo& reg) {
+    FILE* p;
+    p = fopen(reg.getNombre(), "rb");
+    if (p == NULL) return false;
+    fclose(p);
+    return true;
+}
+
 int cantRutasOk(const char* ruta) {
     Archivo reg;
-    int pos = 0, cont=0;
-    while (reg.leerDeDisco(pos++, ruta))
+    int pos = 0, cont = 0;
+    FILE* p;
+    p = fopen(ruta, "rb");
+    if (p == NULL) return -1;
+    fseek(p, 0, 2);
+    int aux = ftell(p) / sizeof(Archivo);
+    fclose(p);
+
+    for (int i = 0; i < aux; i++)
     {
-        if (reg.getEstado()) cont++;
+        reg.leerDeDisco(i, ruta);
+        if (existe(reg)) cont++;
+        else {
+            reg.setEstado(false);
+            reg.grabarEnDisco(ruta, i);
+        }
     }
+
+    /*while (reg.leerDeDisco(pos++, ruta))
+    {
+        if (existe(reg)) {
+            cont++;
+        }
+        else {
+            reg.setEstado(false);
+            reg.grabarEnDisco(ruta, pos);
+            break;
+        }
+        cout << cont << endl;
+    }*/
+    system("pause");
     return cont;
 }
 
