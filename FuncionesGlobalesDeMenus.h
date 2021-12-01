@@ -11,6 +11,7 @@
 #include "Persona.h"
 #include "Turno.h"
 #include "Cadena.h"
+#include "Archivo.h"
 #include <iostream>
 #include <vector>
 #include <cstring>
@@ -95,23 +96,44 @@ void RecaudacionPorEspecialidad();
 
 ///COPIA DE SEGURIDAD
 void CopiaSeguridadPacientes();
+	int generarCod();												///REUTILIZABLE
+	void generarNombreBK(string& nombre);							///REUTILIZABLE
+	void grabarCopiaPacientes(const char* ruta, Paciente& paciente);
+	void guardarNombreArchivoPacientes(const char* ruta);			
 void CopiaSeguridadTurnos();
+	void grabarCopiaTurnos(const char* ruta, Turno& turno);
+	void guardarNombreArchivoTurnos(const char* ruta);
 void CopiaSeguridadPagos();
+	void grabarCopiaPagos(const char* ruta, FacturaConsulta& facturaConsulta);
+	void guardarNombreArchivoPagos(const char* ruta);
 void CopiaSeguridadHC();
+	void grabarCopiaHistoriasClinicas(const char* ruta, HistoriaClinica& historiaClinica);
+	void guardarNombreArchivoHistoriasClinicas(const char* ruta);
 void CopiaSeguridadEmpleados();
+	void grabarCopiaEmpleados(const char* ruta, Empleado& empleado);
+	void guardarNombreArchivoEmpleados(const char* ruta);
 void CopiaSeguridadTodos();
 
-int generarCod();
-void generarNombreBK(string& nombre);
-void grabarCopiaPacientes(const char* ruta, Paciente& paciente);
-void guardarNombreArchivoPacientes(const char* ruta);
-void RestaurarCopiaSeguridadPacientes();
 
+
+void RestaurarCopiaSeguridadPacientes();
+	bool existe(Archivo& reg);											///REUTILIZABLE
+	int cantRegistros(const char* ruta);								///REUTILIZABLE
+	bool seRepite(const char* nombre, const char* ruta);				///REUTILIZABLE
+	int cantRutasOk(const char* ruta);									///REUTILIZABLE
+	void cargarVArchivo(Archivo* vA, int cant, const char* ruta);		///REUTILIZABLE
+	void migrarBKPacientes(Archivo& ruta, int cant, const char* nombre);
 void RestaurarCopiaSeguridadTurnos();
+	void migrarBKTurnos(Archivo& ruta, int cant, const char* nombre);
 void RestaurarCopiaSeguridadPagos();
+	void migrarBKPagos(Archivo& ruta, int cant, const char* nombre);
 void RestaurarCopiaSeguridadHC();
+	void migrarBKHistoriasClinicas(Archivo& ruta, int cant, const char* nombre);
 void RestaurarCopiaSeguridadEmpleados();
+	void migrarBKEmpleados(Archivo& ruta, int cant, const char* nombre);
 void RestaurarCopiaSeguridadTodos();
+
+
 
 
 ///Administrador > Configuraciones > Exportar datos

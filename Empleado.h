@@ -19,6 +19,7 @@ public:
 	void setEspecialidad(Especialidad especialidad);
 	void setHoraEntradaSalida(HorarioEmpleado horarioEntradaSalida);
 	void setEstado(bool estado);
+
 	int getLegajo();
 	char* getPassword();
 	char* getEmail();
@@ -26,10 +27,13 @@ public:
 	Especialidad getEspecialidad();
 	HorarioEmpleado getHoraEntradaSalida();
 	bool getEstado();
+
 	void Mostrar();
 	bool leerDeDisco(int pos);
 	bool grabarEnDisco(int pos = 0);
 
+	bool leerCopiaDeDisco(int pos, const char* ruta);
+	bool GrabarCopiaEnDisco(const char* ruta);
 
 private:
 	int _legajo;

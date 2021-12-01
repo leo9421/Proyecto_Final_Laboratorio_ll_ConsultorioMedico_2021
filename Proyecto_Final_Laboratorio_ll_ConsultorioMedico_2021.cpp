@@ -22,13 +22,20 @@ using namespace std;
 
 int main()
 {
-    RestaurarCopiaSeguridadPacientes();
+    /*Archivo reg;
+    int pos = 0;
+    while (reg.leerDeDisco(pos++, "Backup/Pacientes/rutas.dat"))
+    {
+        reg.Mostrar();
+    }*/
+    //RestaurarCopiaSeguridadPacientes();
     /*Archivo reg;
     int pos = 0;
     while (reg.leerDeDisco(pos++,"Backup/Pacientes/rutas.dat")) {
         reg.Mostrar();
     }*/
     //CopiaSeguridadPacientes();
+    //CopiaSeguridadEmpleados();
     //ExportarEmpleados();
     //char c[2] = { 92 };
     //cout << c;
@@ -80,7 +87,8 @@ int main()
     //Empleado reg(horaEntrada, horaSalida, 123456, "Tobias", "Iaconis", 321, "321", "tobias.iaconis@alumnos.frgp.utn.edu.ar", 1, 0, true);
     //reg.grabarEnDisco(0);
     //obj.grabarEnDisco(0);
-    /*Paciente t;
+   /* cout << endl;
+    Paciente t;
     int pos = 0;
 
     while (t.leerDeDisco(pos++)) {

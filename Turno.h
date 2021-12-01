@@ -30,7 +30,10 @@ public:
 
 	void Mostrar();
 	bool leerDeDisco(int pos);
-	bool grabarEnDisco(int pos);
+	bool grabarEnDisco(int pos = 0);
+
+	bool leerCopiaDeDisco(int pos, const char* ruta);
+	bool GrabarCopiaEnDisco(const char* ruta);
 
 private:
 	int _ID;

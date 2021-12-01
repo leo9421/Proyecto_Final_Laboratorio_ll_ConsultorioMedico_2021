@@ -132,3 +132,25 @@ bool Empleado::grabarEnDisco(int pos) {
 		return ok;
 	}
 }
+bool Empleado::leerCopiaDeDisco(int pos, const char* ruta) {
+	FILE* p;
+	p = fopen(ruta, "rb");
+	if (p == NULL) {
+		return false;
+	}
+	fseek(p, sizeof(Empleado) * pos, 0);
+	bool ok;
+	ok = fread(this, sizeof(Empleado), 1, p);
+	fclose(p);
+	return ok;
+}
+bool Empleado::GrabarCopiaEnDisco(const char* ruta) {
+	FILE* p;
+	p = fopen(ruta, "wb");
+	if (p == NULL) {
+		return false;
+	}
+	bool ok = fwrite(this, sizeof(Empleado), 1, p);
+	fclose(p);
+	return ok;
+}

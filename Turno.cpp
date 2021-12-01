@@ -135,7 +135,7 @@ bool Turno::leerDeDisco(int pos) {
 	fclose(p);
 	return ok;
 }
-bool Turno::grabarEnDisco(int pos = 0) {
+bool Turno::grabarEnDisco(int pos) {
 	FILE* p;
 	if (pos == 0) {
 		p = fopen("Turnos.dat", "ab");
@@ -158,4 +158,26 @@ bool Turno::grabarEnDisco(int pos = 0) {
 		fclose(p);
 		return ok;
 	}
+}
+bool Turno::leerCopiaDeDisco(int pos, const char* ruta) {
+	FILE* p;
+	p = fopen(ruta, "rb");
+	if (p == NULL) {
+		return false;
+	}
+	fseek(p, sizeof(Turno) * pos, 0);
+	bool ok;
+	ok = fread(this, sizeof(Turno), 1, p);
+	fclose(p);
+	return ok;
+}
+bool Turno::GrabarCopiaEnDisco(const char* ruta) {
+	FILE* p;
+	p = fopen(ruta, "wb");
+	if (p == NULL) {
+		return false;
+	}
+	bool ok = fwrite(this, sizeof(Turno), 1, p);
+	fclose(p);
+	return ok;
 }

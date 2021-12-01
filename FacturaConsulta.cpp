@@ -132,7 +132,7 @@ bool FacturaConsulta::leerDeDisco(int pos) {
 	fclose(p);
 	return ok;
 }
-bool FacturaConsulta::grabarEnDisco(int pos = 0) {
+bool FacturaConsulta::grabarEnDisco(int pos) {
 	FILE* p;
 	if (pos == 0) {
 		p = fopen("FacturasConsultas.dat", "ab");
@@ -155,4 +155,26 @@ bool FacturaConsulta::grabarEnDisco(int pos = 0) {
 		fclose(p);
 		return ok;
 	}
+}
+bool FacturaConsulta::leerCopiaDeDisco(int pos, const char* ruta) {
+	FILE* p;
+	p = fopen(ruta, "rb");
+	if (p == NULL) {
+		return false;
+	}
+	fseek(p, sizeof(FacturaConsulta) * pos, 0);
+	bool ok;
+	ok = fread(this, sizeof(FacturaConsulta), 1, p);
+	fclose(p);
+	return ok;
+}
+bool FacturaConsulta::GrabarCopiaEnDisco(const char* ruta) {
+	FILE* p;
+	p = fopen(ruta, "wb");
+	if (p == NULL) {
+		return false;
+	}
+	bool ok = fwrite(this, sizeof(FacturaConsulta), 1, p);
+	fclose(p);
+	return ok;
 }

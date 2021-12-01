@@ -10,7 +10,7 @@
 #include "Persona.h"
 #include "Turno.h"
 #include "Cadena.h"
-#include "Archivo.h"
+//#include "Archivo.h"
 #include <iostream>
 #include <cstdio>
 #include <vector>
@@ -18,6 +18,7 @@
 #include <ctime> 
 #include <fstream>
 #include <Windows.h>
+#include <random>
 ///ESTA ES UNA PRUEBA DE USO DE GITHUB DESDE VISUAL STUDIO 2019
 ///ESTA ES UNA PRUEBA DE USO DE GITHUB DESDE VISUAL STUDIO 2019
 using namespace std;
@@ -1438,8 +1439,7 @@ void OrdenarVectorEmpleadosPorApellido(Empleado* vEmpleados, int cantRegistros) 
     {
         for (int j = 0; j < cantRegistros - 1; j++)
         {
-            if (strcmp(vEmpleados[j].getApellidos(), vEmpleados[j + 1].getApellidos()) > 0)
-            {
+            if (strcmp(vEmpleados[j].getApellidos(), vEmpleados[j + 1].getApellidos()) > 0){
                 aux = vEmpleados[j + 1];
                 vEmpleados[j + 1] = vEmpleados[j];
                 vEmpleados[j] = aux;
@@ -2361,9 +2361,12 @@ void RecaudacionPorEspecialidad() {
 ///----------------------------------------------------------------------------------------------
 ///ESTAS FUNCIONES PERTENECEN A COPIA DE SEGURIDAD
 int generarCod() {
-    int nro, desde = 10000, hasta = 99999;
-    nro = desde + rand() % (hasta + 1 - desde);
-    return nro;
+    int NRO, MIN = 10000, MAX = 99999;
+    random_device rd;
+    mt19937 eng(rd());
+    uniform_int_distribution<int> distr(MIN, MAX);
+    NRO = distr(eng);
+    return NRO;
 }
 
 void generarNombreBK(string& nombre) {
@@ -2421,7 +2424,6 @@ void CopiaSeguridadPacientes() {
             cout << "ERROR. VUELVA A INTENTAR." << endl;
             system("pause");
         }
-        
     }
     Paciente paciente;
     string carpeta("Backup/Pacientes/");
@@ -2434,81 +2436,212 @@ void CopiaSeguridadPacientes() {
     r += nombre;
     r += extension;
     strcpy(ruta, r.c_str());
-    //cout << ruta << endl;
     grabarCopiaPacientes(ruta, paciente);
     guardarNombreArchivoPacientes(ruta);
 }
 ///----------------------------------------------------------------------------------------------
-void CopiaSeguridadTurnos() {
-    int pos = 0;
-    Turno turno;
 
+void grabarCopiaTurnos(const char* ruta, Turno& turno) {
+    int pos = 0;
     FILE* p;
-    p = fopen("backup/Turnos.dat", "wb");
+    p = fopen(ruta, "wb");
     if (p == NULL) {
-        cout << "ERROR DE ARCHIVO" << endl;
+        cout << "ERROR DE ARCHIVO." << endl;
         return;
     }
     while (turno.leerDeDisco(pos++))
     {
         fwrite(&turno, sizeof(Turno), 1, p);
     }
-
     fclose(p);
 }
-///----------------------------------------------------------------------------------------------
-void CopiaSeguridadPagos() {
-    int pos = 0;
-    FacturaConsulta facturaConsulta;
+void guardarNombreArchivoTurnos(const char* ruta) {
+    Archivo reg;
+    reg.setNombre(ruta);
+    reg.setEstado(true);
+    reg.grabarEnDisco("Backup/Turnos/rutas.dat");
+}
 
+void CopiaSeguridadTurnos() {
+    int codigo, hora, minuto;
+    while (true) {
+        system("cls");
+        int cod = generarCod();
+        cout << "PARA CONTINUAR INGRESE EL SIGUIENTE CODIGO: " << cod << endl;
+        cout << "CODIGO DE CONFIRMACION: ";
+        cin >> codigo;
+        if (cod == codigo) break;
+        else {
+            cout << "ERROR. VUELVA A INTENTAR." << endl;
+            system("pause");
+        }    
+    }
+    Turno turno;
+    string carpeta("Backup/Turnos/");
+    string nombre;
+    generarNombreBK(nombre);
+    string extension(".dat");
+    string r;
+    char ruta[41];
+    r += carpeta;
+    r += nombre;
+    r += extension;
+    strcpy(ruta, r.c_str());
+    grabarCopiaTurnos(ruta, turno);
+    guardarNombreArchivoTurnos(ruta);
+}
+///----------------------------------------------------------------------------------------------
+
+void grabarCopiaPagos(const char* ruta, FacturaConsulta& facturaConsulta) {
+    int pos = 0;
     FILE* p;
-    p = fopen("backup/FacturasConsultas.dat", "wb");
+    p = fopen(ruta, "wb");
     if (p == NULL) {
-        cout << "ERROR DE ARCHIVO" << endl;
+        cout << "ERROR DE ARCHIVO." << endl;
         return;
     }
     while (facturaConsulta.leerDeDisco(pos++))
     {
         fwrite(&facturaConsulta, sizeof(FacturaConsulta), 1, p);
     }
-
     fclose(p);
 }
-///----------------------------------------------------------------------------------------------
-void CopiaSeguridadHC() {
-    int pos = 0;
-    HistoriaClinica historiaClinica;
+void guardarNombreArchivoPagos(const char* ruta) {
+    Archivo reg;
+    reg.setNombre(ruta);
+    reg.setEstado(true);
+    reg.grabarEnDisco("Backup/Pagos/rutas.dat");
+}
 
+void CopiaSeguridadPagos() {
+    int codigo, hora, minuto;
+    while (true) {
+        system("cls");
+        int cod = generarCod();
+        cout << "PARA CONTINUAR INGRESE EL SIGUIENTE CODIGO: " << cod << endl;
+        cout << "CODIGO DE CONFIRMACION: ";
+        cin >> codigo;
+        if (cod == codigo) break;
+        else {
+            cout << "ERROR. VUELVA A INTENTAR." << endl;
+            system("pause");
+        }
+    }
+    FacturaConsulta facturaConsulta;
+    string carpeta("Backup/Pagos/");
+    string nombre;
+    generarNombreBK(nombre);
+    string extension(".dat");
+    string r;
+    char ruta[41];
+    r += carpeta;
+    r += nombre;
+    r += extension;
+    strcpy(ruta, r.c_str());
+    grabarCopiaPagos(ruta, facturaConsulta);
+    guardarNombreArchivoPagos(ruta);
+}
+///----------------------------------------------------------------------------------------------
+
+void grabarCopiaHistoriasClinicas(const char* ruta, HistoriaClinica& historiaClinica) {
+    int pos = 0;
     FILE* p;
-    p = fopen("backup/HistoriasClinicas.dat", "wb");
+    p = fopen(ruta, "wb");
     if (p == NULL) {
-        cout << "ERROR DE ARCHIVO" << endl;
+        cout << "ERROR DE ARCHIVO." << endl;
         return;
     }
     while (historiaClinica.leerDeDisco(pos++))
     {
         fwrite(&historiaClinica, sizeof(HistoriaClinica), 1, p);
     }
-
     fclose(p);
 }
-///----------------------------------------------------------------------------------------------
-void CopiaSeguridadEmpleados() {
-    int pos = 0;
-    Empleado empleado;
+void guardarNombreArchivoHistoriasClinicas(const char* ruta) {
+    Archivo reg;
+    reg.setNombre(ruta);
+    reg.setEstado(true);
+    reg.grabarEnDisco("Backup/Historias Clinicas/rutas.dat");
+}
 
+void CopiaSeguridadHC() {
+    int codigo, hora, minuto;
+    while (true) {
+        system("cls");
+        int cod = generarCod();
+        cout << "PARA CONTINUAR INGRESE EL SIGUIENTE CODIGO: " << cod << endl;
+        cout << "CODIGO DE CONFIRMACION: ";
+        cin >> codigo;
+        if (cod == codigo) break;
+        else {
+            cout << "ERROR. VUELVA A INTENTAR." << endl;
+            system("pause");
+        }
+    }
+    HistoriaClinica historiaClinica;
+    string carpeta("Backup/Historias Clinicas/");
+    string nombre;
+    generarNombreBK(nombre);
+    string extension(".dat");
+    string r;
+    char ruta[41];
+    r += carpeta;
+    r += nombre;
+    r += extension;
+    strcpy(ruta, r.c_str());
+    grabarCopiaHistoriasClinicas(ruta, historiaClinica);
+    guardarNombreArchivoHistoriasClinicas(ruta);
+}
+///----------------------------------------------------------------------------------------------
+
+void grabarCopiaEmpleados(const char* ruta, Empleado& empleado) {
+    int pos = 0;
     FILE* p;
-    p = fopen("backup/Empleados.dat", "wb");
+    p = fopen(ruta, "wb");
     if (p == NULL) {
-        cout << "ERROR DE ARCHIVO" << endl;
+        cout << "ERROR DE ARCHIVO." << endl;
         return;
     }
     while (empleado.leerDeDisco(pos++))
     {
         fwrite(&empleado, sizeof(Empleado), 1, p);
     }
-
     fclose(p);
+}
+void guardarNombreArchivoEmpleados(const char* ruta) {
+    Archivo reg;
+    reg.setNombre(ruta);
+    reg.setEstado(true);
+    reg.grabarEnDisco("Backup/Empleados/rutas.dat");
+}
+
+void CopiaSeguridadEmpleados() {
+    int codigo, hora, minuto;
+    while (true) {
+        system("cls");
+        int cod = generarCod();
+        cout << "PARA CONTINUAR INGRESE EL SIGUIENTE CODIGO: " << cod << endl;
+        cout << "CODIGO DE CONFIRMACION: ";
+        cin >> codigo;
+        if (cod == codigo) break;
+        else {
+            cout << "ERROR. VUELVA A INTENTAR." << endl;
+            system("pause");
+        }
+    }
+    Empleado empleado;
+    string carpeta("Backup/Empleados/");
+    string nombre;
+    generarNombreBK(nombre);
+    string extension(".dat");
+    string r;
+    char ruta[41];
+    r += carpeta;
+    r += nombre;
+    r += extension;
+    strcpy(ruta, r.c_str());
+    grabarCopiaEmpleados(ruta, empleado);
+    guardarNombreArchivoEmpleados(ruta);
 }
 ///----------------------------------------------------------------------------------------------
 void CopiaSeguridadTodos() {
@@ -2531,53 +2664,81 @@ bool existe(Archivo& reg) {
     return true;
 }
 
-int cantRutasOk(const char* ruta) {
-    Archivo reg;
-    int pos = 0, cont = 0;
+int cantRegistros(const char* ruta) {
+    int aux;
     FILE* p;
     p = fopen(ruta, "rb");
     if (p == NULL) return -1;
     fseek(p, 0, 2);
-    int aux = ftell(p) / sizeof(Archivo);
+    aux = ftell(p) / sizeof(Archivo);
     fclose(p);
+    return aux;
+}
 
-    for (int i = 0; i < aux; i++)
+bool seRepite(const char* nombre, const char* ruta) {
+    Archivo reg;
+    int pos = 0, cont = 0;
+    while (reg.leerDeDisco(pos++, ruta))
     {
+        if (strcmp(reg.getNombre(), nombre) == 0) cont++;
+    }
+    if (cont > 1) return true;
+    return false;
+}
+
+int cantRutasOk(const char* ruta) {
+    
+    Archivo reg;
+    int pos = 0, cont = 0;
+    int aux = cantRegistros(ruta);
+    
+    //cout << aux;
+
+    for (int i = 0; i < aux; i++){
         reg.leerDeDisco(i, ruta);
-        if (existe(reg)) cont++;
+        if (existe(reg)) {
+            if (seRepite(reg.getNombre(), ruta)) {
+                reg.setEstado(false);
+                reg.grabarEnDisco(ruta, pos);
+            }
+            else if (!reg.getEstado()) {
+                reg.setEstado(true);
+                reg.grabarEnDisco(ruta, i);
+                cont++;
+            }
+            else cont++;
+        }
         else {
             reg.setEstado(false);
             reg.grabarEnDisco(ruta, i);
         }
     }
-
-    /*while (reg.leerDeDisco(pos++, ruta))
-    {
-        if (existe(reg)) {
-            cont++;
-        }
-        else {
+    /*while (reg.leerDeDisco(pos++, ruta)) {
+        if (seRepite(reg.getNombre(), ruta)) {
             reg.setEstado(false);
             reg.grabarEnDisco(ruta, pos);
-            break;
+            cont--;
         }
-        cout << cont << endl;
     }*/
-    system("pause");
+
+    //system("pause");
     return cont;
 }
 
-void cargarVArchivo(Archivo* vA, int cant) {
+void cargarVArchivo(Archivo* vA, int cant, const char* ruta) {
     Archivo aux;
-    int pos = 0;
-    for (int i = 0; i < cant; i++)
+    int pos = 0, c = 0;
+    for (int i = 0; i < cantRegistros(ruta); i++)
     {
-        aux.leerDeDisco(i, "Backup/Pacientes/rutas.dat");
-        if(aux.getEstado()) vA[i] = aux;
+        aux.leerDeDisco(i, ruta);
+        if (aux.getEstado()) {
+            vA[c] = aux;
+            c++;
+        }
     }
 }
 
-void migrarBK(Archivo& ruta, int cant, const char *nombre) {
+void migrarBKPacientes(Archivo& ruta, int cant, const char* nombre) {
     Paciente reg;
     int pos = 0;
     FILE* p;
@@ -2602,8 +2763,7 @@ void RestaurarCopiaSeguridadPacientes() {
         return;
     }
     Archivo* vA = new Archivo[cant];
-    cargarVArchivo(vA,cant);
-    //cout << cant;
+    cargarVArchivo(vA, cant, "Backup/Pacientes/rutas.dat");
     while (true) {
         system("cls");
         for (int i = 1; i <= cant; i++)
@@ -2613,7 +2773,7 @@ void RestaurarCopiaSeguridadPacientes() {
         cout << "Ingrese una opcion para restaurar: ";
         cin >> opcion;
         if (opcion > 0 && opcion <= cant) {
-            migrarBK(vA[opcion-1], cant, "Pacientes.dat");
+            migrarBKPacientes(vA[opcion-1], cant, "Pacientes.dat");
             cout << "El archivo ha sido restaurado" << endl;
             delete[] vA;
             return;
@@ -2625,22 +2785,224 @@ void RestaurarCopiaSeguridadPacientes() {
 
     }
 
-    //delete vA;
+    delete[] vA;
 }
 //-----------------------------------------------------------------------------------------------
-void RestaurarCopiaSeguridadTurnos(){}
+
+void migrarBKTurnos(Archivo& ruta, int cant, const char* nombre) {
+    Turno reg;
+    int pos = 0;
+    FILE* p;
+    p = fopen("Turnos.dat", "wb");
+    if (p == NULL) {
+        cout << "ERROR DE ARCHIVO" << endl;
+        return;
+    }
+    while (reg.leerCopiaDeDisco(pos++, ruta.getNombre())) {
+        reg.grabarEnDisco();
+    }
+    fclose(p);
+}
+
+void RestaurarCopiaSeguridadTurnos() {
+    Turno reg;
+    int pos = 0, opcion;
+    int cant = cantRutasOk("Backup/Turnos/rutas.dat");
+    if (cant == 0) {
+        cout << "No existen copias de seguridad" << endl;
+        system("pause");
+        return;
+    }
+    Archivo* vA = new Archivo[cant];
+    cargarVArchivo(vA, cant, "Backup/Turnos/rutas.dat");
+    while (true) {
+        system("cls");
+        for (int i = 1; i <= cant; i++)
+        {
+            cout << i << ". " << vA[i - 1].getNombre() << endl;
+        }
+        cout << "Ingrese una opcion para restaurar: ";
+        cin >> opcion;
+        if (opcion > 0 && opcion <= cant) {
+            migrarBKTurnos(vA[opcion - 1], cant, "Turnos.dat");
+            cout << "El archivo ha sido restaurado" << endl;
+            delete[] vA;
+            return;
+        }
+        else {
+            cout << "Opcion incorrecta. Vuelva a intentar." << endl;
+            system("pause");
+        }
+
+    }
+
+    delete[] vA;
+}
 
 //-----------------------------------------------------------------------------------------------
-void RestaurarCopiaSeguridadPagos(){}
+
+void migrarBKPagos(Archivo& ruta, int cant, const char* nombre) {
+    FacturaConsulta reg;
+    int pos = 0;
+    FILE* p;
+    p = fopen("Pagos.dat", "wb");
+    if (p == NULL) {
+        cout << "ERROR DE ARCHIVO" << endl;
+        return;
+    }
+    while (reg.leerCopiaDeDisco(pos++, ruta.getNombre())) {
+        reg.grabarEnDisco();
+    }
+    fclose(p);
+}
+
+void RestaurarCopiaSeguridadPagos() {
+    FacturaConsulta reg;
+    int pos = 0, opcion;
+    int cant = cantRutasOk("Backup/Pagos/rutas.dat");
+    if (cant == 0) {
+        cout << "No existen copias de seguridad" << endl;
+        system("pause");
+        return;
+    }
+    Archivo* vA = new Archivo[cant];
+    cargarVArchivo(vA, cant, "Backup/Pagos/rutas.dat");
+    while (true) {
+        system("cls");
+        for (int i = 1; i <= cant; i++)
+        {
+            cout << i << ". " << vA[i - 1].getNombre() << endl;
+        }
+        cout << "Ingrese una opcion para restaurar: ";
+        cin >> opcion;
+        if (opcion > 0 && opcion <= cant) {
+            migrarBKPagos(vA[opcion - 1], cant, "Pagos.dat");
+            cout << "El archivo ha sido restaurado" << endl;
+            delete[] vA;
+            return;
+        }
+        else {
+            cout << "Opcion incorrecta. Vuelva a intentar." << endl;
+            system("pause");
+        }
+
+    }
+
+    delete[] vA;
+}
 
 //-----------------------------------------------------------------------------------------------
-void RestaurarCopiaSeguridadHC(){}
+
+void migrarBKHistoriasClinicas(Archivo& ruta, int cant, const char* nombre) {
+    HistoriaClinica reg;
+    int pos = 0;
+    FILE* p;
+    p = fopen("HistoriasClinicas.dat", "wb");
+    if (p == NULL) {
+        cout << "ERROR DE ARCHIVO" << endl;
+        return;
+    }
+    while (reg.leerCopiaDeDisco(pos++, ruta.getNombre())) {
+        reg.grabarEnDisco();
+    }
+    fclose(p);
+}
+
+void RestaurarCopiaSeguridadHC() {
+    HistoriaClinica reg;
+    int pos = 0, opcion;
+    int cant = cantRutasOk("Backup/HistoriasClinicas/rutas.dat");
+    if (cant == 0) {
+        cout << "No existen copias de seguridad" << endl;
+        system("pause");
+        return;
+    }
+    Archivo* vA = new Archivo[cant];
+    cargarVArchivo(vA, cant, "Backup/HistoriasClinicas/rutas.dat");
+    while (true) {
+        system("cls");
+        for (int i = 1; i <= cant; i++)
+        {
+            cout << i << ". " << vA[i - 1].getNombre() << endl;
+        }
+        cout << "Ingrese una opcion para restaurar: ";
+        cin >> opcion;
+        if (opcion > 0 && opcion <= cant) {
+            migrarBKHistoriasClinicas(vA[opcion - 1], cant, "HistoriasClinicas.dat");
+            cout << "El archivo ha sido restaurado" << endl;
+            delete[] vA;
+            return;
+        }
+        else {
+            cout << "Opcion incorrecta. Vuelva a intentar." << endl;
+            system("pause");
+        }
+
+    }
+
+    delete[] vA;
+}
 
 //-----------------------------------------------------------------------------------------------
-void RestaurarCopiaSeguridadEmpleados(){}
+
+void migrarBKEmpleados(Archivo& ruta, int cant, const char* nombre) {
+    Empleado reg;
+    int pos = 0;
+    FILE* p;
+    p = fopen("Empleados.dat", "wb");
+    if (p == NULL) {
+        cout << "ERROR DE ARCHIVO" << endl;
+        return;
+    }
+    while (reg.leerCopiaDeDisco(pos++, ruta.getNombre())) {
+        reg.grabarEnDisco();
+    }
+    fclose(p);
+}
+
+void RestaurarCopiaSeguridadEmpleados() {
+    Empleado reg;
+    int pos = 0, opcion;
+    int cant = cantRutasOk("Backup/Empleados/rutas.dat");
+    if (cant == 0) {
+        cout << "No existen copias de seguridad" << endl;
+        system("pause");
+        return;
+    }
+    Archivo* vA = new Archivo[cant];
+    cargarVArchivo(vA, cant, "Backup/Empleados/rutas.dat");
+    while (true) {
+        system("cls");
+        for (int i = 1; i <= cant; i++)
+        {
+            cout << i << ". " << vA[i - 1].getNombre() << endl;
+        }
+        cout << "Ingrese una opcion para restaurar: ";
+        cin >> opcion;
+        if (opcion > 0 && opcion <= cant) {
+            migrarBKEmpleados(vA[opcion - 1], cant, "Empleados.dat");
+            cout << "El archivo ha sido restaurado" << endl;
+            delete[] vA;
+            return;
+        }
+        else {
+            cout << "Opcion incorrecta. Vuelva a intentar." << endl;
+            system("pause");
+        }
+
+    }
+
+    delete[] vA;
+}
 
 //-----------------------------------------------------------------------------------------------
-void RestaurarCopiaSeguridadTodos(){}
+void RestaurarCopiaSeguridadTodos() {
+    RestaurarCopiaSeguridadPacientes();
+    RestaurarCopiaSeguridadTurnos();
+    RestaurarCopiaSeguridadPagos();
+    RestaurarCopiaSeguridadHC();
+    RestaurarCopiaSeguridadEmpleados();
+}
 
 ///----------------------------------------------------------------------------------------------
 ///----------------------------------------------------------------------------------------------

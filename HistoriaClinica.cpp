@@ -43,7 +43,7 @@ bool HistoriaClinica::leerDeDisco(int pos) {
 	fclose(p);
 	return ok;
 }
-bool HistoriaClinica::grabarEnDisco(int pos = 0) {
+bool HistoriaClinica::grabarEnDisco(int pos) {
 	FILE* p;
 	if (pos == 0) {
 		p = fopen("HistoriasClinicas.dat", "ab");
@@ -66,4 +66,26 @@ bool HistoriaClinica::grabarEnDisco(int pos = 0) {
 		fclose(p);
 		return ok;
 	}
+}
+bool HistoriaClinica::leerCopiaDeDisco(int pos, const char* ruta) {
+	FILE* p;
+	p = fopen(ruta, "rb");
+	if (p == NULL) {
+		return false;
+	}
+	fseek(p, sizeof(HistoriaClinica) * pos, 0);
+	bool ok;
+	ok = fread(this, sizeof(HistoriaClinica), 1, p);
+	fclose(p);
+	return ok;
+}
+bool HistoriaClinica::GrabarCopiaEnDisco(const char* ruta) {
+	FILE* p;
+	p = fopen(ruta, "wb");
+	if (p == NULL) {
+		return false;
+	}
+	bool ok = fwrite(this, sizeof(HistoriaClinica), 1, p);
+	fclose(p);
+	return ok;
 }
