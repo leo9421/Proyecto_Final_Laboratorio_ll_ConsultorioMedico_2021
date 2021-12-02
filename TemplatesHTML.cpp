@@ -1,11 +1,116 @@
 #include "TemplatesHTML.h"
+//#include "Empleado.h"
+#include "Paciente.h"
 #include <iostream>
 #include <fstream>
 
 
 using namespace std;
+//----------------------------------------------------------------------------------------------------------------------//
+//----------------------------------------------------------------------------------------------------------------------//
+//----------------------------------------------------------------------------------------------------------------------//
+//----------------------------------------------------------------------------------------------------------------------//
+//----------------------------------------------------------------------------------------------------------------------//
+//----------------------------------------------------------------------------------------------------------------------//
+///LISTADOS
+//todo: terminar esta funcion..y modificar el css para cambiar lo que dice cuando se vuelve responsive...acomodar la tabla
+void MostrarPacientesListadosPorApellidos(Paciente* p, int cantRegistros) {
+    ofstream file;
+    file.open("Listados\\index.html");
+    if (!file.is_open()) {
+        cout << "ERROR DE ARCHIVO" << endl;
+        return;
+    }
 
-void prueba() {
+
+	file << "<!DOCTYPE html>" << endl;
+	file << "	<html lang=\"en\">" << endl;
+	file << "	<head>" << endl;
+	file << "	<title>Table V01</title>" << endl;
+	file << "	<meta charset=\"UTF-8\">" << endl;
+	file << "	<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">" << endl;
+	file << "	<!--============================================================================================== = -->" << endl;
+	file << "	<link rel=\"icon\" type=\"image/png\" href=\"images/icons/favicon.ico\"/>" << endl;
+	file << "	<!--============================================================================================== = -->" << endl;
+	file << "	<link rel=\"stylesheet\" type=\"text/css\" href=\"vendor/bootstrap/css/bootstrap.min.css\">" << endl;
+	file << "	<!--============================================================================================== = -->" << endl;
+	file << "	<link rel=\"stylesheet\" type=\"text/css\" href=\"fonts/font-awesome-4.7.0/css/font-awesome.min.css\">" << endl;
+	file << "	<!--============================================================================================== = -->" << endl;
+	file << "	<link rel=\"stylesheet\" type=\"text/css\" href=\"vendor/animate/animate.css\">" << endl;
+	file << "	<!--============================================================================================== = -->" << endl;
+	file << "	<link rel=\"stylesheet\" type=\"text/css\" href=\"vendor/select2/select2.min.css\">" << endl;
+	file << "	<!--============================================================================================== = -->" << endl;
+	file << "	<link rel=\"stylesheet\" type=\"text/css\" href=\"vendor/perfect-scrollbar/perfect-scrollbar.css\">" << endl;
+	file << "	<!--============================================================================================== = -->" << endl;
+	file << "	<link rel=\"stylesheet\" type=\"text/css\" href =\"css/util.css\">" << endl;
+	file << "	<link rel=\"stylesheet\" type=\"text/css\" href =\"css/main.css\">" << endl;
+	file << "	<!--============================================================================================== = -->" << endl;
+	file << "	</head>" << endl;
+	file << "	<body>" << endl;
+	file << "	<div class=\"limiter\">" << endl;
+	file << "	<div class=\"container-table100\">" << endl;
+	file << "	<div class=\"wrap-table100\">" << endl;
+	file << "	<div class=\"table100\">" << endl;
+	file << "	<table>" << endl;
+	file << "	<thead>" << endl;
+	file << "	<tr class=\"table100 - head\">" << endl;
+	file << "	<th class=\"column1\">Apellido</th>" << endl;
+	file << "	<th class=\"column2\">Nombre</th>" << endl;
+	file << "	<th class=\"column3\">DNI</th>" << endl;
+	file << "	<th class=\"column4\">Edad</th>" << endl;
+	file << "	<th class=\"column5\">Telefono</th>" << endl;
+	file << "	<th class=\"column6\">Email</th>" << endl;
+	file << "	</tr>" << endl;
+	file << "	</thead>" << endl;
+	file << "	<tbody>" << endl;
+    for (int i = 0; i < cantRegistros; i++)
+    {
+        if (strcmp(p[i].getNombres(), " ") == 0) continue;
+        file << "	<tr>" << endl;
+        file << "	<td class=\"column1\">"<<p[i].getApellidos()<<"</td >" << endl;
+        file << "	<td class=\"column2\">"<<p[i].getNombres()<<"</td>" << endl;
+        file << "	<td class=\"column3\">"<<p[i].getDNI()<<"</td>" << endl;
+        file << "	<td class=\"column4\">"<<p[i].getEdad()<<"</td>" << endl;
+        file << "	<td class=\"column5\">"<<p[i].getTelefono()<<"</td>"<<endl;
+        file << "	<td class=\"column6\">"<<p[i].getEmail()<<"</td>"<<endl;
+        file << "	</tr>" << endl;
+    }
+	
+    file << "	</tbody>"<< endl;
+    file << "	</table>"<< endl;
+    file << "	</div>"<< endl;
+    file << "	</div>"<< endl;
+    file << "	</div>"<< endl;
+    file << "	</div>"<< endl;
+    file << "	<!--============================================================================================== = -->" << endl;
+    file << "	<script src=\"vendor/jquery/jquery-3.2.1.min.js\"></script>"<< endl;
+        file << "	<!--============================================================================================== = -->" << endl;
+        file << "	<script src=\"vendor/bootstrap/js/popper.js\"></script>" << endl;
+        file << "	<script src=\"vendor/bootstrap/js/bootstrap.min.js\"></script>" << endl;
+        file << "	<!--============================================================================================== = -->" << endl;
+        file << "	<script src=\"vendor/select2/select2.min.js\"></script>" << endl;
+        file << "	<!--============================================================================================== = -->" << endl;
+        file << "	<script src=\"js/main.js\"></script>" << endl;
+        file << "	</body>" << endl;
+        file << "	</html>" << endl;
+
+
+    file.flush();
+    file.close();
+    system("Listados\\index.html");
+}
+
+
+
+
+
+//----------------------------------------------------------------------------------------------------------------------//
+//----------------------------------------------------------------------------------------------------------------------//
+//----------------------------------------------------------------------------------------------------------------------//
+//----------------------------------------------------------------------------------------------------------------------//
+//----------------------------------------------------------------------------------------------------------------------//
+//----------------------------------------------------------------------------------------------------------------------//
+/*void prueba() {
 	//char c = { 22 };
     //char c[2] = { 92 };
     //cout << c;
@@ -116,4 +221,4 @@ void prueba() {
         prueba << "</html>" << endl;
         prueba.close();
         system("html\\index.html");
-}
+}*/

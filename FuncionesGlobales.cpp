@@ -1,5 +1,6 @@
 #include "FuncionesGlobales.h"
 #include "FuncionesGlobalesDeMenus.h"
+#include "TemplatesHTML.h"
 #include "Empleado.h"
 #include <iostream>
 #include <conio.h>

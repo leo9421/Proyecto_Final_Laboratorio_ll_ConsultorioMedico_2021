@@ -1,4 +1,5 @@
 #pragma once
+#include "TemplatesHTML.h"
 
 void cargarCadena(char* pal, int tam);
 int buscarUsuarioYContrasenia(int usuario, char* password);

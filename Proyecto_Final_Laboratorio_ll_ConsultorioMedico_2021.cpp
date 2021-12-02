@@ -22,13 +22,14 @@ using namespace std;
 
 int main()
 {
+    //RestaurarCopiaSeguridadPacientes();
+    //ListadoDePacientesPorApellido();
     /*Archivo reg;
     int pos = 0;
     while (reg.leerDeDisco(pos++, "Backup/Pacientes/rutas.dat"))
     {
         reg.Mostrar();
     }*/
-    //RestaurarCopiaSeguridadPacientes();
     /*Archivo reg;
     int pos = 0;
     while (reg.leerDeDisco(pos++,"Backup/Pacientes/rutas.dat")) {
@@ -87,7 +88,7 @@ int main()
     //Empleado reg(horaEntrada, horaSalida, 123456, "Tobias", "Iaconis", 321, "321", "tobias.iaconis@alumnos.frgp.utn.edu.ar", 1, 0, true);
     //reg.grabarEnDisco(0);
     //obj.grabarEnDisco(0);
-   /* cout << endl;
+    /*cout << endl;
     Paciente t;
     int pos = 0;
 
@@ -97,5 +98,5 @@ int main()
     }*/
     //t.setFechaAsignacionTurno();
     //t.getFechaAsignacionTurno().Mostrar();*/
-
+    //prueba();
 }

@@ -1,15 +1,5 @@
 #include "FuncionesGlobalesDeMenus.h"
-#include "Direccion.h"
-#include "Empleado.h"
-#include "FacturaConsulta.h"
-#include "Fecha.h"
-#include "Fecha_Hora.h"
-#include "HistoriaClinica.h"
-#include "Hora.h"
-#include "Paciente.h"
-#include "Persona.h"
-#include "Turno.h"
-#include "Cadena.h"
+
 //#include "Archivo.h"
 #include <iostream>
 #include <cstdio>
@@ -460,7 +450,7 @@ void modificarTurnoPaciente(Turno& t) {
     int pos = 0;
     while (aux.leerDeDisco(pos++))
     {
-        if (t.getIDPaciente() == aux.getIDPaciente()) {
+        if (t.getID() == aux.getID() /* && t.getIDPaciente() == aux.getIDPaciente()*/) {
             aux = t;
             aux.grabarEnDisco(pos);
         }
@@ -1211,7 +1201,8 @@ void ListadoDePacientesPorApellido()
 
     OrdenarRegistrosPorNombre(p, cantRegistros);
 
-    MostrarPacientes(p, cantRegistros);
+    MostrarPacientesListadosPorApellidos(p, cantRegistros);
+    //MostrarPacientes(p, cantRegistros);
 
     delete[] p; //Comente este delete porque sino el programa me hacia un return raro
 
