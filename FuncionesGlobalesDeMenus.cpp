@@ -134,15 +134,15 @@ bool noSeRepiteIDTurno(int nro) {
 	return true;
 }
 int generarIDTurno() {
-	int nro, desde=1, hasta=100000;
-	srand(time(NULL));
-	while (true)
-	{
-		nro = rand() % (hasta - desde + 1) + desde;
-		if (noSeRepiteIDTurno(nro)) {
-			return nro;
-		}
-	}
+    int nro;
+    Turno reg;
+    FILE* p;
+    p = fopen("Turnos.dat", "rb");
+    if (p == NULL) return -1;
+    fseek(p, 0, 2);
+    nro = ftell(p) / sizeof(Turno);
+    fclose(p);
+    return nro + 1;
 }
 bool empleadoOcupado(Turno& b) {
 	Turno aux;
@@ -671,15 +671,15 @@ bool noSeRepiteIDPaciente(int nro) {
 }
 //todo: hacerlo autonumerico(1,2,3...etc)..tambien con turnos
 int generarIDPaciente() {
-    int nro, desde = 1, hasta = 100000;
-    srand(time(NULL));
-    while (true)
-    {
-        nro = rand() % (hasta - desde + 1) + desde;
-        if (noSeRepiteIDPaciente(nro)) {
-            return nro;
-        }
-    }
+    int nro;
+    Paciente reg;
+    FILE* p;
+    p = fopen("Pacientes.dat", "rb");
+    if (p == NULL) return -1;
+    fseek(p, 0, 2);
+    nro = ftell(p) / sizeof(Paciente);
+    fclose(p);
+    return nro + 1;
 }
 
 bool noExistePaciente(int dni) {
