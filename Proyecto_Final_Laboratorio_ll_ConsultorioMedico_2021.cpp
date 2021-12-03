@@ -22,8 +22,9 @@ using namespace std;
 
 int main()
 {
+    //ESTA ES UNA PRUEBA DE MODIFICACION EN GITHUB
     //RestaurarCopiaSeguridadPacientes();
-    //ListadoDePacientesPorApellido();
+    ///ListadoDePacientesPorApellido();
     /*Archivo reg;
     int pos = 0;
     while (reg.leerDeDisco(pos++, "Backup/Pacientes/rutas.dat"))
@@ -88,8 +89,8 @@ int main()
     //Empleado reg(horaEntrada, horaSalida, 123456, "Tobias", "Iaconis", 321, "321", "tobias.iaconis@alumnos.frgp.utn.edu.ar", 1, 0, true);
     //reg.grabarEnDisco(0);
     //obj.grabarEnDisco(0);
-    /*cout << endl;
-    Paciente t;
+    //cout << endl;
+    /*Paciente t;
     int pos = 0;
 
     while (t.leerDeDisco(pos++)) {
