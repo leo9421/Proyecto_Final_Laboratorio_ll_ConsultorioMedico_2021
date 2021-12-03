@@ -24,7 +24,7 @@ int main()
 {
     //ESTA ES UNA PRUEBA DE MODIFICACION EN GITHUB
     //RestaurarCopiaSeguridadPacientes();
-    ///ListadoDePacientesPorApellido();
+    ListadoDePacientesPorApellido();
     /*Archivo reg;
     int pos = 0;
     while (reg.leerDeDisco(pos++, "Backup/Pacientes/rutas.dat"))

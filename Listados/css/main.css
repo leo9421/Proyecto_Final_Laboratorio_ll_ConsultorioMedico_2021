@@ -193,25 +193,25 @@ tbody tr:hover {
 }
 
 .column1 {
-  width: 260px;
+  width: 220px;
   padding-left: 40px;
 }
 
 .column2 {
-  width: 160px;
+  width: 220px;
 }
 
 .column3 {
-  width: 245px;
+  width: 100px;
 }
 
 .column4 {
   width: 110px;
-  text-align: right;
+  text-align: center;
 }
 
 .column5 {
-  width: 170px;
+  width: 160px;
   text-align: right;
 }
 
@@ -258,19 +258,19 @@ tbody tr:hover {
     content: "Apellido";
   }
   table tbody tr td:nth-child(2):before {
-    content: "Order ID";
+    content: "Nombre";
   }
   table tbody tr td:nth-child(3):before {
-    content: "Name";
+    content: "DNI";
   }
   table tbody tr td:nth-child(4):before {
-    content: "Price";
+    content: "Edad";
   }
   table tbody tr td:nth-child(5):before {
-    content: "Quantity";
+    content: "Telefono";
   }
   table tbody tr td:nth-child(6):before {
-    content: "Total";
+    content: "Email";
   }
 
   .column4,
