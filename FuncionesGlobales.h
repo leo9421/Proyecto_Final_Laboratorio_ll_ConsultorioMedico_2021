@@ -1,11 +1,13 @@
 #pragma once
 #include "TemplatesHTML.h"
+//#include "Empleado.h"
 
 void cargarCadena(char* pal, int tam);
 int buscarUsuarioYContrasenia(int usuario, char* password);
+
 void login();
 void menuAdministrativo();
-void menuMedico();
+void menuMedico(int usuario);
 void menuAdministrador();
 void Listados();
 void Consultas();

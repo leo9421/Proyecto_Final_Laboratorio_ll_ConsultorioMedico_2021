@@ -57,6 +57,7 @@ void leerPassword(char* password)
 }
 
 
+
 void login() {
     int usuario;
     char password[30];
@@ -70,7 +71,6 @@ void login() {
         cin.ignore();
         cout << "Ingrese Contrasena: " << endl;
         leerPassword(password);
-
         tipoEmpleado = buscarUsuarioYContrasenia(usuario, password);
         system("cls");
 
@@ -79,7 +79,7 @@ void login() {
             menuAdministrativo();
             break;
         case 2:
-            menuMedico();
+            menuMedico(usuario);
             break;
         case 99:
             menuAdministrador();
@@ -148,7 +148,7 @@ void menuAdministrativo() {
 
 }
 
-void menuMedico() {
+void menuMedico(int usuario) {
     int opc;
     while (true)
     {
@@ -166,16 +166,17 @@ void menuMedico() {
         {
         case 1:
             system("cls");
-
+            //VerTurnosDelDia(Usuario);
             break;
         case 2:
             system("cls");
-
+            ///ACA PUEDO USAR LA CLASE DE LEANDRO LA QUE LE CARGA LA FECHA ACTUAL A UN OBJETO FECHA
+            AgregaRegistroDeHistoriaClinica(usuario);
             break;
         case 3:
             system("cls");
             break;
-
+            ModificarRegistroDeHistoriaClinica(usuario);
         case 0:
             return;
             break;
@@ -212,7 +213,7 @@ void menuAdministrador() {
         {
         case 1:
             system("cls");
-
+            AgregarUnUsuario();
             break;
         case 2:
             system("cls");
@@ -738,16 +739,16 @@ void ListadoDeTurnos()
         {
         case 1:
             system("cls");
-
+            ListadoDeTurnosOrdenadosPorFecha();
             break;
         case 2:
             system("cls");
-
+            ListadoDeTurnosOrdenadosPorEspecialidad();
             break;
 
         case 3:
             system("cls");
-
+            //todo:aca hay algo raro..en la funcion de tobias esta ConsultaDePagos();
             break;
 
         case 0:
