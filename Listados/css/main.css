@@ -42,7 +42,11 @@ a:hover {
 }
 
 /* ------------------------------------ */
-h1,h2,h3,h4,h5,h6 {margin: 0px;}
+h1,h2,h3,h4,h5,h6 {
+	margin: 10px;
+	color: #9ea17c;
+	font-family: OpenSans-Regular
+}
 
 p {margin: 0px;}
 
@@ -145,6 +149,7 @@ table td, table th {
 table thead tr {
   height: 60px;
   background: #647367;
+  color:#c6c7c6;
 }
 table tbody tr {
   height: 50px;
