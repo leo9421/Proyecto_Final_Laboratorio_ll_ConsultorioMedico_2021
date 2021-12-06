@@ -41,7 +41,7 @@ void Fecha::setNombreDia(int dia, int mes, int anio) {
 	_numDia++;
 }
 bool Fecha::esFeriado(int dia, int mes) {
-	//if (_numDia == 6 || _numDia == 7) return true;
+	if (_numDia == 6 || _numDia == 7) return true;
 	if (dia == 1 && mes == 1) return true;
 	if (dia == 24 && mes == 3)return true;
 	if (dia == 2 && mes == 4)return true;

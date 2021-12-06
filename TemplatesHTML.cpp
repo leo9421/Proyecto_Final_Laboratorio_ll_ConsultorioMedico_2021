@@ -63,7 +63,7 @@ void MostrarPacientesListadosPorApellidos(Paciente* p, int cantRegistros) {
 	file << "	</tr>" << endl;
 	file << "	</thead>" << endl;
 	file << "	<tbody>" << endl;
-    for (int i = 0; i < cantRegistros-1; i++)
+    for (int i = 0; i < cantRegistros; i++)
     {
         if (strcmp(p[i].getNombres(), " ") == 0) continue;
         file << "	<tr>" << endl;

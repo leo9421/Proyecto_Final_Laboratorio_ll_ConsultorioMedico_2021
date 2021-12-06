@@ -43,6 +43,8 @@ int generarIDPaciente();
 bool noSeRepiteIDPaciente(int nro);
 bool noExistePaciente(int dni);
 void ModificarTurno();
+bool horaValida(Hora& h);
+bool existeTurno(Turno& t, int dni, Fecha& f, Hora& h);
 void EliminarTurno();
 void eliminarTurnoPaciente(Turno& t);
 void modificarTurnoDNI(Turno& t);

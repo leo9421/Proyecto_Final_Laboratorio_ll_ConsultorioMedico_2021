@@ -86,7 +86,7 @@ void cargarFechaMax(Fecha& fechaMax, Fecha& fechaHoy, Fecha* vFechas) {
 	fechaMax.setFecha(dia, mes, anio);
 }
 bool estaEnRangoFecha(int dia, int mes, int anio, Fecha* vFechas) {
-	Fecha aux(dia,mes);
+    Fecha aux(dia, mes, anio);
 	if (aux.esFeriado(dia, mes))return false;
 	for (int i = 0; i < 59; i++)
 	{
@@ -133,13 +133,16 @@ bool noSeRepiteIDTurno(int nro) {
 	return true;
 }
 int generarIDTurno() {
-    int nro;
+    int nro, pos = 0, cont = 0;
     Turno reg;
     FILE* p;
     p = fopen("Turnos.dat", "rb");
-    if (p == NULL) return -1;
+    if (p == NULL) return 1;
+    while (reg.leerDeDisco(pos++)) {
+        if (reg.getEstado() == false) cont++;
+    }
     fseek(p, 0, 2);
-    nro = ftell(p) / sizeof(Turno);
+    nro = (ftell(p) / sizeof(Turno)-cont);
     fclose(p);
     return nro + 1;
 }
@@ -378,7 +381,7 @@ void AsignarTurno() {
 						t.setFechaTurno(f);
 						//t.setLegajoMedico(legajoMedico);
 						t.setEstado(true);
-						if (t.grabarEnDisco(0)) {
+						if (t.grabarEnDisco()) {
 							cout << "El turno ha sido reservado." << endl;
                             //system("pause");
 							return;
@@ -441,14 +444,15 @@ int obtenerID(int dni) {
     }
     return -1;
 }
-bool existeTurno(Turno& t, int dni, Fecha& f) {
+bool existeTurno(Turno& t, int dni, Fecha& f, Hora& h) {
     int pos = 0;
     int id = obtenerID(dni);
     if (id == -1) return false;
     while (t.leerDeDisco(pos++))
     {
         if (id == t.getIDPaciente() && t.getFechaTurno().getDia() == f.getDia() && t.getFechaTurno().getMes() == f.getMes()
-            && t.getFechaTurno().getAnio() == f.getAnio()) {
+            && t.getFechaTurno().getAnio() == f.getAnio() && t.getHoraTurno().getHora() == h.getHora()
+            && t.getHoraTurno().getMinuto() == h.getMinuto() && t.getEstado()) {
             return true;
         }
     }
@@ -457,13 +461,14 @@ bool existeTurno(Turno& t, int dni, Fecha& f) {
 void modificarTurnoPaciente(Turno& t) {
     Turno aux;
     int pos = 0;
-    while (aux.leerDeDisco(pos++))
+    while (aux.leerDeDisco(pos))
     {
         if (t.getID() == aux.getID() /* && t.getIDPaciente() == aux.getIDPaciente()*/) {
             aux = t;
             aux.grabarEnDisco(pos);
+            return;
         }
-        return;
+        pos++;
     }
 }
 void modificarTurnoDNI(Turno& t) {
@@ -475,6 +480,7 @@ void modificarTurnoDNI(Turno& t) {
         cin >> DNI;
         if (existeDNI(DNI)) {
             t.setIDPaciente(obtenerID(DNI));
+
             return;
         }
         else {
@@ -490,16 +496,26 @@ void modificarFechaTurno(Turno& t) {
     int dia, mes, anio;
     while (true)
     {
+        system("cls");
         cout << "Ingrese la nueva fecha del turno: " << endl;
         cout << "Dia: ";
         cin >> dia;
-        cout << "Mes";
+        cout << "Mes: ";
         cin >> mes;
         cout << "Anio: ";
         cin >> anio;
         if (aux.esCorrecta(dia, mes, anio)) {
             aux.setFecha(dia, mes, anio);
-            break;
+            cargarHorarios(vHorarios);
+            cargarFechaHoy(fechaHoy);
+            cargarFechaMax(fechaMax, fechaHoy, vFechas);
+            if (estaEnRangoFecha(dia, mes, anio, vFechas)) {
+                break;
+            }
+            else {
+                cout << "Error. Vuelva a introducir fecha." << endl;
+                system("pause");
+            }
         }
         else {
             cout << "Error. Vuelva a introducir fecha." << endl;
@@ -507,14 +523,20 @@ void modificarFechaTurno(Turno& t) {
             //continue;
         }
     }
-        cargarHorarios(vHorarios);
-        cargarFechaHoy(fechaHoy);
-        cargarFechaMax(fechaMax, fechaHoy, vFechas);
+        //cargarHorarios(vHorarios);
+        //cargarFechaHoy(fechaHoy);
+        //cargarFechaMax(fechaMax, fechaHoy, vFechas);
         system("cls");
         cout << "Solo puede asignar turnos hasta el: ";
         fechaMax.Mostrar();
         turnosDisponiblesPorMedico(t.getLegajoMedico(), aux, vHorarios, t, vFechas);
 
+}
+
+bool horaValida(Hora& h) {
+    if (h.getHora() < 8 || h.getHora() > 17) return false;
+    if (h.getMinuto() != 0 && h.getMinuto() != 59) return false;
+    return true;
 }
 
 //ESTA FUNCION PERTENECE AL MENU ADMINISTRATIVO.--------------
@@ -523,7 +545,7 @@ void ModificarTurno()
 {
     Fecha f;
     Turno t;
-    int pos = 0, dni/*, ID*/, opcion, dia, mes, anio;
+    int pos = 0, dni/*, ID*/, opcion, dia, mes, anio, hora, minuto;
     while (true)
     {
         system("cls");
@@ -537,59 +559,73 @@ void ModificarTurno()
             cout << "Ingrese anio de turno:";
             cin >> anio;
             if (f.esCorrecta(dia, mes, anio)) {
-                Fecha f(dia, mes, anio);
-                if (existeTurno(t, dni, f)) {
-                    while (true) {
-                        system("cls");
-                        cout << "MODIFICACION DE TURNO." << endl;
-                        cout<<"------------------------------------" << endl;
-                        cout << "1. Modificar DNI: " << endl;
-                        cout << "2. Modificar fecha: " << endl;
-                        cout << "0. Salir. " << endl << endl;
-                        cin >> opcion;
+                cout << "Ingrese horario del turno: " << endl;
+                cout << "Hora: ";
+                cin >> hora;
+                cout << "Minutos: ";
+                cin >> minuto;
+                Hora h(hora, minuto);
+                if (horaValida(h)) {
 
-                        switch (opcion) {
-                        case 1:
+                    Fecha f(dia, mes, anio);
+                    if (existeTurno(t, dni, f, h)) {
+                        while (true) {
                             system("cls");
-                            modificarTurnoDNI(t);
-                            modificarTurnoPaciente(t);
-                            cout << "Turno modificado!" << endl;
-                            return;
-                        case 2:
-                            system("cls");
-                            modificarFechaTurno(t);
-                            modificarTurnoPaciente(t);
-                            cout << "Turno modificado!" << endl;
-                            return;
-                        case 0:
-                            return;
-                        default:
-                            system("cls");
-                            cout << "Opcion incorrecta. Vuelva a intentarlo." << endl;
-                            system("pause");
-                            break;
+                            cout << "MODIFICACION DE TURNO." << endl;
+                            cout<<"------------------------------------" << endl;
+                            cout << "1. Modificar DNI: " << endl;
+                            cout << "2. Modificar fecha: " << endl;
+                            cout << "0. Salir. " << endl << endl;
+                            cin >> opcion;
+
+                            switch (opcion) {
+                            case 1:
+                                system("cls");
+                                modificarTurnoDNI(t);
+                                modificarTurnoPaciente(t);
+                                cout << "Turno modificado!" << endl;
+                                return;
+                            case 2:
+                                system("cls");
+                                modificarFechaTurno(t);
+                                modificarTurnoPaciente(t);
+                                cout << "Turno modificado!" << endl;
+                                return;
+                            case 0:
+                                return;
+                            default:
+                                system("cls");
+                                cout << "Opcion incorrecta. Vuelva a intentarlo." << endl;
+                                system("pause");
+                                break;
+                            }
                         }
+                        //modificarTurnoPaciente(t);
+                        //cout << "Turno modificado!" << endl;
+                        //return;
                     }
-                    //modificarTurnoPaciente(t);
-                    //cout << "Turno modificado!" << endl;
-                    //return;
+                    else {
+                        cout << "Este paciente no tiene un turno asignado en esta fecha." << endl;
+                        system("pause");
+                    }
+                    //continue;
                 }
                 else {
-                    cout << "Este paciente no tiene un turno asignado en esta fecha." << endl;
+                    cout << "Horario incorrecto. Vuelva a intentar." << endl;
                     system("pause");
+                    //break;
                 }
-                continue;
             }
             else {
                 cout << "Fecha incorrecta. Vuelva a intentar." << endl;
                 system("pause");
-                continue;
+                //continue;
             }
         }
         else {
             cout << "No existe DNI. Ingrese nuevamente." << endl;
             system("pause");
-            continue;
+            //continue;
         }
     }
 }
@@ -600,7 +636,7 @@ void ModificarTurno()
 void eliminarTurnoPaciente(Turno& t) {
     Turno aux;
     int pos = 0;
-    while (aux.leerDeDisco(pos++))
+    while (aux.leerDeDisco(pos))
     {
         if (t.getIDPaciente() == aux.getIDPaciente()) {
             aux = t;
@@ -608,15 +644,17 @@ void eliminarTurnoPaciente(Turno& t) {
             aux.grabarEnDisco(pos);
             return;
         }
+        pos++;
     }
 }
 //todo: modificar esta funcion que fue copiada de modificar turno
 void EliminarTurno() {
     Fecha f;
     Turno t;
-    int pos = 0, dni/*, ID*/, opcion, dia, mes, anio;
+    int pos = 0, dni/*, ID*/, opcion, dia, mes, anio, hora, minuto;
     while (true)
     {
+        system("cls");
         cout << "Ingrese DNI del paciente: ";
         cin >> dni;
         if (existeDNI(dni)) {
@@ -627,28 +665,43 @@ void EliminarTurno() {
             cout << "Ingrese anio de turno:";
             cin >> anio;
             if (f.esCorrecta(dia, mes, anio)) {
-                Fecha f(dia, mes, anio);
-                if (existeTurno(t, dni, f)) {
-                    eliminarTurnoPaciente(t);
-                    cout << "Turno modificado!" << endl;
-                    return;
+                cout << "Ingrese horario del turno: " << endl;
+                cout << "Hora: ";
+                cin >> hora;
+                cout << "Minutos: ";
+                cin >> minuto;
+                Hora h(hora, minuto);
+                if (horaValida(h)) {
+
+                    Fecha f(dia, mes, anio);
+                    if (existeTurno(t, dni, f, h)) {
+                        eliminarTurnoPaciente(t);
+                        cout << "El turno ha sido eliminado!" << endl;
+                        system("pause");
+                        return;
+                    }
+                    else {
+                        cout << "Este paciente no tiene un turno asignado en esta fecha." << endl;
+                        system("pause");
+                    }
+                    //continue;
                 }
                 else {
-                    cout << "Este paciente no tiene un turno asignado en esta fecha." << endl;
+                    cout << "Horario incorrecto. Vuelva a intentar." << endl;
                     system("pause");
+                    //break;
                 }
-                continue;
             }
             else {
                 cout << "Fecha incorrecta. Vuelva a intentar." << endl;
                 system("pause");
-                continue;
+                //continue;
             }
         }
         else {
             cout << "No existe DNI. Ingrese nuevamente." << endl;
             system("pause");
-            continue;
+            //continue;
         }
     }
 }

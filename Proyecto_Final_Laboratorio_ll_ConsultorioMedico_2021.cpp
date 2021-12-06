@@ -24,7 +24,7 @@ int main()
 {
     //ESTA ES UNA PRUEBA DE MODIFICACION EN GITHUB
     //RestaurarCopiaSeguridadPacientes();
-    ListadoDePacientesPorApellido();
+    //ListadoDePacientesPorApellido();
     /*Archivo reg;
     int pos = 0;
     while (reg.leerDeDisco(pos++, "Backup/Pacientes/rutas.dat"))
@@ -53,6 +53,7 @@ int main()
     //reg.Mostrar();
     //AsignarTurno();
     //ModificarTurno();
+    //EliminarTurno();
     //login();
     //Hora h1(8, 0), h2(18, 0);
     //HorarioEmpleado horaLaboral;
@@ -90,13 +91,20 @@ int main()
     //reg.grabarEnDisco(0);
     //obj.grabarEnDisco(0);
     //cout << endl;
-    /*Paciente t;
+    Turno t;
     int pos = 0;
 
     while (t.leerDeDisco(pos++)) {
-        t.Mostrar();
-    cout << endl; 
-    }*/
+        if (t.getEstado()) {
+            t.Mostrar();
+            cout << endl; 
+        }
+    }
+    /*FILE* p;
+    p = fopen("Turnos.dat", "rb");
+    fseek(p, 0, 2);
+    cout << ftell(p) / sizeof(Turno);
+    fclose(p);*/
     //t.setFechaAsignacionTurno();
     //t.getFechaAsignacionTurno().Mostrar();*/
     //prueba();

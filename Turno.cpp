@@ -137,7 +137,7 @@ bool Turno::leerDeDisco(int pos) {
 }
 bool Turno::grabarEnDisco(int pos) {
 	FILE* p;
-	if (pos == 0) {
+	if (pos == -1) {
 		p = fopen("Turnos.dat", "ab");
 		if (p == NULL) {
 			return false;
