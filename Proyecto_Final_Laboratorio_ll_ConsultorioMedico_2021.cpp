@@ -92,7 +92,7 @@ int main()
     //reg.grabarEnDisco(0);
     //obj.grabarEnDisco(0);
     //cout << endl;
-    Empleado t;
+    /*Empleado t;
     int pos = 0;
 
     while (t.leerDeDisco(pos++)) {
@@ -100,7 +100,7 @@ int main()
             t.Mostrar();
             cout << endl; 
         //}
-    }
+    }*/
     /*FILE* p;
     p = fopen("Turnos.dat", "rb");
     fseek(p, 0, 2);

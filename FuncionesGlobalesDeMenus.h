@@ -53,12 +53,19 @@ void modificarFechaTurno(Turno& t);
 bool existeDNI(int dni);
 void obtenerEmpleado(int usuario, Empleado& e);
 
-//void VerTurnosDelDia(Usuario);
+void VerTurnosDelDia(int usuario);
 void AgregaRegistroDeHistoriaClinica(int usuario);
 void ModificarRegistroDeHistoriaClinica(int usuario);
 void AgregarUnUsuario();
+void EliminarUsuario();
+void ModificarUsuario();
+void MostrarTurnosDeCadaEspecialidad(int Legajo);
+void MostrarTurnosOrdenadosPorEspecialidad(Empleado* vEmpleados, int cantRegistros);
+void OrdenarTurnosPorLegajo(Turno* p, int cantRegistros);
+
 void ListadoDeTurnosOrdenadosPorFecha();
 void ListadoDeTurnosOrdenadosPorEspecialidad();
+void ListadoDeTurnosOrdenadosPorMedicoTratante();
 
 ///LISTADOS
 void ListadoAdministradoresOrdenadoPorLegajo();

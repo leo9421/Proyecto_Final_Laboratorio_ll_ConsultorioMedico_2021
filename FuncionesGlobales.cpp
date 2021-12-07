@@ -181,7 +181,7 @@ void menuMedico(int usuario) {
         {
         case 1:
             system("cls");
-            //VerTurnosDelDia(Usuario);
+            VerTurnosDelDia(usuario);
             break;
         case 2:
             system("cls");
@@ -217,9 +217,6 @@ void menuAdministrador() {
         cout << "1-AGREGAR UN USUARIO. " << endl;
         cout << "2-ELIMINAR UN USUARIO. " << endl;
         cout << "3-MODIFICAR UN USUARIO. " << endl;
-        //cout << "6-INFORMES" << endl;
-        //cout << "7-CONSULTAS" << endl;
-        //cout << "8-LISTADOS" << endl;
         cout << "4-CONFIGURACIONES." << endl;
         //cout << "5-ASIGNACION DE LIMITE DE TURNOS." << endl;
         cout << "0- VOLVER AL MENU PRINCIPAL" << endl << endl;
@@ -235,10 +232,11 @@ void menuAdministrador() {
             break;
         case 2:
             system("cls");
-
+            EliminarUsuario();
             break;
         case 3:
             system("cls");
+            ModificarUsuario();
             break;
 
         case 4:

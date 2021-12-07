@@ -1116,6 +1116,32 @@ void MostrarTurnos(Turno* p, int cantRegistros)
 
 }
 
+void OrdenarTurnosPorLegajo(Turno* p, int cantRegistros) {
+
+    int i, j;
+
+    Turno aux;
+
+    for (i = 0; i < cantRegistros; i++)
+    {
+
+        for (j = 0; j < cantRegistros - 1; j++)
+        {
+
+
+            if (p[j].getLegajoMedico() < p[j + 1].getLegajoMedico())
+            {
+
+                aux = p[j + 1];
+                p[j + 1] = p[j];
+                p[j] = aux;
+            }
+        }
+    }
+
+
+}
+
 ///NO ESTA COMPLETO, PORQUE PACIENTE NO TIENE NINGUN ATRIBUTO QUE SEA LA EDAD DEL PACIENTE
 void OrdenarRegistrosPorEdad(Paciente* vPacientes, int cantRegistros)
 {
@@ -1289,6 +1315,33 @@ int BuscarPosiocionID(int ID) {
     }
 
     return Cont;
+}
+
+void MostrarTurnosDeCadaEspecialidad(int Legajo) {
+
+    Turno reg;
+    int Pos = 0;
+    while (reg.leerDeDisco(Pos) == true) {
+        if (reg.getLegajoMedico() == Legajo) {
+            reg.Mostrar();
+            cout << endl;
+        }
+        Pos++;
+    }
+
+
+}
+
+void MostrarTurnosOrdenadosPorEspecialidad(Empleado* vEmpleados, int cantRegistros) {
+
+    Empleado reg;
+    int Pos = 0;
+    while (reg.leerDeDisco(Pos)) {
+        cout << "Especialidad: " << reg.getEspecialidad().getNEspecialidades() << endl << endl;
+        MostrarTurnosDeCadaEspecialidad(reg.getLegajo());
+        Pos++;
+    }
+
 }
 
 ///ESTA FUNCION PERTENECE ListadoDePacientes
@@ -1505,8 +1558,57 @@ void ListadoDeTurnosOrdenadosPorFecha()
 
 void ListadoDeTurnosOrdenadosPorEspecialidad()
 {
+    int cantRegistros, tipoEmpleado = 2;
+    cantRegistros = cantEmpleados(tipoEmpleado);///Cuenta la cantidad de registros que hay en el archivo de paciente
+    if (cantRegistros == 0)
+    {
+        cout << "NO HAY REGISTROS DE MEDICOS EN EL ARCHIVO DE EMPLEADOS" << endl;
+        return;
+    }
 
+    Empleado* vEmpleados;
+    vEmpleados = new Empleado[cantRegistros];
 
+    if (vEmpleados == NULL)
+    {
+        cout << "NO SE PUDO OBTENER MEMORIA DINAMICA PARA EL VECTOR DE EMPLEADOS" << endl;
+        return;
+    }
+    CargarVectorEmpleados(vEmpleados, tipoEmpleado);
+    OrdenarVectorEmpleadosPorEspecialidad(vEmpleados, cantRegistros);
+    MostrarTurnosOrdenadosPorEspecialidad(vEmpleados, cantRegistros);
+
+    delete[] vEmpleados;
+}
+
+void ListadoDeTurnosOrdenadosPorMedicoTratante() {
+
+    int cantRegistros;
+    ///Cuenta la cantidad de registros que hay en el archivo de paciente
+    cantRegistros = ContarCantidadRegistroTurnos();
+
+    if (cantRegistros == 0)
+    {
+        cout << "NO HAY REGISTROS DE ADMINISTRATIVOS EN EL ARCHIVO DE EMPLEADOS" << endl;
+        return;
+    }
+
+    Turno* p;
+    p = new Turno[cantRegistros];
+
+    if (p == NULL)
+    {
+        cout << "NO SE PUDO OBTENER MEMORIA DINAMICA PARA EL VECTOR DE EMPLEADOS" << endl;
+        return;
+    }
+
+    CopiarRegistrosTurnos(p, cantRegistros);
+
+    OrdenarTurnosPorLegajo(p, cantRegistros);
+
+    MostrarTurnos(p, cantRegistros);
+
+    delete[] p;
 
 
 }
@@ -2147,32 +2249,34 @@ void mostrarCantTurnosAsignadosEnMes(int cont, int mes, int anio) {
 }
 
 void CantidadTurnosAsignadosEnMes() {
-    int anio, mes, pos = 0, cont = 0;
+    int anio = 1, mes = 2, pos = 0, cont = 0;
     Turno reg;
     Fecha f;
-    while (true) {
-        cout << "------------------Informe cantidad de turnos------------------" << endl;
-        cout << "Ingrese el anio o 0 (cero) para volver al menu anterior: ";
-        cin >> anio;
-        if (anio == 0) return;
-        cout << "Ingrese el mes o 0 (cero) para volver al menu anterior: ";
-        cin >> mes;
-        if (mes == 0) return;
-        if (f.esCorrecta(1, mes, anio)) {
+    while (anio != 0 || mes != 0) {
+        while (true) {
+            cout << "------------------Informe cantidad de turnos------------------" << endl;
+            cout << "Ingrese el anio o mes (cero) para volver al menu anterior: ";
+            cin >> anio;
+            if (anio == 0) return;
+            cout << "Ingrese el mes o 0 (cero) para volver al menu anterior: ";
+            cin >> mes;
+            if (mes == 0) return;
+            if (f.esCorrecta(1, mes, anio)) {
 
-            while (reg.leerDeDisco(pos++))
-            {
-                if (reg.getFechaTurno().getAnio() == anio && reg.getFechaTurno().getMes() == mes) {
-                    cont++;
+                while (reg.leerDeDisco(pos++))
+                {
+                    if (reg.getFechaTurno().getAnio() == anio && reg.getFechaTurno().getMes() == mes) {
+                        cont++;
+                    }
                 }
+                break;
             }
-            break;
+            else {
+                cout << "LA FECHA ES INCORRECTA. VUELVA A INGRESAR." << endl;
+            }
         }
-        else {
-            cout << "LA FECHA ES INCORRECTA. VUELVA A INGRESAR." << endl;
-        }
+        mostrarCantTurnosAsignadosEnMes(cont, mes, anio);
     }
-    mostrarCantTurnosAsignadosEnMes(cont, mes, anio);
 }
 ///------------------------------------------------------------------------------------------------------------
 void mostrarAusenciasATurnosEnMes(int cont, int mes, int anio) {
@@ -2201,7 +2305,7 @@ void AusenciasTurnosMes() {
             while (reg.leerDeDisco(pos++))
             {
                 if (reg.getFechaTurno().getAnio() == anio && reg.getFechaTurno().getMes() == mes && !reg.getAsistencia() &&
-                    reg.getFechaTurno()<hoy) {
+                    reg.getFechaTurno() < hoy) {
                     cont++;
                 }
             }
@@ -2227,88 +2331,53 @@ void RecaudacionMensual()
         cin >> AnioIngresado;
         cout << endl;
 
-        if (AnioIngresado != 0)
+        if (AnioIngresado == 0) { return; }
+
+
+        cout << "Ingrese el mes en el que quiera ver la recaudacion total de ese anio" << endl;
+        cin >> MesIngresado;
+        cout << endl;
+
+        ///Puedo usar el ftell()
+        //int CantRegistros = ContarCantidadRegistrosPacientes();
+        int AnioMin, AnioMax;
+
+        FacturaConsulta reg;
+
+        AnioMin = BuscarAnioMinFactura();
+        AnioMax = BuscarAnioMaxFactura();
+
+        float RecaudacioMensual = 0;
+
+        ///Valida que el anio y el mes ingresado se encuentre en el archivo de facturaconsulta
+        if (AnioIngresado >= AnioMin && AnioIngresado <= AnioMax && MesIngresado <= 12 && MesIngresado > 0)
         {
-
-            cout << "Ingrese el mes en el que quiera ver la recaudacion total de ese anio" << endl;
-            cin >> MesIngresado;
-            cout << endl;
-
-
-            ///Puedo usar el ftell()
-            int CantRegistros = ContarCantidadRegistrosPacientes();
-            int AnioMin, AnioMax;
-
-            FacturaConsulta reg;
-
-            AnioMin = BuscarAnioMinFactura();
-            AnioMax = BuscarAnioMaxFactura();
-
-
-            ///CREA UNA MATRIZ DINAMICA, PIDO MEMORIA PARA ESA MATRIZ
-            int tam = (AnioMax - AnioMin) + 1; ///Este el tamanio de la cantidad de filas de la matriz
-            float** p;
-            int c = 12; /// Meses del anio (Columnas de la matriz)
-            p = new float* [tam];
-
-
-            for (int x = 0; x < tam; x++)
-            {
-                p[x] = new float[c];
-            }
-
-
-            ///PONE CADA ELEMENTO DE LA MATRIZ EN 0
-            for (int x = 0; x < tam; x++)
-            {
-                for (int j = 0; j < c; j++)
-                {
-                    p[x][j] = 0;
-                }
-            }
-
-
-            ///ASIGNA RECAUDACION DE LOS ANIOS A LA MATRIZ DINAMICA
             int Pos = 0;
-            float RecaudacionTotal = 0; ///ACA SE GUARDA LA RECAUDACION TOTAL DE TODOS LOS MESES DEL ANIO INGRESADO
-            ///Valida que el anio y el mes ingresado se encuentre en el archivo de facturaconsulta
-
-            if (AnioIngresado >= AnioMin && AnioIngresado <= AnioMax && MesIngresado <= 12 && MesIngresado > 0)
+            while (reg.leerDeDisco(Pos) == true)
             {
 
-                while (reg.leerDeDisco(Pos) == true)
-                {
-                    p[reg.getFechaFactura().getAnio() - AnioMin][reg.getFechaFactura().getMes() - 1] += reg.getPrecioConsulta();
-                    //RecaudacionTotal +=reg.getPrecioConsulta();
-                    Pos++;
+                if (reg.getFechaFactura().getAnio() == AnioIngresado && reg.getFechaFactura().getMes() == MesIngresado) {
+                    RecaudacioMensual += reg.getPrecioConsulta();
                 }
-
-                cout << "Anio: " << AnioIngresado << endl << endl;
-                cout << "RECAUDACION DEL MES\t\t\t\tRECAUACION" << endl;
-                cout << "------------------------------------------------------------" << endl;
-
-                ///Muestra la recaudacion del anio y mes que se ingresaron por teclado
-                cout << MesIngresado << "\t\t\t\t\t\t   " << p[AnioIngresado - AnioMin][MesIngresado - 1] << endl << endl;
-
-
-
+                Pos++;
             }
 
-            else
-            {
-                cout << "EL ANIO Y/O MES INGRESADO NO SE ENCUENTRAN EN EL ARCHIVO, INTENTE CON OTRO MES Y/O ANIO " << endl;
-            }
+            cout << "Anio: " << AnioIngresado << endl << endl;
+            cout << "RECAUDACION DEL MES\t\t\t\tRECAUACION" << endl;
+            cout << "------------------------------------------------------------" << endl;
 
-            system("pause");
-            system("cls");
-            /*
-                     ///Libera la memoria de la matriz
-                    for (int x = 0; x < CantRegistros; x++)
-                    {
-                        delete p[x];
-                    }
-            */
+            ///Muestra la recaudacion del anio y mes que se ingresaron por teclado
+            cout << MesIngresado << "\t\t\t\t\t\t   " << RecaudacioMensual << endl << endl;
+
         }
+
+        else
+        {
+            cout << "EL ANIO Y/O MES INGRESADO NO SE ENCUENTRAN EN EL ARCHIVO, INTENTE CON OTRO MES Y/O ANIO " << endl;
+        }
+
+        system("pause");
+        system("cls");
 
     }
 
@@ -2327,82 +2396,57 @@ void RecaudacionAnual()
         cin >> AnioIngresado;
         cout << endl;
 
-        if (AnioIngresado != 0)
+        if (AnioIngresado == 0)
         {
-            ///Puedo usar el ftell()
-            int CantRegistros = ContarCantidadRegistrosPacientes();
-            int AnioMin, AnioMax;
-
-            FacturaConsulta reg;
-
-            AnioMin = BuscarAnioMinFactura();
-            AnioMax = BuscarAnioMaxFactura();
-
-            ///CREA UNA MATRIZ DINAMICA, PIDO MEMORIA PARA ESA MATRIZ
-            int tam = (AnioMax - AnioMin) + 1; ///Este el tamanio de la cantidad de filas de la matriz
-            float** p;
-            int c = 12; /// Meses del anio (columnas de la matriz)
-            p = new float* [tam];
-
-
-            for (int x = 0; x < tam; x++)
-            {
-                p[x] = new float[c];
-            }
-
-
-            ///PONE CADA ELEMENTO DE LA MATRIZ EN 0
-            for (int x = 0; x < tam; x++)
-            {
-                for (int j = 0; j < c; j++)
-                {
-                    p[x][j] = 0;
-                }
-            }
-
-
-
-            ///ASIGNA RECAUDACION DE LOS ANIOS A LA MATRIZ DINAMICA
-            int Pos = 0;
-            float RecaudacionTotal = 0; ///ACA SE GUARDA LA RECAUDACION TOTAL DE TODOS LOS MESES DEL ANIO INGRESADO
-            ///Valida que el anio ingresado se encuentre en el archivo de facturaconsulta
-            if (AnioIngresado >= AnioMin && AnioIngresado <= AnioMax)
-            {
-                while (reg.leerDeDisco(Pos) == true)
-                {
-                    p[reg.getFechaFactura().getAnio() - AnioMin][reg.getFechaFactura().getMes() - 1] += reg.getPrecioConsulta();
-                    RecaudacionTotal += reg.getPrecioConsulta();
-                    Pos++;
-                }
-
-                cout << "La recaudacion del anio " << AnioIngresado << " fue: " << endl << endl;
-                cout << "MES\t\t\t\tRECAUACION" << endl;
-                cout << "-------------------------------------------------------" << endl;
-                for (int x = 0; x < 12; x++)
-                {
-
-                    cout << x + 1 << "\t\t\t\t   " << p[AnioIngresado - AnioMin][x] << endl;
-                }
-
-                cout << "-------------------------------------------------------" << endl;
-                cout << "TOTAL:\t\t\t\t   " << RecaudacionTotal << endl << endl;
-            }
-
-            else
-            {
-                cout << "El anio que ingreso no se encuentra en el archivo, intente con otro anio" << endl;
-            }
-            /*
-                ///Libera la memoria de la matriz
-                for (int x = 0; x < CantRegistros; x++)
-                {
-                    delete p[x];
-                }
-            */
-
-            system("pause");
-            system("cls");
+            return;
         }
+        ///Puedo usar el ftell()
+        //int CantRegistros = ContarCantidadRegistrosPacientes();
+        int AnioMin, AnioMax;
+
+        FacturaConsulta reg;
+
+        //todo: estas dos funciones no me convencen
+        AnioMin = BuscarAnioMinFactura();
+        AnioMax = BuscarAnioMaxFactura();
+
+
+        float RecaudacionTotal = 0;
+        float RecaudacionesMensuales[12] = {};
+
+        ///Valida que el anio ingresado se encuentre en el archivo de facturaconsulta
+        if (AnioIngresado >= AnioMin && AnioIngresado <= AnioMax)
+        {
+            int Pos = 0;
+            while (reg.leerDeDisco(Pos) == true)
+            {
+                if (reg.getFechaFactura().getAnio() == AnioIngresado) {
+                    RecaudacionesMensuales[reg.getFechaFactura().getMes() - 1] += reg.getPrecioConsulta();
+                    RecaudacionTotal += reg.getPrecioConsulta();
+                }
+                Pos++;
+            }
+
+            cout << "La recaudacion del anio " << AnioIngresado << " fue: " << endl << endl;
+            cout << "MES\t\t\t\tRECAUACION" << endl;
+            cout << "-------------------------------------------------------" << endl;
+            for (int x = 0; x < 12; x++)
+            {
+                cout << x + 1 << "\t\t\t\t   " << RecaudacionesMensuales[x] << endl;
+            }
+
+            cout << "-------------------------------------------------------" << endl;
+            cout << "TOTAL:\t\t\t\t   " << RecaudacionTotal << endl << endl;
+        }
+
+        else
+        {
+            cout << "El anio que ingreso no se encuentra en el archivo, intente con otro anio" << endl;
+        }
+
+        system("pause");
+        system("cls");
+
     }
 
 
@@ -2424,12 +2468,18 @@ void RecaudacionPorCliente()
         cin >> DniCliente;
         cout << endl;
 
-        if (DniCliente != 0)
-        {
+        if (DniCliente == 0) {
+            return;
+        }
 
+        if (existeDNI(DniCliente) == false) {
+            cout << "No existe un paciente con el dni que ingreso o el dni es incorrecto " << endl;
+            system("pause");
+            system("cls");
+        }
+        else {
             int Pos = 0;
             float Recaudacion = 0; ///ACA SE ACUMULA LA RECAUDACION DEL CLIENTE QUE SE BUSCA
-
             ///ESTO RECORRE EL ARCHIVO DE FACTURAS PARA ACUMULAR LA RECAUDACION
             ///DEL CLIENTE QUE SE INGRESO POR TECLADO
             int id = obtenerID(DniCliente);
@@ -2446,13 +2496,12 @@ void RecaudacionPorCliente()
 
             if (Cont != 0)
             {
-
                 Paciente obj;
-                Pos = 0;
+
                 ///BUSCA EL DNI QUE SE INGRESO EN EL ARCHIVO DE PACIENTES EL
                 ///DNI QUE SE INGRESO POR TECLADO, PARA PODER MOSTRAR
                 ///EL NOMBRE Y EL APELLIDO DEL CLIENTE
-
+                Pos = 0;
                 while (obj.leerDeDisco(Pos) == true)
                 {
                     if (obj.getDNI() == DniCliente)
@@ -2471,10 +2520,9 @@ void RecaudacionPorCliente()
                 cout << "No existe niguna factura con el numero de dni ingresado, intente con otro numero" << endl << endl;
             }
 
-            system("pause");
-            system("cls");
-        }
 
+
+        }
 
     }
 
@@ -2537,7 +2585,7 @@ void VerTurnosDelDia(int Usuario)
 
 }
 
-void AgregaRegistroDeHistoriaClinica(int usuario){
+void AgregaRegistroDeHistoriaClinica(int usuario) {
     Turno obj;
     int IdTurno;
     Fecha f;
@@ -2553,66 +2601,66 @@ void AgregaRegistroDeHistoriaClinica(int usuario){
         cin >> hora;
         cout << endl;
         if (hora != 0) {
-            cout << "Minutos: ";
-            cin >> minutos;
-            cout << endl;
+            return;
+        }
+        cout << "Minutos: ";
+        cin >> minutos;
+        cout << endl;
 
-            int Cont = 0;
-            int Pos = 0;
-            while (obj.leerDeDisco(Pos) == true)
+        int Cont = 0;
+        int Pos = 0;
+        while (obj.leerDeDisco(Pos) == true)
+        {
+            if (obj.getLegajoMedico() == usuario && obj.getFechaTurno().getDia() == f.getDia() && obj.getFechaTurno().getMes() == f.getMes() && obj.getFechaTurno().getAnio() == f.getAnio() && hora == obj.getHoraTurno().getHora() && minutos == obj.getHoraTurno().getMinuto())
             {
-                if (obj.getLegajoMedico() == usuario && obj.getFechaTurno().getDia() == f.getDia() && obj.getFechaTurno().getMes() == f.getMes() && obj.getFechaTurno().getAnio() == f.getAnio() && hora == obj.getHoraTurno().getHora() && minutos == obj.getHoraTurno().getMinuto())
+                Cont++;
+                IdTurno = obj.getID();
+                obj.Mostrar();
+                cout << endl;
+            }
+            Pos++;
+        }
+
+        if (Cont == 0)
+        {
+            cout << "No hay turnos para el dia de hoy en el horaria ingresado, intente con otro horario" << endl;
+        }
+
+
+        if (Cont != 0) {
+            HistoriaClinica reg;
+            char DetallesConsulta[2000];
+            bool HistoriaClinicaExiste;
+            HistoriaClinicaExiste = ExisteHistoriaClinica(IdTurno);
+
+            if (HistoriaClinicaExiste == true) {
+                cout << "Ya hay una historia clinica para el turno actual" << endl;
+            }
+
+            else {
+                reg.setIDTurno(IdTurno);
+                cin.ignore();
+                cout << "Ingrese los detalles de la consulta" << endl;
+                cin.getline(DetallesConsulta, 2000);
+                cout << endl << endl;
+
+                reg.setDetallesConsulta(DetallesConsulta);
+
+                if (reg.grabarEnDisco(0) == true)
                 {
-                    Cont++;
-                    IdTurno = obj.getID();
-                    obj.Mostrar();
-                    cout << endl;
-                }
-                Pos++;
-            }
-
-            if (Cont == 0)
-            {
-                cout << "No hay turnos para el dia de hoy en el horaria ingresado, intente con otro horario" << endl;
-            }
-
-
-            if (Cont != 0) {
-                HistoriaClinica reg;
-                char DetallesConsulta[2000];
-                bool HistoriaClinicaExiste;
-                HistoriaClinicaExiste = ExisteHistoriaClinica(IdTurno);
-
-                if (HistoriaClinicaExiste == true) {
-                    cout << "Ya hay una historia clinica para el turno actual" << endl;
+                    cout << "El registro se agrego correctamente" << endl;
                 }
 
-                else {
-                    reg.setIDTurno(IdTurno);
-                    cin.ignore();
-                    cout << "Ingrese los detalles de la consulta" << endl;
-                    cin.getline(DetallesConsulta, 2000);
-                    cout << endl << endl;
-
-                    reg.setDetallesConsulta(DetallesConsulta);
-
-                    if (reg.grabarEnDisco(0) == true)
-                    {
-                        cout << "El registro se agrego correctamente" << endl;
-                    }
-
-                    else
-                    {
-                        cout << "No se pudo agregar el registro correctamente" << endl;
-                    }
+                else
+                {
+                    cout << "No se pudo agregar el registro correctamente" << endl;
                 }
-
             }
-
-            system("pause");
-            system("cls");
 
         }
+
+        system("pause");
+        system("cls");
 
     }
 
@@ -2621,7 +2669,7 @@ void AgregaRegistroDeHistoriaClinica(int usuario){
 //todo:Si ingreso un 2, 2, 2 en dia, mes, anio, me lo toma igual
 //todo:cuando el usuario ingresa un id que no existe le pide nuevamente que ingrese la fecha 
 //todo:Meter el codigo en funciones pare que no me quede un spaggeti
-void ModificarRegistroDeHistoriaClinica(int usuario){
+void ModificarRegistroDeHistoriaClinica(int usuario) {
     int Dia = 1, Mes, Anio, DniPaciente, IdPaciente, ID;
     while (Dia != 0) {
         cout << "--------------------------Modificar historia clinica--------------------------" << endl;
@@ -2631,80 +2679,81 @@ void ModificarRegistroDeHistoriaClinica(int usuario){
         cout << "Ingrese el Dia: ";
         cin >> Dia;
         if (Dia != 0) {
-            cout << "Ingrese el Mes: ";
-            cin >> Mes;
+            return;
+        }
+        cout << "Ingrese el Mes: ";
+        cin >> Mes;
 
-            cout << "Ingrese el Anio: ";
-            cin >> Anio;
+        cout << "Ingrese el Anio: ";
+        cin >> Anio;
 
-            Fecha f;
+        Fecha f;
 
-            if (f.esCorrecta(Dia, Mes, Anio) == false) {
-                cout << "La fecha que ingreso es incorrecta, ingrese otra fecha" << endl;
+        if (f.esCorrecta(Dia, Mes, Anio) == false) {
+            cout << "La fecha que ingreso es incorrecta, ingrese otra fecha" << endl;
+        }
+
+
+        else {
+            f.setFecha(Dia, Mes, Anio);
+            cout << "Ingrese el DNI del paciente: ";
+            cin >> DniPaciente;
+            cout << endl;
+
+            if (existeDNI(DniPaciente) == false) {
+                cout << "No existe un paciente con el DNI que ingreso, ingrese otro dni" << endl;
             }
 
-
             else {
-                f.setFecha(Dia, Mes, Anio);
-                cout << "Ingrese el DNI del paciente: ";
-                cin >> DniPaciente;
-                cout << endl;
-
-                if (existeDNI(DniPaciente) == false) {
-                    cout << "No existe un paciente con el DNI que ingreso, ingrese otro dni" << endl;
+                IdPaciente = obtenerID(DniPaciente);
+                if (!BuscarYMostrarHistoriasClinicas(IdPaciente, usuario, f)) {
+                    //todo:revisar bien este mensaje
+                    cout << "No existe ningun registro de historia clinica para el paciente y rango de fecha ingresados, ingrese otra fecha y/o dni de paciente" << endl;
                 }
 
                 else {
-                    IdPaciente = obtenerID(DniPaciente);
-                    if (!BuscarYMostrarHistoriasClinicas(IdPaciente, usuario, f)) {
-                        cout << "No existe ningun registro de historia clinica para el paciente y rango de fecha ingresados, ingrese otra fecha y/o dni de paciente" << endl;
+
+                    Turno reg;
+                    HistoriaClinica obj;
+                    bool HistoriaClinicaExiste;
+
+                    cout << "Ingrese el ID de la historia clinica que quiera modificar:  ";
+                    cin >> ID;
+                    cout << endl;
+
+                    HistoriaClinicaExiste = ExisteHistoriaClinica(ID);
+
+                    if (HistoriaClinicaExiste == false) {
+                        cout << "No existe una historia clinica con el ID que ingreso, ingrese otro ID" << endl;
                     }
 
                     else {
 
-                        Turno reg;
-                        HistoriaClinica obj;
-                        bool HistoriaClinicaExiste;
+                        int Cont;
 
-                        cout << "Ingrese el ID de la historia clinica que quiera modificar:  ";
-                        cin >> ID;
+                        Cont = BuscarPosiocionID(ID);
+
+                        obj.leerDeDisco(Cont);
+
+                        char DetallesConsulta[2000];
+                        cin.ignore();
+                        cout << "Ingrese los detalles de la consulta para modificar (2000 caracteres maximo)" << endl;
+                        cin.getline(DetallesConsulta, 2000);
                         cout << endl;
 
-                        HistoriaClinicaExiste = ExisteHistoriaClinica(ID);
-
-                        if (HistoriaClinicaExiste == false) {
-                            cout << "No existe una historia clinica con el ID que ingreso, ingrese otro ID" << endl;
+                        obj.setDetallesConsulta(DetallesConsulta);
+                        FILE* IdHistoriaClinica;
+                        IdHistoriaClinica = fopen("HistoriasClinicas.dat", "rb+"); ///No me acuerdo si era rb o ab
+                        if (IdHistoriaClinica == NULL) {
+                            cout << "No se pudo abrir el archivo de historia clinica" << endl;
+                            return;
                         }
 
-                        else {
 
-                            int Cont;
-
-                            Cont = BuscarPosiocionID(ID);
-
-                            obj.leerDeDisco(Cont);
-
-                            char DetallesConsulta[2000];
-                            cin.ignore();
-                            cout << "Ingrese los detalles de la consulta para modificar" << endl;
-                            cin.getline(DetallesConsulta, 2000);
-                            cout << endl;
-
-                            obj.setDetallesConsulta(DetallesConsulta);
-                            FILE* IdHistoriaClinica;
-                            IdHistoriaClinica = fopen("HistoriasClinicas.dat", "rb+"); ///No me acuerdo si era rb o ab
-                            if (IdHistoriaClinica == NULL) {
-                                cout << "No se pudo abrir el archivo de historia clinica" << endl;
-                                return;
-                            }
-
-
-                            fseek(IdHistoriaClinica, sizeof(HistoriaClinica) * Cont, 0);
-                            fwrite(&obj, sizeof(HistoriaClinica), 1, IdHistoriaClinica);
-                            //obj.grabarEnDisco(Cont);
-                            fclose(IdHistoriaClinica);
-
-                        }
+                        fseek(IdHistoriaClinica, sizeof(HistoriaClinica) * Cont, 0);
+                        fwrite(&obj, sizeof(HistoriaClinica), 1, IdHistoriaClinica);
+                        //obj.grabarEnDisco(Cont);
+                        fclose(IdHistoriaClinica);
 
                     }
 
@@ -2712,9 +2761,11 @@ void ModificarRegistroDeHistoriaClinica(int usuario){
 
             }
 
-            system("pause");
-            system("cls");
         }
+
+        system("pause");
+        system("cls");
+
     }
 
 }
@@ -2858,7 +2909,257 @@ void AgregarUnUsuario()
     
 
 }
+//-------------------------------------------------------------------------------------------------
+void EliminarUsuario()
+{
 
+    int DniUsuario = 1;
+    Empleado reg;
+    while (DniUsuario)
+    {
+        cout << "-------------------------Eliminar un usuario-------------------------" << endl;
+        cout << "Ingrese el dni del usuario que quiera eliminar (Ingrese un 0 para volver al menu): ";
+        //todo:cuando ingreso un solo digito me lo toma igual
+        cin >> DniUsuario;
+        cout << endl;
+
+        ///ESTO VALIDA QUE EL DNI INGRESADO NO PUEDO SER NEGATIVO
+        if (DniUsuario == 0) { return; }
+
+        if (existeDNI(DniUsuario) == false) {
+            cout << "El dni que ingreso no existe o es incorrecto, ingrese otro dni" << endl;
+            system("pause");
+            system("cls");
+        }
+
+        else
+        {
+            int Opcion;
+            int Posicion = 0;
+            int Pos = 0;
+            while (reg.leerDeDisco(Pos) == true)
+            {
+                if (reg.getEstado() == true && reg.getDNI() == DniUsuario)
+                {
+                    Posicion = Pos;
+                    reg.Mostrar();
+                }
+                Pos++;
+            }
+
+            ///ESTO ES PARA SABER SI SE ENCONTRO ALGUN EMPLEADO CON EL DNI INGRESADO
+            if (Posicion != 0)
+            {
+                cout << "¿Desea eliminar el usuario? (1-SI 2-NO)" << endl;
+                cout << "Ingrese una opcion" << endl;
+                cin >> Opcion;
+                cout << endl;
+
+                if (Opcion == 1)
+                {
+
+                    reg.leerDeDisco(Posicion);
+                    reg.setEstado(false);
+                    //todo:meter todo esto en una funcion
+                    FILE* p;
+
+                    p = fopen("Empleados.dat", "rb+");
+
+                    if (p == nullptr)
+                    {
+                        cout << "NO SE PUDO ABRIR EL ARCHIVO DE EMPLEADOS" << endl;
+                    }
+
+                    fseek(p, sizeof(Empleado) * Posicion, 0);
+                    fwrite(&reg, sizeof(Empleado), 1, p);
+
+                    //todo:falta el grabar, creo
+
+                    fclose(p);
+                }
+
+                ///ESTA ES UNA VALIDACION PARA CUANDO EL USUARIO INGRESA UNA OPCION QUE NO EXISTE
+                if (Opcion != 1 && Opcion != 2)
+                {
+                    cout << "La opcion que ingreso es incorrecta, ingrese otra opcion" << endl;
+                }
+            }
+
+            else
+            {
+                cout << "No se encontro ningun usuario con el dni ingresado, ingrese otro dni " << endl;
+            }
+
+
+            system("pause");
+            system("cls");
+
+        }
+
+
+
+    }
+}
+//-------------------------------------------------------------------------------------------------------------
+void ModificarUsuario()
+{
+    int DniUsuario = 1, EdadUsusario, LegajoUsuario, TipoEmpleadoUsuario, IdEpleadoUsuario, IdEpleadoUsuarioHorario;
+    int NumeroEspecialidadUsuario;
+    char Nombres[50];
+    char Apellidos[50];
+    char ContraseniaUsuario[30];
+    char EmailUsuario[50];
+    int Posicion = 0;
+    Empleado reg;
+    while (DniUsuario != 0)
+    {
+        cout << "-------------------------Modificar un usuario-------------------------" << endl;
+        cout << "Ingrese el dni del usuario que quiera moficar (Ingrese un 0 para volver al menu): ";
+        cin >> DniUsuario;
+        cout << endl;
+
+        if (DniUsuario == 0) { return; }
+
+        ///ESTO VALIDA QUE EL DNI INGRESADO NO PUEDO SER NEGATIVO
+        if (existeDNI(DniUsuario) == false)
+        {
+            cout << "El dni que ingreso no existe o no es valido, ingrese otro dni" << endl;
+            system("pause");
+            system("cls");
+        }
+
+
+        else
+        {
+            int Pos = 0;
+            while (reg.leerDeDisco(Pos) == true)
+            {
+                if (reg.getEstado() == true && reg.getDNI() == DniUsuario)
+                {
+                    Posicion = Pos;
+                    reg.Mostrar();
+                }
+                Pos++;
+            }
+
+            ///ESTO ES PARA SABER SI SE ENCONTRO ALGUN EMPLEADO CON EL DNI INGRESADO
+            if (Posicion != 0)
+            {
+
+                int Opcion;
+                cout << "¿Desea modificar el usuario? (1-SI 2-NO)" << endl;
+                cout << "Ingrese una opcion: ";
+                //todo: falta validar que ingrese un numero que sea 1 o 2
+                cin >> Opcion;
+                cout << endl;
+                cin.ignore();
+
+                if (Opcion == 1)
+                {
+                    //todo:pide datps que no los deberia pedir
+                    cout << "Ingrese los nombres del usuario" << endl;
+                    cin.getline(Nombres, 50);///OK
+                    cout << endl;
+
+                    cout << "Ingrese los apellidos del usuario" << endl;
+                    cin.getline(Apellidos, 50); ///OK
+                    cout << endl;
+
+                    cout << "Ingrese la edad del usuario" << endl;
+                    cin >> EdadUsusario; ///OK
+                    cout << endl;
+
+                    cout << "Ingrese un legajo para el usuario" << endl;
+                    cin >> LegajoUsuario; ///OK, PERO CREO QUE ESTO DEBERIA SER UN AUTONUMERICO
+                    cout << endl;
+
+                    cout << "Ingrese una contrasenia para el usuario" << endl;
+                    cin >> ContraseniaUsuario; ///OK
+                    cout << endl;
+
+                    cout << "Ingrese el email del usuario" << endl;
+                    cin >> EmailUsuario; ///OK
+                    cout << endl;
+
+                    cout << "Ingrese el tipo de empleado del usuario" << endl;
+                    cout << "99-Administrador  1-Adminitrativo  2-Medico" << endl;
+                    cin >> TipoEmpleadoUsuario; ///OK
+                    cout << endl;
+
+                    cout << "Ingrese el ID del empleado" << endl;///No estoy muy seguro de esto, revisar bien
+                    cin >> IdEpleadoUsuario; ///ESTE ES EL ID DE EMPLEADP DE LA ESPECIALIDAD DEL USUARIO
+                    cout << endl;
+
+
+                    cout << "ingrese la especialidad deñ empleado: " << endl;
+                    cout << "0-Administrador  1-Administrativo  2-Pediatria" << endl;
+                    cout << "3-Kinesiologia   4-Oftalmologia    5-Traumatologia" << endl;
+                    cout << "6-Obstetricia    7-Psicologia      8-Nutricion" << endl;
+                    cout << "9-Psiquiatra     10-Oftalmologia   11-Cardiologia" << endl << endl;
+                    cout << "Ingrese el numero correspondiente a la especialidad del empleado" << endl;
+                    cin >> NumeroEspecialidadUsuario; ///OK ///No estoy muy seguro de esto, revisar bien
+                    cout << endl;
+
+
+                    cout << "Ingrese el ID del empleado del horario" << endl;///No estoy muy seguro de esto, revisar bien
+                    cin >> IdEpleadoUsuarioHorario;
+                    cout << endl;
+
+                    reg.leerDeDisco(Posicion);
+                    reg.setDNI(DniUsuario);
+                    reg.setNombres(Nombres);
+                    reg.setApellidos(Apellidos);
+                    reg.setEdad(EdadUsusario);
+                    reg.setLegajo(LegajoUsuario);
+                    reg.setPassword(ContraseniaUsuario);
+                    reg.setEmail(EmailUsuario);
+                    reg.setTipoEmpleado(TipoEmpleadoUsuario);
+                    Especialidad obj;
+                    obj.setIDEmpleado(IdEpleadoUsuario);
+                    obj.setNEspecialidades(NumeroEspecialidadUsuario);
+                    reg.setEspecialidad(obj);
+                    HorarioEmpleado horita;
+                    horita.setIDEmpleado(IdEpleadoUsuarioHorario);
+
+                    FILE* p;
+
+                    p = fopen("Empleados.dat", "rb+");
+
+                    if (p == nullptr)
+                    {
+                        cout << "NO SE PUDO ABRIR EL ARCHIVO DE EMPLEADOS" << endl;
+                    }
+
+                    fseek(p, sizeof(Empleado) * Posicion, 0);
+                    fwrite(&reg, sizeof(Empleado), 1, p);
+
+                    //todo:falta el grabar
+
+                    fclose(p);
+
+                }
+
+                ///ESTA ES UNA VALIDACION PARA CUANDO EL USUARIO INGRESA UNA OPCION QUE NO EXISTE
+                if (Opcion != 1 && Opcion != 2)
+                {
+                    cout << "La opcion que ingreso es incorrecta, ingrese otra opcion" << endl;
+                }
+            }
+
+            else
+            {
+                cout << "No se encontro ningun usuario con el dni ingresado, ingrese otro dni " << endl;
+            }
+
+            system("pause");
+            system("cls");
+
+
+        }
+
+    }
+
+}
 
 ///----------------------------------------------------------------------------------------------
 ///----------------------------------------------------------------------------------------------
