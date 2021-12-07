@@ -16,7 +16,7 @@ using namespace std;
 //todo: terminar esta funcion..y modificar el css para cambiar lo que dice cuando se vuelve responsive...acomodar la tabla
 void MostrarPacientesListadosPorApellidos(Paciente* p, int cantRegistros) {
     ofstream file;
-    file.open("Listados\\index.html");
+    file.open("Listados\\ListadoPacientesOrdenadosPorApellido.html");
     if (!file.is_open()) {
         cout << "ERROR DE ARCHIVO" << endl;
         return;
@@ -26,7 +26,7 @@ void MostrarPacientesListadosPorApellidos(Paciente* p, int cantRegistros) {
 	file << "<!DOCTYPE html>" << endl;
 	file << "	<html lang=\"en\">" << endl;
 	file << "	<head>" << endl;
-	file << "	<title>Table V01</title>" << endl;
+	file << "	<title>Consultorio Medico</title>" << endl;
 	file << "	<meta charset=\"UTF-8\">" << endl;
 	file << "	<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">" << endl;
 	file << "	<!--============================================================================================== = -->" << endl;
@@ -52,6 +52,7 @@ void MostrarPacientesListadosPorApellidos(Paciente* p, int cantRegistros) {
 	file << "	<div class=\"wrap-table100\">" << endl;
 	file << "	<div class=\"table100\">" << endl;
 	file << "	<table>" << endl;
+    file << "   <h2><center>Listado de pacientes ordenados por apellido</center></h2>" << endl;
 	file << "	<thead>" << endl;
 	file << "	<tr class=\"table100 - head\">" << endl;
 	file << "	<th class=\"column1\">Apellido</th>" << endl;
@@ -97,7 +98,7 @@ void MostrarPacientesListadosPorApellidos(Paciente* p, int cantRegistros) {
 
     file.flush();
     file.close();
-    system("Listados\\index.html");
+    system("Listados\\ListadoPacientesOrdenadosPorApellido.html");
 }
 
 
