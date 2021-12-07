@@ -132,7 +132,7 @@ void menuAdministrativo() {
 
         case 5:
             system("cls");
-            //GestionarPagos();
+            GestionarPagos();
             break;
         case 6:
             system("cls");
@@ -804,11 +804,11 @@ void Consultas()
         {
         case 1:
             system("cls");
-            ConsultaDePacientes();
+            ConsultaDePacientes();//HTML-OK
             break;
         case 2:
             system("cls");
-            ConsultaDeTurnos();
+            ConsultaDeTurnos();//HTML-OK
             break;
 
         case 3:

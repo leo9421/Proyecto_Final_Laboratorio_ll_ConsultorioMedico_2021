@@ -22,6 +22,9 @@ using namespace std;
 
 int main()
 {
+    //ConsultaDePacientes();
+    //ConsultaDeTurnos();
+    ConsultaDePagos();
     //ESTA ES UNA PRUEBA DE MODIFICACION EN GITHUB
     //RestaurarCopiaSeguridadPacientes();
     //ListadoDePacientesPorApellido();
@@ -92,12 +95,13 @@ int main()
     //reg.grabarEnDisco(0);
     //obj.grabarEnDisco(0);
     //cout << endl;
-    /*Empleado t;
+    /*Turno t;
     int pos = 0;
 
     while (t.leerDeDisco(pos++)) {
         //if (t.getEstado()) {
             t.Mostrar();
+            //cout << t.getEstado() << endl;
             cout << endl; 
         //}
     }*/

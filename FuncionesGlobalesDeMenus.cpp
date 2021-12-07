@@ -1828,7 +1828,10 @@ void ConsultaPacientePorDNI()
         cin >> DNI;
         cout << endl;
         if (existeDNI(DNI)) break;
-        else cout << "No existe ningun paciente con ese DNI. Intente de nuevo." << endl;
+        else {
+            cout << "No existe ningun paciente con ese DNI. Intente de nuevo." << endl;
+            system("pause");
+        }
     }
     Paciente reg;
     int pos = 0;
@@ -1836,7 +1839,7 @@ void ConsultaPacientePorDNI()
     {
         if (reg.getDNI() == DNI)
         {
-            reg.Mostrar();
+            MostrarPacientePorDNI(reg);
             return;
         }
     }
@@ -1875,7 +1878,16 @@ void CargarVectorPacientes(Paciente* vPacientes, int edadInicial, int edadTope) 
     }
 }
 
-
+int cantRegistrosRango(int edadInicial, int edadTope) {
+    Paciente reg;
+    int pos = 0, cont = 0;
+    while (reg.leerDeDisco(pos))
+    {
+        if (reg.getEdad() >= edadInicial && reg.getEdad() <= edadTope) cont++;
+        pos++;
+    }
+    return cont;
+}
 
 void ConsultaPacientePorRangoEdad() {
     int cantRegistros, edadInicial, edadTope;
@@ -1896,9 +1908,9 @@ void ConsultaPacientePorRangoEdad() {
         if (validarEdad(edadInicial, edadTope)) break;
         else cout << "Rango ingresado no valido. Vuelva a intentar." << endl;
     }
-
+    int cant = cantRegistrosRango(edadInicial, edadTope);
     Paciente* vPacientes;
-    vPacientes = new Paciente[cantRegistros];
+    vPacientes = new Paciente[cant];
 
     if (vPacientes == NULL)
     {
@@ -1906,8 +1918,9 @@ void ConsultaPacientePorRangoEdad() {
         return;
     }
     CargarVectorPacientes(vPacientes, edadInicial, edadTope);
-    OrdenarRegistrosPorEdad(vPacientes, cantRegistros);//REUTILIZADO
-    MostrarPacientes(vPacientes, cantRegistros);//MUESTRA LOS PACIENTES EN EL RANGO ESTABLECIDO(CON LOS LIMITES INCLUIDOS)
+    OrdenarRegistrosPorEdad(vPacientes, cant);//REUTILIZADO
+    MostrarPacientesPorRangoEdad(vPacientes, cant);
+    //MostrarPacientes(vPacientes, cantRegistros);//MUESTRA LOS PACIENTES EN EL RANGO ESTABLECIDO(CON LOS LIMITES INCLUIDOS)
 
     //delete[] vEmpleados;
 }
@@ -1929,19 +1942,14 @@ int obtenerCantTurnos() {
 void ConsultaDeTurnosNoAsistidos() {
     Turno turno;
     Fecha f;
+    vector <Turno> vTurnos;
     int cantTurnos = obtenerCantTurnos();
     if (cantTurnos == 0) {
         cout << "NO HAY REGISTROS DE TURNOS EN EL ARCHIVO." << endl;
         return;
     }
     cargarFechaHoy(f);
-    int pos = 0;
-    while (turno.leerDeDisco(pos++))
-    {
-        if (!turno.getAsistencia() && turno.getFechaTurno() < f) {
-            turno.Mostrar();
-        }
-    }
+    MostrarTurnosNoAsistidos(f);
 }
 ///----------------------------------------------------------------
 void ConsultaDeTurnosPorRangoDeFecha() {
@@ -1976,17 +1984,8 @@ void ConsultaDeTurnosPorRangoDeFecha() {
     cout << endl;
 
     fechaFinal.setFecha(Dia_Final, Mes_Final, Anio_Final);
-
-    Turno reg;
-    int pos = 0;
-    while (reg.leerDeDisco(pos++))
-    {
-        if (reg.getFechaTurno()>fechaInicial && reg.getFechaTurno()<fechaFinal)
-        {
-            reg.Mostrar();
-            cout << endl;
-        }
-    }
+    MostrarConsultaDeTurnosPorRangoFecha(fechaInicial, fechaFinal);
+    
 }
 ///----------------------------------------------------------------
 int obtenerEspecialidad(int legajoMedico) {
@@ -2023,13 +2022,9 @@ void ConsultaDeTurnosPorEspecialidad() {
         cin >> especialidad;
         cout << endl;
         if (especialidad >= 1 && especialidad <= 10) {
-            especialidad++;
-            while (turno.leerDeDisco(pos++))
-            {
-                if (obtenerEspecialidad(turno.getLegajoMedico()) == especialidad) {
-                    turno.Mostrar();
-                }
-            }
+            //especialidad++;
+            MostrarTurnosPorEspecialidad(especialidad);
+
             return;
         }
         else {
@@ -2075,23 +2070,7 @@ void ConsultaPorRangoFecha()
     cout << endl;
 
     fecha2.setFecha(Dia_Final, Mes_Final, Anio_Final);
-
-
-
-    FacturaConsulta reg;
-
-    int Pos = 0;
-    while (reg.leerDeDisco(Pos) == true)
-    {
-
-        if (reg.getFechaFactura() > fecha1 && reg.getFechaFactura() < fecha2)
-        {
-            reg.Mostrar();
-            cout << endl;
-        }
-        Pos++;
-    }
-
+    MostrarConsultaPagosPorRangoFecha(fecha1, fecha2);
 
 }
 
@@ -2113,30 +2092,7 @@ void ConsultaPorCliente()
 
         if (DniPaciente != 0)
         {
-
-            FacturaConsulta reg;
-
-            int Pos = 0;
-            int id = obtenerID(DniPaciente);
-            while (reg.leerDeDisco(Pos) == true)
-            {
-
-                if (reg.getIDPaciente() == id)
-                {
-
-                    Cont++;
-                    reg.Mostrar();
-                    cout << endl;
-
-                }
-                Pos++;
-            }
-
-            if (Cont == 0)
-            {
-                cout << "NO EXISTE UN PAGO CON ESE NUMERO DE DNI, INTENTE CON OTRO NUMERO" << endl << endl;
-            }
-
+            MostrarPagosPorCliente(DniPaciente);
             system("pause");
             system("cls");
         }

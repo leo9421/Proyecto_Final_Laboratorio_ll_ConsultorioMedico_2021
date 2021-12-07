@@ -52,6 +52,8 @@ void modificarTurnoDNI(Turno& t);
 void modificarFechaTurno(Turno& t);
 bool existeDNI(int dni);
 void obtenerEmpleado(int usuario, Empleado& e);
+int cantRegistrosRango(int edadInicial, int edadTope);
+
 
 void VerTurnosDelDia(int usuario);
 void AgregaRegistroDeHistoriaClinica(int usuario);

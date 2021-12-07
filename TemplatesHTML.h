@@ -16,7 +16,19 @@
 #include "HorarioEmpleado.h"
 #include "Archivo.h"
 #include <cstdlib>
+#include <vector>
+#include <string>
 
-void prueba();
+//void prueba();
 ///LISTADOS
 void MostrarPacientesListadosPorApellidos(Paciente* p, int cantRegistros);
+void MostrarPacientesPorRangoEdad(Paciente* vPacientes, int cant);
+void MostrarPacientePorDNI(Paciente& reg);
+void MostrarTurnosNoAsistidos(Fecha& hoy);
+void MostrarConsultaDeTurnosPorRangoFecha(Fecha& fechaInicial, Fecha& fechaFinal);
+void MostrarTurnosPorEspecialidad(int especialidad);
+void MostrarConsultaPagosPorRangoFecha(Fecha& fecha1, Fecha& fecha2);
+void MostrarPagosPorCliente(int DniPaciente);
+
+int obtenerDNIPaciente(int IDPaciente);
+void obtenerNombrePaciente(int IDPaciente, char nombre[]);
