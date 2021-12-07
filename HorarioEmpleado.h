@@ -1,15 +1,17 @@
 #pragma once
 #include "Hora.h"
 #include "FuncionesGlobales.h"
+#include "Cadena.h"
 //#include "Empleado.h"
 
 class HorarioEmpleado
 {
 public:
+public:
 	HorarioEmpleado();
 	//HorarioEmpleado(int IDEmpleado, bool *diasATrabajar, Hora *horaEntrada, Hora *horaSalida);
 	void setIDEmpleado(int idEmpleado);
-	void setDias(const char (*dias)[11]);
+	void setDias(const char(*dias)[11]);
 	void setDiasATrabajar(bool* diasATrabajar);
 	void setHoraEntrada(Hora* horaEntrada);
 	void setHoraSalida(Hora* horaSalida);

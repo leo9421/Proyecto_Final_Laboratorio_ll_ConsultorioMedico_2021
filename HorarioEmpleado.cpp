@@ -34,14 +34,13 @@ HorarioEmpleado::HorarioEmpleado() {
 		_horaEntrada[i] = horaEntrada[i];
 		_horaSalida[i] = horaSalida[i];
 	}
-
 }*/
 void HorarioEmpleado::setIDEmpleado(int idEmpleado) {
 	if (idEmpleado > 0 && idEmpleado < 100000) {
 		_IDEmpleado = idEmpleado;
 	}
 }
-void HorarioEmpleado::setDias(const char (*dias)[11]) {
+void HorarioEmpleado::setDias(const char(*dias)[11]) {
 	for (int i = 0; i < 7; i++)
 	{
 		strcpy(_dias[i], dias[i]);
@@ -56,10 +55,10 @@ void HorarioEmpleado::setDiasATrabajar(bool* diasATrabajar) {
 void HorarioEmpleado::setHoraEntrada(Hora* horaEntrada) {
 	for (int i = 0; i < 7; i++)
 	{
-			if (horaEntrada[i].getHora() < 0 || horaEntrada[i].getHora() > 23 ||
-				horaEntrada[i].getMinuto() < 0 || horaEntrada[i].getMinuto() > 59) {
-				return;
-			}
+		if (horaEntrada[i].getHora() < 0 || horaEntrada[i].getHora() > 23 ||
+			horaEntrada[i].getMinuto() < 0 || horaEntrada[i].getMinuto() > 59) {
+			return;
+		}
 	}
 	for (int i = 0; i < 7; i++) {
 		_horaEntrada[i] = horaEntrada[i];
@@ -85,7 +84,7 @@ void HorarioEmpleado::setEstado(bool estado) {
 int  HorarioEmpleado::getIDEmpleado() {
 	return _IDEmpleado;
 }
-char *HorarioEmpleado::getDias() {
+char* HorarioEmpleado::getDias() {
 	return *_dias;
 }
 bool* HorarioEmpleado::getDiasATrabajar() {
@@ -106,7 +105,7 @@ void HorarioEmpleado::Mostrar() {
 	cout << "Dias a trabajar: " << endl;
 	for (int i = 0; i < 7; i++)
 	{
-		if (_diasATrabajar[i]==true)
+		if (_diasATrabajar[i] == true)
 		{
 			cout << _dias[i] << " de ";
 			_horaEntrada[i].Mostrar();
@@ -128,7 +127,7 @@ bool HorarioEmpleado::leerDeDisco(int pos) {
 	fclose(p);
 	return ok;
 }
-bool HorarioEmpleado::grabarEnDisco(int pos=0) {
+bool HorarioEmpleado::grabarEnDisco(int pos = 0) {
 	FILE* p;
 	if (pos == 0) {
 		p = fopen("HorariosEmpleados.dat", "ab");

@@ -102,6 +102,9 @@ void menuAdministrativo() {
         cout << "3-ELIMINAR TURNO." << endl;
         cout << "4-AGREGAR PACIENTES AL SISTEMA." << endl;
         cout << "5-GESTIONAR PAGOS." << endl;
+        cout << "6-INFORMES" << endl;
+        cout << "7-CONSULTAS" << endl;
+        cout << "8-LISTADOS" << endl;
         cout << "0-VOLVER AL MENU PRINCIPAL." << endl << endl;
         cout << "INGRESE UNA OPCION: ";
         cin >> opc;
@@ -129,8 +132,20 @@ void menuAdministrativo() {
 
         case 5:
             system("cls");
+            //GestionarPagos();
             break;
-
+        case 6:
+            system("cls");
+            Informes();
+            break;
+        case 7:
+            system("cls");
+            Consultas();
+            break;
+        case 8:
+            system("cls");
+            Listados();
+            break;
         case 0:
             return;
             break;
@@ -202,6 +217,9 @@ void menuAdministrador() {
         cout << "1-AGREGAR UN USUARIO. " << endl;
         cout << "2-ELIMINAR UN USUARIO. " << endl;
         cout << "3-MODIFICAR UN USUARIO. " << endl;
+        //cout << "6-INFORMES" << endl;
+        //cout << "7-CONSULTAS" << endl;
+        //cout << "8-LISTADOS" << endl;
         cout << "4-CONFIGURACIONES." << endl;
         //cout << "5-ASIGNACION DE LIMITE DE TURNOS." << endl;
         cout << "0- VOLVER AL MENU PRINCIPAL" << endl << endl;

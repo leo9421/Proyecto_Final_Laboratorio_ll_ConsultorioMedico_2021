@@ -87,11 +87,43 @@ bool Empleado::getEstado() {
 void Empleado::Mostrar() {
 	Persona::Mostrar();
 	cout << "Legajo: " << _legajo << endl;
-	cout << "Password" << _password << endl;
+	cout << "Password: " << _password << endl;
 	cout << "Email: " << _email << endl;
 	cout << "Tipo de Empleado (1- Administrativo, 2- Medico, 99-Administrador): " << _tipoEmpleado << endl;
 	if (_tipoEmpleado == 2) {
-		cout << "Especialidad Medico: " << _especialidad.getEspecialidades()<<endl;
+		switch (_especialidad.getNEspecialidades()) {
+		case 2:
+			cout << "Especialidad Medico: Pediatria" << endl;
+			break;
+		case 3:
+			cout << "Especialidad Medico: Kinesiologia" << endl;
+			break;
+		case 4:
+			cout << "Especialidad Medico: Oftalmologia" << endl;
+			break;
+		case 5:
+			cout << "Especialidad Medico: Traumatologia" << endl;
+			break;
+		case 6:
+			cout << "Especialidad Medico: Obstetricia" << endl;
+			break;
+		case 7:
+			cout << "Especialidad Medico: Psicologia" << endl;
+			break;
+		case 8:
+			cout << "Especialidad Medico: Nutricion" << endl;
+			break;
+		case 9:
+			cout << "Especialidad Medico: Psiquiatria" << endl;
+			break;
+		case 10:
+			cout << "Especialidad Medico: Dermatologia" << endl;
+			break;
+		case 11:
+			cout << "Especialidad Medico: Cardiologia" << endl;
+			break;
+		}
+		//cout << "Especialidad Medico: " << _especialidad.getEspecialidades()<<endl;
 	}
 	_horarioEntradaSalida.Mostrar();
 	cout << endl;

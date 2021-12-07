@@ -723,13 +723,16 @@ bool noSeRepiteIDPaciente(int nro) {
 }
 //todo: hacerlo autonumerico(1,2,3...etc)..tambien con turnos
 int generarIDPaciente() {
-    int nro;
+    int nro, pos = 0, cont = 0;
     Paciente reg;
     FILE* p;
     p = fopen("Pacientes.dat", "rb");
-    if (p == NULL) return -1;
+    if (p == NULL) return 1;
+    while (reg.leerDeDisco(pos++)) {
+        if (reg.getEstado() == false) cont++;
+    }
     fseek(p, 0, 2);
-    nro = ftell(p) / sizeof(Paciente);
+    nro = (ftell(p) / sizeof(Paciente) - cont);
     fclose(p);
     return nro + 1;
 }
@@ -2720,59 +2723,139 @@ void ModificarRegistroDeHistoriaClinica(int usuario){
 
 
 ///ESTA FUNCION PERTENECE AL MENU ADMINISTRADOR
+
+int generarIdEmpleado() {
+    int nro, pos = 0, cont = 0;
+    Empleado reg;
+    FILE* p;
+    p = fopen("Empleados.dat", "rb");
+    if (p == NULL) return 1;
+    while (reg.leerDeDisco(pos)) {
+        if (reg.getEstado() == false) cont++;
+        pos++;
+    }
+    fseek(p, 0, 2);
+    nro = (ftell(p) / sizeof(Empleado) - cont);
+    fclose(p);
+    return nro + 1;
+}
+
 void AgregarUnUsuario()
 {
 
-    int DniUsuario, EdadUsusario, LegajoUsuario, TipoEmpleadoUsuario, IdEpleadoUsuario;
-    int NumeroEspecialidadUsuario;
+    int DniUsuario, EdadUsusario, LegajoUsuario, TipoEmpleadoUsuario, IdEpleadoUsuario, dia, mes, anio, edad, NumeroEspecialidadUsuario = -1;
     char Nombres[50];
     char Apellidos[50];
     char ContraseniaUsuario[30];
     char EmailUsuario[50];
+    bool diasATrabajar[7]{ 1 };
+    //int hEntrada[7][2]{};
+    //int hSalida[7][2]{};
+    Fecha f;
+    HorarioEmpleado hE;
+    Empleado reg;
+    Especialidad especialidad;
+    Hora hEntrada[7];
+    Hora hSalida[7];
     cout << "-------------------------Agregar a un usuario-------------------------" << endl;
     cout << "Ingrese los datos del usuario que quiera agregar" << endl;
-    cout << "Ingrese el DNI del usuario" << endl;
+    cout << "Ingrese el DNI: " << endl;
     cin >> DniUsuario;
     cout << endl;
     cin.ignore();
 
-    cout << "Ingrese los nombres del usuario" << endl;
-    cin.getline(Nombres, 50);
+    cout << "Ingrese nombre/s:" << endl;
+    cargarCadena(Nombres, 49);
     cout << endl;
 
-    cout << "Ingrese los apellidos del usuario" << endl;
-    cin.getline(Apellidos, 50);
+    cout << "Ingrese apellido/s: " << endl;
+    cargarCadena(Apellidos, 49);
     cout << endl;
 
-
-    cout << "Ingrese la edad del usuario" << endl;
-    cin >> EdadUsusario;
+    cout << "Ingrese Fecha de nacimiento:" << endl;
+    cout << "Dia: ";
+    cin >> dia;
+    cout << "Mes: ";
+    cin >> mes;
+    cout << "Anio: ";
+    cin >> anio;
+    if (f.esCorrecta(dia, mes, anio)) {
+        f.setFecha(dia, mes, anio);
+    }
     cout << endl;
+    edad = obtenerEdad(f);
+    //int id = generarIdEmpleado();
 
-    cout << "Ingrese un legajo para el usuario" << endl;
-    cin >> LegajoUsuario;
-    cout << endl;
-
-    cout << "Ingrese una contrasenia para el usuario" << endl;
+    cout << "Ingrese una contrasenia (al menos 8 caracteres): " << endl;
     cin >> ContraseniaUsuario;
     cout << endl;
 
-    cout << "Ingrese el email del usuario" << endl;
+    cout << "Ingrese el email: " << endl;
     cin >> EmailUsuario;
     cout << endl;
 
-    cout << "Ingrese el tipo de empleado del usuario" << endl;
+    cout << "Ingrese el tipo de empleado (1- Administrativo, 2- Medico, 99-Administrador): " << endl;
     cin >> TipoEmpleadoUsuario;
     cout << endl;
+    
+    if (TipoEmpleadoUsuario == 1) {
+        NumeroEspecialidadUsuario = 1;
+    }
+    else if (TipoEmpleadoUsuario == 99) {
+        NumeroEspecialidadUsuario = 0;
+    }
+    else if (TipoEmpleadoUsuario == 2) {
+        cout << "Ingrese el numero de especialidad del medico:" << endl;///No estoy muy seguro de esto, revisar bien
+        cout << "Opcion 1: Pediatria" << endl;
+        cout << "Opcion 2: Kinesiologia" << endl;
+        cout << "Opcion 3: Oftalmologia" << endl;
+        cout << "Opcion 4: Traumatologia" << endl;
+        cout << "Opcion 5: Obstetricia" << endl;
+        cout << "Opcion 6: Psicologia" << endl;
+        cout << "Opcion 7: Nutricion" << endl;
+        cout << "Opcion 8: Psiquiatria" << endl;
+        cout << "Opcion 9: Dermatologia" << endl;
+        cout << "Opcion 10: Cardiologia" << endl;
 
-    cout << "Ingrese el ID del empleado" << endl;///No estoy muy seguro de esto, revisar bien
-    cin >> IdEpleadoUsuario;
-    cout << endl;
+        cin >> NumeroEspecialidadUsuario;
+        cout << endl;
 
-    cout << "Ingrese el numero de especialidad del usuario" << endl;///No estoy muy seguro de esto, revisar bien
-    cin >> NumeroEspecialidadUsuario;
-    cout << endl;
-
+    }
+    reg.setDNI(DniUsuario);
+    reg.setNombres(Nombres);
+    reg.setApellidos(Apellidos);
+    reg.setEdad(edad);
+    reg.setLegajo(generarIdEmpleado());
+    reg.setPassword(ContraseniaUsuario);
+    reg.setEmail(EmailUsuario);
+    reg.setTipoEmpleado(TipoEmpleadoUsuario);
+    especialidad.setIDEmpleado(reg.getLegajo());
+    especialidad.setNEspecialidades(NumeroEspecialidadUsuario+1);
+    reg.setEspecialidad(especialidad);
+    hE.setIDEmpleado(reg.getLegajo());
+    bool dias[7] = { 1,1,1,1,1,0,0 };
+    hE.setDiasATrabajar(dias);
+    for (int i = 0; i < 5; i++)
+    {
+        hEntrada[i].setHora(8);
+        hEntrada[i].setMinuto(0);
+        hSalida[i].setHora(18);
+        hSalida[i].setMinuto(0);
+    }
+    for (int i = 5; i < 7; i++)
+    {
+        hEntrada[i].setHora(0);
+        hEntrada[i].setMinuto(0);
+        hSalida[i].setHora(0);
+        hSalida[i].setMinuto(0);
+    }
+    hE.setHoraEntrada(hEntrada);
+    hE.setHoraSalida(hSalida);
+    hE.setEstado(true);
+    reg.setHoraEntradaSalida(hE);
+    reg.setEstado(true);
+    reg.grabarEnDisco();
+    
 
 }
 

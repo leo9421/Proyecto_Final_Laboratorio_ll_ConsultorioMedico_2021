@@ -45,6 +45,7 @@ bool noExistePaciente(int dni);
 void ModificarTurno();
 bool horaValida(Hora& h);
 bool existeTurno(Turno& t, int dni, Fecha& f, Hora& h);
+int generarIdEmpleado();
 void EliminarTurno();
 void eliminarTurnoPaciente(Turno& t);
 void modificarTurnoDNI(Turno& t);

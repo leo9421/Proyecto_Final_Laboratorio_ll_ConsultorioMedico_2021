@@ -50,5 +50,9 @@ int Especialidad::getNEspecialidades() {
 }
 void Especialidad::Mostrar() {
 	cout << "Legajo de empleado: " << _IDEmpleado << endl;
-	cout << "Especialidad: " << _especialidades[_nEspecialidades]<<endl;
+	cout << "Especialidad: ";
+	for (int i = 0; i < 20; i++)
+	{
+		cout << _especialidades[_nEspecialidades][i];
+	}
 }

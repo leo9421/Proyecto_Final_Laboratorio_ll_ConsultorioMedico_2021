@@ -36,6 +36,7 @@ int main()
     while (reg.leerDeDisco(pos++,"Backup/Pacientes/rutas.dat")) {
         reg.Mostrar();
     }*/
+    //AgregarUnUsuario();
     //CopiaSeguridadPacientes();
     //CopiaSeguridadEmpleados();
     //ExportarEmpleados();
@@ -91,14 +92,14 @@ int main()
     //reg.grabarEnDisco(0);
     //obj.grabarEnDisco(0);
     //cout << endl;
-    Turno t;
+    Empleado t;
     int pos = 0;
 
     while (t.leerDeDisco(pos++)) {
-        if (t.getEstado()) {
+        //if (t.getEstado()) {
             t.Mostrar();
             cout << endl; 
-        }
+        //}
     }
     /*FILE* p;
     p = fopen("Turnos.dat", "rb");
