@@ -729,6 +729,8 @@ void MostrarConsultaPagosPorRangoFecha(Fecha& fecha1, Fecha& fecha2) {
 void MostrarPagosPorCliente(int DniPaciente) {
     ofstream file;
     FacturaConsulta facturaConsulta;
+    //todo:validar que existan registros
+    //todo: no se ve legajo medico y obra social
     file.open("Listados\\ConsultaPagosPorCliente.html");
     if (!file.is_open()) {
         cout << "ERROR DE ARCHIVO" << endl;

@@ -190,8 +190,8 @@ void menuMedico(int usuario) {
             break;
         case 3:
             system("cls");
-            break;
             ModificarRegistroDeHistoriaClinica(usuario);
+            break;
         case 0:
             return;
             break;
@@ -764,7 +764,7 @@ void ListadoDeTurnos()
 
         case 3:
             system("cls");
-            //todo:aca hay algo raro..en la funcion de tobias esta ConsultaDePagos();
+            ListadoDeTurnosOrdenadosPorMedicoTratante();
             break;
 
         case 0:

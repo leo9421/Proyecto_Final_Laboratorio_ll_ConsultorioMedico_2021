@@ -38,6 +38,7 @@ int nroDiaEnRango(Fecha* vFechas, Fecha& f, Fecha& aux);
 bool opcionValida(int opcion);
 void turnosDisponiblesPorMedico(int legajoMedico, Fecha& f, Hora* vHorarios, Turno& t, Fecha* vFechas);
 int obtenerID(int dni);
+bool existeDNIEmpleado(int dni);
 void AgregarPaciente(int dni=0);
 int generarIDPaciente();
 bool noSeRepiteIDPaciente(int nro);
@@ -53,7 +54,7 @@ void modificarFechaTurno(Turno& t);
 bool existeDNI(int dni);
 void obtenerEmpleado(int usuario, Empleado& e);
 int cantRegistrosRango(int edadInicial, int edadTope);
-
+void GestionarPagos();
 
 void VerTurnosDelDia(int usuario);
 void AgregaRegistroDeHistoriaClinica(int usuario);

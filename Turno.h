@@ -5,7 +5,7 @@ class Turno
 public:
 	Turno();
 	Turno(Fecha fechaTurno, Hora horaTurno, Fecha fechaAsignacionTurno, int ID = 0, int IDPaciente = 0,
-		int obraSocial = 0, int legajoMedico = 0, bool asistencia = false, bool estado = true);
+		int obraSocial = -1, int legajoMedico = 0, bool asistencia = false, bool estado = true);
 	~Turno();
 
 	void setID(int id);

@@ -1,16 +1,5 @@
-;DNI;Nombres;Apellidos;Edad;ID;Telefono;Email;Calle;Localidad;Partido;Provincia;CodigoPostal;Pais;Estado
-;0;Vacio;Iaconis;0;0;Vacio;Vacio;vacio;vacio;vacio;vacio;vacio;vacio;1
-;0;Vacio;Adam;0;0;Vacio;Vacio;vacio;vacio;vacio;vacio;vacio;vacio;1
-;0;Vacio;Bass;0;0;Vacio;Vacio;vacio;vacio;vacio;vacio;vacio;vacio;1
-;0;Vacio;Lopez;0;0;Vacio;Vacio;vacio;vacio;vacio;vacio;vacio;vacio;1
-;0;Vacio;Hernandez;0;0;Vacio;Vacio;vacio;vacio;vacio;vacio;vacio;vacio;1
-;0;Vacio;Vacio;22;0;Vacio;Vacio;vacio;vacio;vacio;vacio;vacio;vacio;1
-;0;Vacio;Vacio;23;0;Vacio;Vacio;vacio;vacio;vacio;vacio;vacio;vacio;1
-;0;Vacio;Vacio;25;0;Vacio;Vacio;vacio;vacio;vacio;vacio;vacio;vacio;1
-;0;Vacio;Vacio;25;0;Vacio;Vacio;vacio;vacio;vacio;vacio;vacio;vacio;1
-;0;Vacio;Vacio;30;0;Vacio;Vacio;vacio;vacio;vacio;vacio;vacio;vacio;1
-;0;Vacio;Vacio;50;0;Vacio;Vacio;vacio;vacio;vacio;vacio;vacio;vacio;1
-;0;Vacio;Vacio;0;0;Vacio;Vacio;vacio;Torcuato;vacio;vacio;vacio;vacio;1
-;0;Vacio;Vacio;0;0;Vacio;Vacio;vacio;Pacheco;vacio;vacio;vacio;vacio;1
-;0;Vacio;Vacio;0;0;Vacio;Vacio;vacio;Aaaaa;vacio;vacio;vacio;vacio;1
-;0;Vacio;Vacio;0;0;Vacio;Vacio;vacio;Capital;vacio;vacio;vacio;vacio;1
+DNI;Nombres;Apellidos;Edad;ID;Telefono;Email;Dia de nacimiento;Mes de nacimiento;Anio de nacimiento;Calle; Localidad; Partido; Provincia; CodigoPostal; Pais; Estado
+6546831;Candela;Sanabria;38;1;1563245632;Vacio;4;6;1983;falsa 123;Tigre;Tigre;Buenos Aires;1646;1646;1
+468464;Luis;Mas;20;2;156543213;lmas@gmail.com;12;12;2000;Callao 343;San Martin;San Martin;Buenos Aires;1234;1234;1
+123456;ana;perez;20;3;1532138513;asdf@gmail.com;1;1;2001;callao 153;san martin;san martin;buenos aires;1324;1324;1
+9999;Maria;Rodriguez;53;4;156543215;Vacio;5;11;1968;Luis Beltran 3253;Virreyes;San Fernando;Buenos Aires;1646;1646;1

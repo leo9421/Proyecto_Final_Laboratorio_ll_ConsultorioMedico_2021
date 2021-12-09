@@ -6,7 +6,7 @@ using namespace std;
 Turno::Turno() {
 	_ID = 0;
 	_IDPaciente = 0;
-	_obraSocial = 0;
+	_obraSocial = -1;
 	_legajoMedico = 0;
 	_asistencia = false;
 	_estado = true;

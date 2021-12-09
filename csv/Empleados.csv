@@ -1,8 +1,7 @@
 Legajo;Password;Email;Tipo de Empleado;Especialidad
-3333;AnaMartinez;leandro.gomez3@alumnos.frgp.utn.edu.ar;Medico;Pediatria
-3333;AnaMartinez;leandro.gomez3@alumnos.frgp.utn.edu.ar;Medico;Kinesiologia
-3333;AnaMartinez;leandro.gomez3@alumnos.frgp.utn.edu.ar;Medico;Oftalmologia
-3333;AnaMartinez;leandro.gomez3@alumnos.frgp.utn.edu.ar;Medico;Traumatologia
-3333;AnaMartinez;leandro.gomez3@alumnos.frgp.utn.edu.ar;Medico;Obstetricia
-3333;AnaMartinez;leandro.gomez3@alumnos.frgp.utn.edu.ar;Medico;Psicologia
-3333;AnaMartinez;leandro.gomez3@alumnos.frgp.utn.edu.ar;Medico;Nutricion
+1;123456789;tiaconis@gmail.com;Administrador;Administrativo
+2;123456789;lgomez@gmail.colm;Administrador;Administrativo
+3;987654321;adiaz@gmail.com;Medico;Obstetricia
+4;123456789;msanchez@gmail.com;Administrativo;Administrativo
+5;123456789;jmartinez@gmail.com;Administrador;Administrativo
+5;123456789;jperez@hotmail.com;Administrador;Administrador

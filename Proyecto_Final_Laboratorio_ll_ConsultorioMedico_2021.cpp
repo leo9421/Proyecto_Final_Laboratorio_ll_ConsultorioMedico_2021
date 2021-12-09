@@ -24,7 +24,7 @@ int main()
 {
     //ConsultaDePacientes();
     //ConsultaDeTurnos();
-    ConsultaDePagos();
+    //ConsultaDePagos();
     //ESTA ES UNA PRUEBA DE MODIFICACION EN GITHUB
     //RestaurarCopiaSeguridadPacientes();
     //ListadoDePacientesPorApellido();
@@ -58,7 +58,14 @@ int main()
     //AsignarTurno();
     //ModificarTurno();
     //EliminarTurno();
-    //login();
+    login();
+    /*Turno t;
+    Fecha f(7, 12, 2021);
+    Hora h(17, 30);
+    t.setFechaTurno(f);
+    t.setHoraTurno(h);
+    t.setLegajoMedico(3);
+    t.grabarEnDisco();*/
     //Hora h1(8, 0), h2(18, 0);
     //HorarioEmpleado horaLaboral;
     //horaLaboral.setHoraEntrada(h1);
@@ -86,7 +93,7 @@ int main()
     obj.setDNI(123456);
     obj.setNombres("Tobias");
     obj.setApellidos("Iaconis");
-    obj.setLegajo(2222);
+    obj.setLegajo(1111);
     strcpy(pass, "12345678");
     obj.setPassword(pass);
     obj.setEmail("tobias.iaconis@alumnos.frgp.utn.edu.ar");

@@ -304,7 +304,7 @@ void turnosDisponiblesPorMedico(int legajoMedico, Fecha& f, Hora* vHorarios, Tur
 		}
 	}
 }
-
+//todo: corregir bugs..cuando elijo un turno del dia siguiente me toma el turno de la misma hora del dia de "hoy"
 void AsignarTurno() {
 	int dia, mes, anio, hora, minuto, idTurno, idPaciente, DNIPaciente, obraSocial, especialidad = -1, legajoMedico = 0, opcion, opcionTurnoDia;
 	bool b = false, x = false, b1 = true;
@@ -895,8 +895,167 @@ else
 {
 	cout << "YA HAY UN TURNO PARA ESA ESPECIALIDAD EN LA FECHA QUE INGRESO, INTENTE CON OTRA FECHA" << endl;
 }*/
+//-------------------------------------------------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------------------------------------
+void GestionarPagos() {
+
+    int dia, mes, anio, hora, minuto;
+    Fecha f;
+    cout << "-------------------------Gestionar Pagos-------------------------" << endl;
+    cout << "Ingrese la fecha del turno para pasarle asistencia" << endl;
+    //todo:aca puedo usar la funcion cargarfechaHoy
 
 
+    //cargarFechaHoy(f)
+
+    cout << "Ingrese el dia: ";
+    cin >> dia;
+    cout << endl;
+
+    cout << "Ingrese el mes: ";
+    cin >> mes;
+    cout << endl;
+
+    cout << "Ingrese el anio: ";
+    cin >> anio;
+    cout << endl;
+
+    cout << "Ingrese la hora: ";
+    cin >> hora;
+    cout << endl;
+
+    cout << "Ingrese los minutos: ";
+    cin >> minuto;
+    cout << endl;
+
+    Turno reg;
+
+    int Pos = 0;
+    int Posicion = 0;
+    while (reg.leerDeDisco(Pos)) {
+        if (reg.getFechaTurno().getDia() == dia && reg.getFechaTurno().getMes() == mes && reg.getFechaTurno().getAnio() == anio && reg.getHoraTurno().getHora() == hora && reg.getHoraTurno().getMinuto() == minuto) {
+            //todo:ACA TENGO QUE PONER EN TRUE EL ESTADO ASISTENCIA Y DESPUES GRABAR
+            Posicion = Pos;
+        }
+        Pos++;
+    }
+
+    reg.leerDeDisco(Posicion);
+    reg.setEstado(true);
+    FILE* p;
+    p = fopen("FacturaConsulta.dat", "ab"); ///No me acuerdo si era rb o ab
+    if (p == NULL) {
+        cout << "No se pudo abrir el archivo de facturas" << endl;
+        return;
+    }
+
+
+    fseek(p, sizeof(FacturaConsulta) * Posicion, 0);
+    fwrite(&reg, sizeof(FacturaConsulta), 1, p);
+    //obj.grabarEnDisco(Cont);
+    fclose(p);
+
+
+    FacturaConsulta obj;
+    int   IDFactura;
+    float precioConsultaFactura;
+    int   IDPacienteFactura;
+    int   obraSocialFactura;
+    //Fecha _fechaFactura;
+    int diaFactura;
+    int mesFactura;
+    int anioFactura;
+    //Fecha _fechaTurno;
+    int diaTurno;
+    int mesTurno;
+    int anioTurno;
+
+    int legajoAdministrativoFactura;
+    int formaPagoFactura;
+    int legajoMedicoFactura;
+
+
+    //todo:falta validaciones para todos los ingresos de datos
+    cout << "Ingrese el ID del turno" << endl; //todo:esto es un autonumerico
+    cin >> IDFactura;
+    cout << endl;
+
+    cout << "Ingrese el precio del turno" << endl;
+    cin >> precioConsultaFactura;
+    cout << endl;
+
+    cout << "Ingrese el ID del paciente" << endl;
+    cin >> IDPacienteFactura;
+    cout << endl;
+
+    cout << "Ingrese el dia de la factura" << endl;
+    cin >> diaFactura;
+    cout << endl;
+
+    cout << "Ingrese el mes de la factura" << endl;
+    cin >> mesFactura;
+    cout << endl;
+
+    cout << "Ingrese el anio de la factura" << endl;
+    cin >> anioFactura;
+    cout << endl;
+
+    cout << "Ingrese el dia del turno" << endl;
+    cin >> diaTurno;
+    cout << endl;
+
+    cout << "Ingrese el mes del turno" << endl;
+    cin >> mesTurno;
+    cout << endl;
+
+    cout << "Ingrese el anio del turno" << endl;
+    cin >> anioTurno;
+    cout << endl;
+
+    //todo:Esto tiene que ser a utonumerico creo
+    cout << "Ingrese su numero de legajo" << endl;
+    cin >> legajoAdministrativoFactura;
+    cout << endl;
+
+    cout << "Ingrese la forma de pago de la factura" << endl;
+    cin >> formaPagoFactura;
+    cout << endl;
+
+    cout << "Ingrese el numero de legajo del medico con el que se tuvo el turno" << endl;
+    cin >> legajoMedicoFactura;
+    cout << endl;
+
+    obj.setID(IDFactura);
+    obj.setPrecioConsulta(precioConsultaFactura);
+    obj.setIDPaciente(IDPacienteFactura);
+    Fecha FechaFactura, FechaTurno;
+    FechaFactura.setFecha(diaFactura, mesFactura, anioFactura);
+    obj.setFechaFactura(FechaFactura);
+    FechaTurno.setFecha(diaTurno, mesTurno, anioTurno);
+    obj.setLegajoAdministrativo(legajoAdministrativoFactura);
+    obj.setFormaPago(formaPagoFactura);
+    obj.setLegajoMedico(legajoMedicoFactura);
+
+    if (obj.grabarEnDisco() == true) {
+        cout << "La factura se agrego correctamente" << endl;
+    }
+
+    else {
+        cout << "No se pudo agregar la factura" << endl;
+    }
+
+
+
+}
+//-------------------------------------------------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------------------------------------
 ///Cuenta y devuelve la cantidad de registros que hay en el archivo de pacientes
 ///Cuenta y devuelve la cantidad de registros que hay en el archivo de pacientes
 int ContarCantidadRegistrosPacientes()
@@ -1110,6 +1269,7 @@ void MostrarTurnos(Turno* p, int cantRegistros)
 {
     for (int x = 0; x < cantRegistros; x++)
     {
+        cout << "Legajo medico tratante: "<<p[x].getLegajoMedico() << endl;
         p[x].Mostrar();
         cout << endl;
     }
@@ -1580,7 +1740,7 @@ void ListadoDeTurnosOrdenadosPorEspecialidad()
 
     delete[] vEmpleados;
 }
-
+//todo: mostrar legajo de medico en cada registro que se muestra
 void ListadoDeTurnosOrdenadosPorMedicoTratante() {
 
     int cantRegistros;
@@ -1657,8 +1817,10 @@ void OrdenarVectorEmpleadosPorLegajo(Empleado* vEmpleados, int cantRegistros) {
 void MostrarEmpleados(Empleado* vEmpleados, int cantRegistros) {
     for (int i = 0; i < cantRegistros; i++)
     {
-        vEmpleados[i].Mostrar();
-        cout << endl;
+        if (vEmpleados[i].getEstado()) {
+            vEmpleados[i].Mostrar();
+            cout << endl;
+        }
     }
 }
 
@@ -2106,44 +2268,43 @@ void ConsultaPorObraSocial()
 {
 
     int ObraSocial = 1;
-
-
-    while (ObraSocial >= 0)
+    while (ObraSocial != 0)
     {
         int Cont = 0;
         cout << "---------------BUSCAR PAGO POR OBRA SOCIAL---------------" << endl; ///Esto no se si dejarlo o sacarlo
-        cout << "Ingrese la obra social del pago que desea buscar (ingrese un numero negativo para volver al menu)" << endl;
+        //todo:aca podriamos mostrar que es cada obra social
+        cout << "Ingrese la obra social del pago que desea buscar (ingrese un 0 para volver al menu)" << endl;
         cin >> ObraSocial;
         cout << endl;
 
-        if (ObraSocial >= 0)
+        if (ObraSocial == 0)
+        {
+            return;
+        }
+
+        FacturaConsulta reg;
+
+        int Pos = 0;
+        while (reg.leerDeDisco(Pos) == true)
         {
 
-            FacturaConsulta reg;
-
-            int Pos = 0;
-            while (reg.leerDeDisco(Pos) == true)
+            if (reg.getObraSocial() == ObraSocial)
             {
+                Cont++;
+                reg.Mostrar();
+                cout << endl;
 
-                if (reg.getObraSocial() == ObraSocial)
-                {
-                    Cont++;
-                    reg.Mostrar();
-                    cout << endl;
-
-                }
-                Pos++;
             }
-
-            if (Cont == 0)
-            {
-                cout << "NO EXISTE UN PAGO CON ESE NUMERO DE OBRA SOCIAL, INTENTE CON OTRO NUMERO" << endl << endl;
-            }
-
-
-            system("pause");
-            system("cls");
+            Pos++;
         }
+
+        if (Cont == 0)
+        {
+            cout << "NO EXISTE UN PAGO CON ESE NUMERO DE OBRA SOCIAL, INTENTE CON OTRO NUMERO" << endl << endl;
+        }
+
+        system("pause");
+        system("cls");
 
     }
 
@@ -2528,6 +2689,8 @@ void VerTurnosDelDia(int Usuario)
         if (reg.getLegajoMedico() == Usuario && reg.getFechaTurno().getDia() == f.getDia() && reg.getFechaTurno().getMes() == f.getMes() && reg.getFechaTurno().getAnio() == f.getAnio())
         {
             Cont++;
+            //todo: hacer esta funcion
+            //cout << obtenerNombre(reg.getIDPaciente()) << end;
             reg.Mostrar();
             cout << endl;
         }
@@ -2556,7 +2719,7 @@ void AgregaRegistroDeHistoriaClinica(int usuario) {
         cout << "Hora: ";
         cin >> hora;
         cout << endl;
-        if (hora != 0) {
+        if (hora == 0) {
             return;
         }
         cout << "Minutos: ";
@@ -2567,8 +2730,9 @@ void AgregaRegistroDeHistoriaClinica(int usuario) {
         int Pos = 0;
         while (obj.leerDeDisco(Pos) == true)
         {
-            if (obj.getLegajoMedico() == usuario && obj.getFechaTurno().getDia() == f.getDia() && obj.getFechaTurno().getMes() == f.getMes() && obj.getFechaTurno().getAnio() == f.getAnio() && hora == obj.getHoraTurno().getHora() && minutos == obj.getHoraTurno().getMinuto())
-            {
+            if (obj.getLegajoMedico() == usuario && obj.getFechaTurno().getDia() == f.getDia() && obj.getFechaTurno().getMes()
+                == f.getMes() && obj.getFechaTurno().getAnio() == f.getAnio() && hora == obj.getHoraTurno().getHora() && minutos
+                == obj.getHoraTurno().getMinuto()) {
                 Cont++;
                 IdTurno = obj.getID();
                 obj.Mostrar();
@@ -2628,13 +2792,14 @@ void AgregaRegistroDeHistoriaClinica(int usuario) {
 void ModificarRegistroDeHistoriaClinica(int usuario) {
     int Dia = 1, Mes, Anio, DniPaciente, IdPaciente, ID;
     while (Dia != 0) {
+        //system("cls");
         cout << "--------------------------Modificar historia clinica--------------------------" << endl;
         cout << "Buscar historias clinicas en un rango de fechas" << endl << endl;
         cout << "Ingrese una fecha inicial (Ingrese un dia igual a 0 para volver al menu)" << endl;
 
         cout << "Ingrese el Dia: ";
         cin >> Dia;
-        if (Dia != 0) {
+        if (Dia == 0) {
             return;
         }
         cout << "Ingrese el Mes: ";
@@ -2866,6 +3031,18 @@ void AgregarUnUsuario()
 
 }
 //-------------------------------------------------------------------------------------------------
+bool existeDNIEmpleado(int dni) {
+    Empleado reg;
+    int pos = 0;
+    while (reg.leerDeDisco(pos++))
+    {
+        if (dni == reg.getDNI()) {
+            return true;
+        }
+    }
+    return false;
+}
+
 void EliminarUsuario()
 {
 
@@ -2882,7 +3059,7 @@ void EliminarUsuario()
         ///ESTO VALIDA QUE EL DNI INGRESADO NO PUEDO SER NEGATIVO
         if (DniUsuario == 0) { return; }
 
-        if (existeDNI(DniUsuario) == false) {
+        if (existeDNIEmpleado(DniUsuario) == false) {
             cout << "El dni que ingreso no existe o es incorrecto, ingrese otro dni" << endl;
             system("pause");
             system("cls");
@@ -2977,7 +3154,7 @@ void ModificarUsuario()
         if (DniUsuario == 0) { return; }
 
         ///ESTO VALIDA QUE EL DNI INGRESADO NO PUEDO SER NEGATIVO
-        if (existeDNI(DniUsuario) == false)
+        if (existeDNIEmpleado(DniUsuario) == false)
         {
             cout << "El dni que ingreso no existe o no es valido, ingrese otro dni" << endl;
             system("pause");
@@ -3025,9 +3202,9 @@ void ModificarUsuario()
                     cin >> EdadUsusario; ///OK
                     cout << endl;
 
-                    cout << "Ingrese un legajo para el usuario" << endl;
+                    /*cout << "Ingrese un legajo para el usuario" << endl;
                     cin >> LegajoUsuario; ///OK, PERO CREO QUE ESTO DEBERIA SER UN AUTONUMERICO
-                    cout << endl;
+                    cout << endl;*/
 
                     cout << "Ingrese una contrasenia para el usuario" << endl;
                     cin >> ContraseniaUsuario; ///OK
@@ -3038,44 +3215,48 @@ void ModificarUsuario()
                     cout << endl;
 
                     cout << "Ingrese el tipo de empleado del usuario" << endl;
-                    cout << "99-Administrador  1-Adminitrativo  2-Medico" << endl;
+                    cout << "99-Administrador  1-Administrativo  2-Medico" << endl;
                     cin >> TipoEmpleadoUsuario; ///OK
                     cout << endl;
 
-                    cout << "Ingrese el ID del empleado" << endl;///No estoy muy seguro de esto, revisar bien
+                    /*cout << "Ingrese el ID del empleado" << endl;///No estoy muy seguro de esto, revisar bien
                     cin >> IdEpleadoUsuario; ///ESTE ES EL ID DE EMPLEADP DE LA ESPECIALIDAD DEL USUARIO
-                    cout << endl;
+                    cout << endl;*/
+
+                    if (TipoEmpleadoUsuario == 2) {
+                        cout << "ingrese la especialidad deñ empleado: " << endl;
+                        cout << "1-Pediatria" << endl;
+                        cout << "2-Kinesiologia   3-Oftalmologia    4-Traumatologia" << endl;
+                        cout << "5-Obstetricia    6-Psicologia      7-Nutricion" << endl;
+                        cout << "8-Psiquiatra     9-Oftalmologia   10-Cardiologia" << endl << endl;
+                        cout << "Ingrese el numero correspondiente a la especialidad del empleado" << endl;
+                        cin >> NumeroEspecialidadUsuario; ///OK ///No estoy muy seguro de esto, revisar bien
+                        NumeroEspecialidadUsuario++;
+                        cout << endl;
+                    }
+                    else if (TipoEmpleadoUsuario == 1) NumeroEspecialidadUsuario = 1;
+                    else if(TipoEmpleadoUsuario==99) NumeroEspecialidadUsuario=0;
 
 
-                    cout << "ingrese la especialidad deñ empleado: " << endl;
-                    cout << "0-Administrador  1-Administrativo  2-Pediatria" << endl;
-                    cout << "3-Kinesiologia   4-Oftalmologia    5-Traumatologia" << endl;
-                    cout << "6-Obstetricia    7-Psicologia      8-Nutricion" << endl;
-                    cout << "9-Psiquiatra     10-Oftalmologia   11-Cardiologia" << endl << endl;
-                    cout << "Ingrese el numero correspondiente a la especialidad del empleado" << endl;
-                    cin >> NumeroEspecialidadUsuario; ///OK ///No estoy muy seguro de esto, revisar bien
-                    cout << endl;
-
-
-                    cout << "Ingrese el ID del empleado del horario" << endl;///No estoy muy seguro de esto, revisar bien
+                    /*cout << "Ingrese el ID del empleado del horario" << endl;///No estoy muy seguro de esto, revisar bien
                     cin >> IdEpleadoUsuarioHorario;
-                    cout << endl;
+                    cout << endl;*/
 
                     reg.leerDeDisco(Posicion);
                     reg.setDNI(DniUsuario);
                     reg.setNombres(Nombres);
                     reg.setApellidos(Apellidos);
                     reg.setEdad(EdadUsusario);
-                    reg.setLegajo(LegajoUsuario);
+                    //reg.setLegajo(LegajoUsuario);
                     reg.setPassword(ContraseniaUsuario);
                     reg.setEmail(EmailUsuario);
                     reg.setTipoEmpleado(TipoEmpleadoUsuario);
                     Especialidad obj;
-                    obj.setIDEmpleado(IdEpleadoUsuario);
+                    obj.setIDEmpleado(reg.getLegajo());
                     obj.setNEspecialidades(NumeroEspecialidadUsuario);
                     reg.setEspecialidad(obj);
                     HorarioEmpleado horita;
-                    horita.setIDEmpleado(IdEpleadoUsuarioHorario);
+                    horita.setIDEmpleado(reg.getLegajo());
 
                     FILE* p;
 
@@ -3200,6 +3381,8 @@ void CopiaSeguridadPacientes() {
     strcpy(ruta, r.c_str());
     grabarCopiaPacientes(ruta, paciente);
     guardarNombreArchivoPacientes(ruta);
+    cout << "La copia se ha realizado con exito!" << endl;
+    system("pause");
 }
 ///----------------------------------------------------------------------------------------------
 
@@ -3251,6 +3434,8 @@ void CopiaSeguridadTurnos() {
     strcpy(ruta, r.c_str());
     grabarCopiaTurnos(ruta, turno);
     guardarNombreArchivoTurnos(ruta);
+    cout << "La copia se ha realizado con exito!" << endl;
+    system("pause");
 }
 ///----------------------------------------------------------------------------------------------
 
@@ -3302,6 +3487,8 @@ void CopiaSeguridadPagos() {
     strcpy(ruta, r.c_str());
     grabarCopiaPagos(ruta, facturaConsulta);
     guardarNombreArchivoPagos(ruta);
+    cout << "La copia se ha realizado con exito!" << endl;
+    system("pause");
 }
 ///----------------------------------------------------------------------------------------------
 
@@ -3323,7 +3510,7 @@ void guardarNombreArchivoHistoriasClinicas(const char* ruta) {
     Archivo reg;
     reg.setNombre(ruta);
     reg.setEstado(true);
-    reg.grabarEnDisco("Backup/Historias Clinicas/rutas.dat");
+    reg.grabarEnDisco("Backup/HistoriasClinicas/rutas.dat");
 }
 
 void CopiaSeguridadHC() {
@@ -3341,7 +3528,7 @@ void CopiaSeguridadHC() {
         }
     }
     HistoriaClinica historiaClinica;
-    string carpeta("Backup/Historias Clinicas/");
+    string carpeta("Backup/HistoriasClinicas/");
     string nombre;
     generarNombreBK(nombre);
     string extension(".dat");
@@ -3353,6 +3540,8 @@ void CopiaSeguridadHC() {
     strcpy(ruta, r.c_str());
     grabarCopiaHistoriasClinicas(ruta, historiaClinica);
     guardarNombreArchivoHistoriasClinicas(ruta);
+    cout << "La copia se ha realizado con exito!" << endl;
+    system("pause");
 }
 ///----------------------------------------------------------------------------------------------
 
@@ -3404,6 +3593,8 @@ void CopiaSeguridadEmpleados() {
     strcpy(ruta, r.c_str());
     grabarCopiaEmpleados(ruta, empleado);
     guardarNombreArchivoEmpleados(ruta);
+    cout << "La copia se ha realizado con exito!" << endl;
+    system("pause");
 }
 ///----------------------------------------------------------------------------------------------
 void CopiaSeguridadTodos() {
@@ -3774,27 +3965,32 @@ void ExportarPacientes()
     Paciente reg;
     //reg.GrabarEnDisco(0);  ///Esta linea la use para grabar un objeto de tipo paciente a un archivo de pacientes
     ofstream File;
+
+
+    int pos = 0;
+    File.open("csv/pacientes.csv"); //Este es el direcctorio adonde se guarda el archivo csv
     if (!File.is_open()) {
         cout << "ERROR DE ARCHIVO" << endl;
         return;
     }
-    
-    int pos = 0;
-    File.open("csv/pacientes.csv"); //Este es el direcctorio adonde se guarda el archivo csv
-    File << "DNI" << ";" << "Nombres" << ";" << "Apellidos" << ";" << "Edad";
-    File << "ID" << ";" << "Telefono" << ";" << "Email";
+    File << "DNI" << ";" << "Nombres" << ";" << "Apellidos" << ";" << "Edad" << ";";
+    File << "ID" << ";" << "Telefono" << ";" << "Email" << ";";
+    File << "Dia de nacimiento" << ";" << "Mes de nacimiento" << ";" << "Anio de nacimiento" << ";";
     File << "Calle" << "; " << "Localidad" << "; " << "Partido" << "; " << "Provincia" << "; " << "CodigoPostal" << "; " << "Pais" << "; " << "Estado" << endl;
-    
+
     while (reg.leerDeDisco(pos++)) //Esto carga a un objeto de tipo paciente un registro de un archivo de oacientes
     {
         ///Esto convierte lo que esta cargado en el objeto de tipo paciente a un archivo csv y lo guarda ahi
-        File << reg.getDNI() << ";" << reg.getNombres() << ";" << reg.getApellidos() << ";" << reg.getEdad();
-        File << reg.getID() << ";" << reg.getTelefono() << ";" << reg.getEmail();
-        File << reg.getDireccionPaciente().getCalle() << ";" << reg.getDireccionPaciente().getLocalidad() << ";" << reg.getDireccionPaciente().getPartido();
-        File << reg.getDireccionPaciente().getProvincia() << ";" << reg.getDireccionPaciente().getCodigoPostal() << ";" << reg.getDireccionPaciente().getCodigoPostal();
+        File << reg.getDNI() << ";" << reg.getNombres() << ";" << reg.getApellidos() << ";" << reg.getEdad() << ";";
+        File << reg.getID() << ";" << reg.getTelefono() << ";" << reg.getEmail() << ";";
+        File << reg.getFechaNac().getDia() << ";" << reg.getFechaNac().getMes() << ";" << reg.getFechaNac().getAnio() << ";";
+        File << reg.getDireccionPaciente().getCalle() << ";" << reg.getDireccionPaciente().getLocalidad() << ";" << reg.getDireccionPaciente().getPartido() << ";";
+        File << reg.getDireccionPaciente().getProvincia() << ";" << reg.getDireccionPaciente().getCodigoPostal() << ";" << reg.getDireccionPaciente().getCodigoPostal() << ";";
         File << reg.getEstado() << endl;
     }
-    
+
+    cout << "Se exporto el archivo de pacientes exitosamente" << endl;
+
     File.flush();
     File.close();
 }
@@ -3808,28 +4004,31 @@ void ExportarTurnos()
 
     ofstream File;
     File.open("csv/Turnos.csv"); //Este es el direcctorio adonde se guarda el archivo csv
+
     if (!File.is_open()) {
         cout << "ERROR DE ARCHIVO" << endl;
         return;
     }
 
-    File << "ID" << ";" << "IDPaciente" << ";" << "ObraSocial";
-    File << "Dia del turno" << ";" << "Mes del turno" << ";" << "Anio del turno";
-    File << "Hora del turno" << ";" << "Minuto del turno";
-    File << "Dia asignacion turno" << ";" << "Mes asignacion turno" << ";" << "Anio asignacion turno";
-    File << "LegajoMedico" << ";" << "Asistencia" << ";" << "Estado" << endl;
+    File << ";" << "ID" << ";" << "IDPaciente" << ";" << "ObraSocial";
+    File << ";" << "Dia del turno" << ";" << "Mes del turno" << ";" << "Anio del turno";
+    File << ";" << "Hora del turno" << ";" << "Minuto del turno";
+    File << ";" << "Dia asignacion turno" << ";" << "Mes asignacion turno" << ";" << "Anio asignacion turno";
+    File << ";" << "LegajoMedico" << ";" << "Asistencia" << ";" << "Estado" << endl;
 
     int Pos = 0;
     while (reg.leerDeDisco(Pos) == true) //Esto carga a un objeto de tipo Turno un registro de un archivo de Turnos
     {
         ///Esto convierte lo que esta cargado en el objeto de tipo Turno a un archivo csv y lo guarda ahi
-        File << reg.getID() << ";" << reg.getIDPaciente() << ";" << reg.getObraSocial();
-        File << reg.getFechaTurno().getDia() << ";" << reg.getFechaTurno().getMes() << ";" << reg.getFechaTurno().getAnio();
-        File << reg.getHoraTurno().getHora() << ";" << reg.getHoraTurno().getMinuto();
-        File << reg.getFechaAsignacionTurno().getDia() << ";" << reg.getFechaAsignacionTurno().getMes() << ";" << reg.getFechaAsignacionTurno().getAnio();
-        File << reg.getLegajoMedico() << ";" << reg.getAsistencia() << ";" << reg.getEstado() << endl;
+        File << ";" << reg.getID() << ";" << reg.getIDPaciente() << ";" << reg.getObraSocial();
+        File << ";" << reg.getFechaTurno().getDia() << ";" << reg.getFechaTurno().getMes() << ";" << reg.getFechaTurno().getAnio();
+        File << ";" << reg.getHoraTurno().getHora() << ";" << reg.getHoraTurno().getMinuto();
+        File << ";" << reg.getFechaAsignacionTurno().getDia() << ";" << reg.getFechaAsignacionTurno().getMes() << ";" << reg.getFechaAsignacionTurno().getAnio();
+        File << ";" << reg.getLegajoMedico() << ";" << reg.getAsistencia() << ";" << reg.getEstado() << endl;
         Pos++;
     }
+
+    cout << "Se exporto el archivo de turnos exitosamente" << endl;
 
     File.flush();
     File.close();
@@ -3851,24 +4050,23 @@ void ExportarPagosConsultas()
     }
 
 
-    File << "ID" << ";" << "PrecioConsulta" << ";" << "IDPaciente" << ";" << "ObraSocial";
-    File << "DiaFactura" << ";" << "MesFactura" << ";" << "AnioFactura";
-    File << "DiaTurno" << ";" << "MesTurno" << ";" << "AnioTurno";
-    File << "LegajoAdmin" << ";" << "FormaPago" << endl;
+    File << ";" << "ID" << ";" << "PrecioConsulta" << ";" << "IDPaciente" << ";" << "ObraSocial";
+    File << ";" << "DiaFactura" << ";" << "MesFactura" << ";" << "AnioFactura";
+    File << ";" << "DiaTurno" << ";" << "MesTurno" << ";" << "AnioTurno";
+    File << ";" << "LegajoAdmin" << ";" << "FormaPago" << ";" << "LegajoMedico" << endl;
 
     int Pos = 0;
-
     while (reg.leerDeDisco(Pos) == true)
     {
         ///Esto convierte lo que esta cargado en el objeto de tipo FacturaConsulta a un archivo csv y lo guarda ahi
         ///Falta el get de precioconsulta
-        File << reg.getID() << ";" << "precioConsul" << ";" << reg.getIDPaciente() << ";" << reg.getObraSocial();
-        File << reg.getFechaFactura().getDia() << ";" << reg.getFechaFactura().getMes() << ";" << reg.getFechaFactura().getAnio();
-        File << reg.getFechaTurno().getDia() << ";" << reg.getFechaTurno().getMes() << ";" << reg.getFechaTurno().getAnio();
-        File << reg.getLegajoAdministrativo() << ";" << reg.getFormaPago() << endl;
+        File << ";" << reg.getID() << ";" << reg.getPrecioConsulta() << ";" << reg.getIDPaciente() << ";" << reg.getObraSocial();
+        File << ";" << reg.getFechaFactura().getDia() << ";" << reg.getFechaFactura().getMes() << ";" << reg.getFechaFactura().getAnio();
+        File << ";" << reg.getFechaTurno().getDia() << ";" << reg.getFechaTurno().getMes() << ";" << reg.getFechaTurno().getAnio();
+        File << ";" << reg.getLegajoAdministrativo() << ";" << reg.getFormaPago() << endl;
         Pos++;
     }
-
+    cout << "Se exporto el archivo de Consultas exitosamente" << endl;
     File.flush();
     File.close();
 }
@@ -3888,16 +4086,16 @@ void ExportarHistoriasClinicas()
         return;
     }
 
-    File << "IDTurno" << ";" << "DetallesConsulta" << endl;
+    File << ";" << "IDTurno" << ";" << "DetallesConsulta" << endl;
     int Pos = 0;
 
     while (reg.leerDeDisco(Pos) == true)
     {
 
-        File << reg.getIDTurno() << ";" << reg.getDetallesConsulta() << endl;
+        File << ";" << reg.getIDTurno() << ";" << reg.getDetallesConsulta() << endl;
         Pos++;
     }
-
+    cout << "Se exporto el archivo de Historias Clinicas exitosamente" << endl;
     File.flush();
     File.close();
 }
@@ -3908,7 +4106,7 @@ void ExportarEmpleados()
 {
     int pos = 0;
     Cadena especialidad[3] = { "Administrativo","Medico","Administrador" };
-    Cadena especialidades[12] = { "Administrador","Administrativo","Pediatria", "Kinesiologia", "Oftalmologia", 
+    Cadena especialidades[12] = { "Administrador","Administrativo","Pediatria", "Kinesiologia", "Oftalmologia",
         "Traumatologia", "Obstetricia", "Psicologia", "Nutricion", "Psiquiatria", "Dermatologia", "Cardiologia" };
     Empleado reg;
     ofstream File;
@@ -3917,31 +4115,7 @@ void ExportarEmpleados()
         cout << "ERROR DE ARCHIVO" << endl;
         return;
     }
-    /*private:
-    int _legajo;
-    char _password[30];
-    char _email[50];
-    int _tipoEmpleado;
-    Especialidad _especialidad;
-    HorarioEmpleado _horarioEntradaSalida;
-    bool _estado;*/
 
-    /*
-        class Especialidad
-        private:
-        int _IDEmpleado;
-        char _especialidades[12][20];
-        int _nEspecialidades;
-        */
-
-        //class HorarioEmpleado
-        /* private:
-        int _IDEmpleado;
-        char _dias[7][11];
-        bool _diasATrabajar[7];
-        Hora _horaEntrada[7];
-        Hora _horaSalida[7];
-        bool _estado; */
 
         ///Aca tengo un problema con _especialidad > Esoecialidades
     File << "Legajo" << ";" << "Password" << ";" << "Email" << ";" << "Tipo de Empleado";
@@ -3949,16 +4123,17 @@ void ExportarEmpleados()
     while (reg.leerDeDisco(pos))
     {
         if (reg.getTipoEmpleado() == 99) {
-            File << reg.getLegajo() << ";" << reg.getPassword() <<";"<<reg.getEmail()<<";"<< especialidad[2].getCadena()<<";"
-                <<especialidades[reg.getEspecialidad().getNEspecialidades()].getCadena() << endl;
+            File << reg.getLegajo() << ";" << reg.getPassword() << ";" << reg.getEmail() << ";" << especialidad[2].getCadena() << ";"
+                << especialidades[reg.getEspecialidad().getNEspecialidades()].getCadena() << endl;
         }
         else {
-            File << reg.getLegajo() << ";" << reg.getPassword() << ";" << reg.getEmail() << ";" << 
-                especialidad[reg.getTipoEmpleado()-1].getCadena() << ";" <<
-                especialidades[reg.getEspecialidad().getNEspecialidades()-1].getCadena() << endl;
+            File << reg.getLegajo() << ";" << reg.getPassword() << ";" << reg.getEmail() << ";" <<
+                especialidad[reg.getTipoEmpleado() - 1].getCadena() << ";" <<
+                especialidades[reg.getEspecialidad().getNEspecialidades() - 1].getCadena() << endl;
         }
         pos++;
     }
+    cout << "Se exporto el archivo de Empleados exitosamente" << endl;
     File.flush();
     File.close();
 }
