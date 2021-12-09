@@ -57,11 +57,11 @@ void leerPassword(char* password)
 }
 
 
-
 void login() {
     int usuario;
     char password[30];
     int tipoEmpleado;
+    
     while (true) {
         system("cls");
         cout << "\t\tLOGIN DE USUARIO" << endl;
@@ -845,7 +845,7 @@ void ConsultaDePacientes()
         cout << "1-POR DNI" << endl;
         cout << "2-POR RANGO DE EDAD" << endl;
         cout << "0- VOLVER" << endl << endl;
-        cout << "INGRESE UNA OPCION ";
+        cout << "INGRESE UNA OPCION: ";
         cin >> opc;
         cout << endl;
 

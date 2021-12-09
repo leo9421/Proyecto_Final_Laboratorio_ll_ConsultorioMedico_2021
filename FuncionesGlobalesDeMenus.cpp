@@ -9,6 +9,7 @@
 #include <fstream>
 #include <Windows.h>
 #include <random>
+//#include "rtuil.h"
 ///ESTA ES UNA PRUEBA DE USO DE GITHUB DESDE VISUAL STUDIO 2019
 ///ESTA ES UNA PRUEBA DE USO DE GITHUB DESDE VISUAL STUDIO 2019
 using namespace std;
@@ -439,6 +440,7 @@ void AsignarTurno() {
                 system("cls");
                 cout << "Ingrese especialidad (o 0 para volver al menu anterior): ";
                 cin >> especialidad;
+                especialidad++;
                 cout << endl;
                 if (especialidad == 0) break;
                 if (!existeEspecialidad(especialidad, t)) {
@@ -557,7 +559,7 @@ void AsignarTurno() {
                                     //t.setDNIPaciente(DNIPaciente);
                                     t.setObraSocial(obraSocial);
                                     //t.setEspecialidad(especialidad);
-                                    t.setFechaTurno(f);
+                                    //t.setFechaTurno(f);
                                     //t.setLegajoMedico(legajoMedico);
                                     t.setEstado(true);
                                     if (t.grabarEnDisco(0)) {
@@ -1010,12 +1012,14 @@ void AgregarPaciente(int dni) {
         
     while (true)
     {
-        system("cls");
-        cout << "Ingrese los datos del nuevo paciente (o 0 para volver al menu administrativo): " << endl;
-        cout << "DNI: ";
-        cin >> dni;
+        if (dni == 0) {
+            system("cls");
+            cout << "Ingrese los datos del nuevo paciente (o 0 para volver al menu administrativo): " << endl;
+            cout << "DNI: ";
+            cin >> dni;
+        }
         if (dni == 0)return;
-        cin.ignore();
+        //cin.ignore();
         if (noExistePaciente(dni)) {
             break;
         }
@@ -1024,6 +1028,8 @@ void AgregarPaciente(int dni) {
             system("pause");
         }
     }
+    system("cls");
+    cin.ignore();
     cout << "Nombre/s: ";
     cargarCadena(nombres, 49);
     cout << "Apellido/s: ";
@@ -1031,7 +1037,7 @@ void AgregarPaciente(int dni) {
     while (true)
     {
         system("cls");
-        cout << "Ingrese fecha de nacimiento (o 0 para volver al menu administrativo):" << endl;
+        cout << "Ingrese fecha de nacimiento:" << endl;
         cout << "Dia: ";
         cin >> dia;
         if (dia == 0) {
@@ -1153,7 +1159,7 @@ int generarIDFacturaConsulta() {
     int nro, pos = 0, cont = 0;
     FacturaConsulta reg;
     FILE* p;
-    p = fopen("FacturaConsulta.dat", "rb");
+    p = fopen("FacturasConsultas.dat", "rb");
     if (p == NULL) return 1;
     while (reg.leerDeDisco(pos++)) {
         //if (reg.getEstado() == false)
@@ -1209,7 +1215,7 @@ void GestionarPagos(int usuario) {
         else if (hora < 0 || hora>24) {
             cout << "Hora ingresada incorrecta. Vuelva a intentar" << endl;
             system("pause");
-            continue;
+            //continue;
         }
         cout << endl;
 
@@ -1226,6 +1232,7 @@ void GestionarPagos(int usuario) {
             system("pause");
             continue;
         }
+        //if(existeTurno())
         Hora h(hora, minuto);
         //if (!horaValida(h)) {
         //    cout << "Hora ingresada incorrecta. Vuelva a intentar" << endl;
@@ -1425,8 +1432,8 @@ void GestionarPagos(int usuario) {
     else {
         cout << "No se pudo agregar la factura" << endl;
     }
-
-
+    cout << endl << endl;
+    obj.Mostrar();
 
 }
 //-------------------------------------------------------------------------------------------------------------------------------
@@ -1647,9 +1654,11 @@ void MostrarTurnos(Turno* p, int cantRegistros)
 {
     for (int x = 0; x < cantRegistros; x++)
     {
-        cout << "Legajo medico tratante: "<<p[x].getLegajoMedico() << endl;
-        p[x].Mostrar();
-        cout << endl;
+        if (p[x].getEstado()) {
+            cout << "Legajo medico tratante: "<<p[x].getLegajoMedico() << endl;
+            p[x].Mostrar();
+            cout << endl;
+        }
     }
 
 }
@@ -1858,9 +1867,13 @@ int BuscarPosiocionID(int ID) {
 void MostrarTurnosDeCadaEspecialidad(int Legajo) {
 
     Turno reg;
+    /*Cadena especialidades[10] = {"Pediatria", "Kinesiologia", "Oftalmologia", "Traumatologia", "Obstetricia", "Psicologia",
+        "Nutricion", "Psiquiatria", "Dermatologia", "Cardiologia" };
+    Especialidad e;*/
     int Pos = 0;
     while (reg.leerDeDisco(Pos) == true) {
         if (reg.getLegajoMedico() == Legajo) {
+            cout << "Legajo Empleado: " << Legajo << endl;
             reg.Mostrar();
             cout << endl;
         }
@@ -1875,7 +1888,7 @@ void MostrarTurnosOrdenadosPorEspecialidad(Empleado* vEmpleados, int cantRegistr
     Empleado reg;
     int Pos = 0;
     while (reg.leerDeDisco(Pos)) {
-        cout << "Especialidad: " << reg.getEspecialidad().getNEspecialidades() << endl << endl;
+       // cout << "Especialidad: " << reg.getEspecialidad().getNEspecialidades() << endl << endl;
         MostrarTurnosDeCadaEspecialidad(reg.getLegajo());
         Pos++;
     }
@@ -2196,6 +2209,7 @@ void MostrarEmpleados(Empleado* vEmpleados, int cantRegistros) {
     for (int i = 0; i < cantRegistros; i++)
     {
         if (vEmpleados[i].getEstado()) {
+            cout <<"Numero de especialidad: " << vEmpleados[i].getEspecialidad().getNEspecialidades() << endl;
             vEmpleados[i].Mostrar();
             cout << endl;
         }
@@ -2358,37 +2372,45 @@ void ListadoMedicosOrdenadoPorEspecialidad() {
 //-------------------------------------------------------------------
 ///CONSULTAS
 ///ESTA FUNCION PERTENECE A ConsultaDePacientes, no tenia que hacerlo yo xd
+///ESTA FUNCION PERTENECE A ConsultaDePacientes, no tenia que hacerlo yo xd
+///CONSULTAS
 void ConsultaPacientePorDNI()
 {
-    int DNI;
-    while (true)
-    {
-        system("cls");
-        cout << "Ingrese el Dni del paciente que desea buscar: ";
-        cin >> DNI;
-        cout << endl;
-        if (existeDNI(DNI)) break;
-        else {
-            cout << "No existe ningun paciente con ese DNI. Intente de nuevo." << endl;
-            system("pause");
-        }
-    }
-    Paciente reg;
-    int pos = 0;
-    while (reg.leerDeDisco(pos++))
-    {
-        if (reg.getDNI() == DNI)
+
+    int DNI = 1;
+    while (DNI != 0) {
+        while (true)
         {
-            MostrarPacientePorDNI(reg);
-            return;
+            system("cls");
+            cout << "-----------------Consulta de paciente por dni-----------------" << endl;
+            cout << "Ingrese el Dni del paciente que desea buscar (ingrese 0 para volver al menu): " << endl;
+            cin >> DNI;
+            cout << endl;
+            if (DNI == 0) { return; }
+            if (existeDNI(DNI)) break;
+            else {
+                cout << "No existe ningun paciente con ese DNI. Intente de nuevo." << endl;
+                system("pause");
+            }
         }
+        Paciente reg;
+        int pos = 0;
+        while (reg.leerDeDisco(pos++))
+        {
+            if (reg.getDNI() == DNI)
+            {
+                MostrarPacientePorDNI(reg);
+                //return; //Te comente esto porque sino me cortaba el programa
+            }
+        }
+
     }
 }
 
 ///----------------------------------------------------------------
 int cantPacientes() {
     FILE* p;
-    p=fopen("Pacientes.dat", "rb");
+    p = fopen("Pacientes.dat", "rb");
     if (p == NULL) {
         cout << "NO SE PUDO ABRIR EL ARCHIVO." << endl;
         return -1;
@@ -2400,7 +2422,8 @@ int cantPacientes() {
 }
 
 bool validarEdad(int edadInicial, int edadTope) {
-    if (edadInicial >= 0 && edadTope <= 120) return true;
+    if (edadInicial >= 0 && edadInicial <= 120 
+        && edadTope >= 0 && edadTope <= 120) return true;
     return false;
 }
 
@@ -2410,7 +2433,7 @@ void CargarVectorPacientes(Paciente* vPacientes, int edadInicial, int edadTope) 
     int pos = 0;
     while (reg.leerDeDisco(pos++))
     {
-        if (reg.getEdad()>=edadInicial && reg.getEdad()<=edadTope)
+        if (reg.getEdad() >= edadInicial && reg.getEdad() <= edadTope)
         {
             vPacientes[i] = reg;
             i++;
@@ -2430,39 +2453,46 @@ int cantRegistrosRango(int edadInicial, int edadTope) {
 }
 
 void ConsultaPacientePorRangoEdad() {
-    int cantRegistros, edadInicial, edadTope;
+    int cantRegistros, edadInicial = 1, edadTope;
     cantRegistros = cantPacientes();///Cuenta la cantidad de registros que hay en el archivo de paciente
     if (cantRegistros == 0)
     {
         cout << "NO HAY REGISTROS DE PACIENTES EN EL ARCHIVO." << endl;
+        system("pause");
         return;
     }
-    while (true)
-    {
-        system("cls");
-        cout << "Ingrese un rango de edad: " << endl;
-        cout << "Desde: ";
-        cin >> edadInicial;
-        cout << "Hasta: ";
-        cin >> edadTope;
-        if (validarEdad(edadInicial, edadTope)) break;
-        else cout << "Rango ingresado no valido. Vuelva a intentar." << endl;
-    }
-    int cant = cantRegistrosRango(edadInicial, edadTope);
-    Paciente* vPacientes;
-    vPacientes = new Paciente[cant];
+    while (edadInicial != 0) {
+        while (true)
+        {
+            system("cls");
+            cout << "Ingrese un rango de edad: " << endl;
+            cout << "Desde: ";
+            cin >> edadInicial;
+            if (edadInicial == 0) { return; }
+            cout << "Hasta: ";
+            cin >> edadTope;
+            if (validarEdad(edadInicial, edadTope)) break;
+            else {
+                cout << "Rango ingresado no valido. Vuelva a intentar." << endl;
+                system("pause");
+            }
+        }
+        int cant = cantRegistrosRango(edadInicial, edadTope);
+        Paciente* vPacientes;
+        vPacientes = new Paciente[cant];
 
-    if (vPacientes == NULL)
-    {
-        cout << "NO SE PUDO OBTENER MEMORIA DINAMICA PARA EL VECTOR DE PACIENTES" << endl;
-        return;
-    }
-    CargarVectorPacientes(vPacientes, edadInicial, edadTope);
-    OrdenarRegistrosPorEdad(vPacientes, cant);//REUTILIZADO
-    MostrarPacientesPorRangoEdad(vPacientes, cant);
-    //MostrarPacientes(vPacientes, cantRegistros);//MUESTRA LOS PACIENTES EN EL RANGO ESTABLECIDO(CON LOS LIMITES INCLUIDOS)
+        if (vPacientes == NULL)
+        {
+            cout << "NO SE PUDO OBTENER MEMORIA DINAMICA PARA EL VECTOR DE PACIENTES" << endl;
+            return;
+        }
+        CargarVectorPacientes(vPacientes, edadInicial, edadTope);
+        OrdenarRegistrosPorEdad(vPacientes, cant);//REUTILIZADO
+        MostrarPacientesPorRangoEdad(vPacientes, cant);
+        //MostrarPacientes(vPacientes, cantRegistros);//MUESTRA LOS PACIENTES EN EL RANGO ESTABLECIDO(CON LOS LIMITES INCLUIDOS)
 
-    //delete[] vEmpleados;
+        delete[] vPacientes;
+    }
 }
 ///----------------------------------------------------------------
 ///ESTAS FUNCIONES PERTENECE A CONSULTA DE TURNOS
@@ -2482,7 +2512,7 @@ int obtenerCantTurnos() {
 void ConsultaDeTurnosNoAsistidos() {
     Turno turno;
     Fecha f;
-    vector <Turno> vTurnos;
+    //vector <Turno> vTurnos;
     int cantTurnos = obtenerCantTurnos();
     if (cantTurnos == 0) {
         cout << "NO HAY REGISTROS DE TURNOS EN EL ARCHIVO." << endl;
@@ -2492,40 +2522,80 @@ void ConsultaDeTurnosNoAsistidos() {
     MostrarTurnosNoAsistidos(f);
 }
 ///----------------------------------------------------------------
+///FALTA VALIDAR ESTO cuando se ingresa un anio negativo
+
+int cantRegistrosOk(Fecha& fechaInicial, Fecha& FechaFinal) {
+    Turno reg;
+    int pos = 0;
+    int cont = 0;
+    while (reg.leerDeDisco(pos++))
+    {
+        if (reg.getFechaTurno() > fechaInicial && reg.getFechaTurno() < FechaFinal) {
+            cont++;
+        }
+    }
+    return cont;
+}
+
 void ConsultaDeTurnosPorRangoDeFecha() {
     Fecha fechaInicial;
-    int Dia_Inicial;
+    int Dia_Inicial = 1;
     int Mes_Inicial;
     int Anio_Inicial;
     Fecha fechaFinal;
     int Dia_Final;
     int Mes_Final;
     int Anio_Final;
-    cout << "---------------MOSTRAR TURNOS POR RANGO DE FECHA---------------" << endl; ///Esto no se si dejarlo o sacarlo
+    while (Dia_Inicial != 0) {
+        cout << "---------------MOSTRAR TURNOS POR RANGO DE FECHA---------------" << endl; ///Esto no se si dejarlo o sacarlo
 
-    cout << "Ingrese el dia, el mes y el anio de la fecha inicial" << endl;
-    cout << "Ingrese el dia: ";
-    cin >> Dia_Inicial;
-    cout << "Ingrese el mes: ";
-    cin >> Mes_Inicial;
-    cout << "Ingrese el anio: ";
-    cin >> Anio_Inicial;
-    cout << endl;
+        cout << "Ingrese el dia, el mes y el anio de la fecha inicial" << endl;
+        cout << "Ingrese el dia: ";
+        if (Dia_Inicial == 0) { return; }
+        cin >> Dia_Inicial;
+        cout << "Ingrese el mes: ";
+        cin >> Mes_Inicial;
+        cout << "Ingrese el anio: ";
+        cin >> Anio_Inicial;
+        cout << endl;
 
-    fechaInicial.setFecha(Dia_Inicial, Mes_Inicial, Anio_Inicial);
+        if (fechaInicial.esCorrecta(Dia_Inicial, Mes_Inicial, Anio_Inicial) == false) {
+            cout << "La fecha inicial que ingreso es incorrecta, ingrese otra fecha" << endl;
+        }
 
-    cout << "Ingrese el dia, el mes y el anio de la fecha final" << endl;
-    cout << "Ingrese el dia: ";
-    cin >> Dia_Final;
-    cout << "Ingrese el mes: ";
-    cin >> Mes_Final;
-    cout << "Ingrese el anio: ";
-    cin >> Anio_Final;
-    cout << endl;
+        else {
+            cout << "Ingrese el dia, el mes y el anio de la fecha final" << endl;
+            cout << "Ingrese el dia: ";
+            cin >> Dia_Final;
+            cout << "Ingrese el mes: ";
+            cin >> Mes_Final;
+            cout << "Ingrese el anio: ";
+            cin >> Anio_Final;
+            cout << endl;
 
-    fechaFinal.setFecha(Dia_Final, Mes_Final, Anio_Final);
-    MostrarConsultaDeTurnosPorRangoFecha(fechaInicial, fechaFinal);
-    
+            if (fechaFinal.esCorrecta(Dia_Final, Mes_Final, Anio_Final) == false) {
+                cout << "La fecha final que ingreso es incorrecta, ingrese otra fecha" << endl;
+            }
+
+            else {
+                fechaFinal.setFecha(Dia_Final, Mes_Final, Anio_Final);
+                if (cantRegistrosOk(fechaInicial, fechaFinal) == 0) {
+                    cout << "No hay registros de turnos en ese rango de fecha." << endl;
+                    //system("pause");
+                    return;
+                }
+                else {
+                    MostrarConsultaDeTurnosPorRangoFecha(fechaInicial, fechaFinal);
+                }
+            }
+
+
+        }
+
+        system("pause");
+        system("cls");
+
+    }
 }
 ///----------------------------------------------------------------
 int obtenerEspecialidad(int legajoMedico) {
@@ -2543,32 +2613,40 @@ int obtenerEspecialidad(int legajoMedico) {
 
 void ConsultaDeTurnosPorEspecialidad() {
     Turno turno;
-    int pos = 0, especialidad;
-    while (true)
+    int pos = 0, especialidad = 2, cont = 0;
+    while (especialidad != 0)
     {
-        system("cls");
-        cout << "---------------CONSULTA DE TURNOS POR ESPECIALIDAD---------------" << endl<<endl;
-        cout << "1. Pediatria" << endl;
-        cout << "2. Kinesiologia" << endl;
-        cout << "3. Oftalmologia" << endl;
-        cout << "4. Traumatologia" << endl;
-        cout << "5. Obstetricia" << endl;
-        cout << "6. Psicologia" << endl;
-        cout << "7. Nutricion" << endl;
-        cout << "8. Psiquiatria" << endl;
-        cout << "9. Dermatologia" << endl;
-        cout << "10. Cardiologia" << endl;
-        cout << "Ingrese la especialidad: ";
-        cin >> especialidad;
-        cout << endl;
-        if (especialidad >= 1 && especialidad <= 10) {
-            //especialidad++;
-            MostrarTurnosPorEspecialidad(especialidad);
+        while (true)
+        {
+            system("cls");
+            cout << "---------------CONSULTA DE TURNOS POR ESPECIALIDAD---------------" << endl << endl;
+            cout << "1. Pediatria" << endl;
+            cout << "2. Kinesiologia" << endl;
+            cout << "3. Oftalmologia" << endl;
+            cout << "4. Traumatologia" << endl;
+            cout << "5. Obstetricia" << endl;
+            cout << "6. Psicologia" << endl;
+            cout << "7. Nutricion" << endl;
+            cout << "8. Psiquiatria" << endl;
+            cout << "9. Dermatologia" << endl;
+            cout << "10. Cardiologia" << endl;
+            cout << "Ingrese la especialidad (Ingrese 0 para volver al menu): ";
+            cin >> especialidad;
+            cout << endl;
 
-            return;
-        }
-        else {
-            cout << "OPCION INCORRECTA. VUELVA A INTENTAR." << endl;
+            if (especialidad == 0) { return; }
+
+            if (especialidad >= 1 && especialidad <= 10) {
+                especialidad++;
+                MostrarTurnosPorEspecialidad(especialidad);
+
+                //return;
+            }
+            else {
+                cout << "OPCION INCORRECTA. VUELVA A INTENTAR." << endl;
+                system("pause");
+            }
+
         }
 
     }
@@ -2577,45 +2655,75 @@ void ConsultaDeTurnosPorEspecialidad() {
 ///----------------------------------------------------------------
 
 ///ESTA FUNCION PERTENECE A ConsultaDePagos
+///Falta validar los anios negativos, falta validar cuando no hay registros dentro del rango
 void ConsultaPorRangoFecha()
 {
     Fecha fecha1;
-    int Dia_Inicial;
+    int Dia_Inicial = 1;
     int Mes_Inicial;
     int Anio_Inicial;
     Fecha fecha2;
     int Dia_Final;
     int Mes_Final;
     int Anio_Final;
-    cout << "---------------BUSCAR PAGO POR RANGO DE FECHA---------------" << endl; ///Esto no se si dejarlo o sacarlo
+    while (Dia_Inicial != 0) {
+        cout << "---------------BUSCAR PAGO POR RANGO DE FECHA---------------" << endl; ///Esto no se si dejarlo o sacarlo
 
-    cout << "Ingrese el dia, el mes y el anio de la fecha inicial" << endl;
-    cout << "Ingrese el dia: ";
-    cin >> Dia_Inicial;
-    cout << "Ingrese el mes: ";
-    cin >> Mes_Inicial;
-    cout << "Ingrese el anio: ";
-    cin >> Anio_Inicial;
-    cout << endl;
+        cout << "Ingrese el dia, el mes y el anio de la fecha inicial" << endl;
+        cout << "Ingrese el dia: ";
+        cin >> Dia_Inicial;
+        if (Dia_Inicial == 0) { return; }
+        cout << "Ingrese el mes: ";
+        cin >> Mes_Inicial;
+        cout << "Ingrese el anio: ";
+        cin >> Anio_Inicial;
+        cout << endl;
 
-    fecha1.setFecha(Dia_Inicial, Mes_Inicial, Anio_Inicial);
+        if (fecha1.esCorrecta(Dia_Inicial, Mes_Inicial, Anio_Inicial) == false) {
+            cout << "La fecha inicial que ingreso es incorrecta, ingrese otra fecha" << endl;
+        }
 
-    cout << "Ingrese el dia, el mes y el anio de la fecha final" << endl;
-    cout << "Ingrese el dia: ";
-    cin >> Dia_Final;
-    cout << "Ingrese el mes: ";
-    cin >> Mes_Final;
-    cout << "Ingrese el anio: ";
-    cin >> Anio_Final;
-    cout << endl;
+        else {
+            cout << "Ingrese el dia, el mes y el anio de la fecha final" << endl;
+            cout << "Ingrese el dia: ";
+            cin >> Dia_Final;
+            cout << "Ingrese el mes: ";
+            cin >> Mes_Final;
+            cout << "Ingrese el anio: ";
+            cin >> Anio_Final;
+            cout << endl;
 
-    fecha2.setFecha(Dia_Final, Mes_Final, Anio_Final);
-    MostrarConsultaPagosPorRangoFecha(fecha1, fecha2);
+            if (fecha2.esCorrecta(Dia_Final, Mes_Final, Anio_Final) == false) {
+                cout << "La fecha inicial que ingreso es incorrecta, ingrese otra fecha" << endl;
+            }
 
+            else {
+                fecha2.setFecha(Dia_Final, Mes_Final, Anio_Final);
+                MostrarConsultaPagosPorRangoFecha(fecha1, fecha2);
+            }
+        }
+        system("pause");
+        system("cls");
+
+    }
 }
 
 
 ///ESTA FUNCION PERTENECE A ConsultaDePagos
+
+int cantRegistrosOk(int DniPaciente) {
+    FacturaConsulta reg;
+    int pos = 0;
+    int cont = 0;
+    while (reg.leerDeDisco(pos++))
+    {
+        if (obtenerDNIPaciente(reg.getIDPaciente()==DniPaciente)) {
+            cont++;
+        }
+    }
+    return cont;
+}
+
 void ConsultaPorCliente()
 {
 
@@ -2623,6 +2731,7 @@ void ConsultaPorCliente()
 
     while (DniPaciente != 0)
     {
+        system("cls");
         int Cont = 0;
         cout << "---------------BUSCAR PAGO POR CLIENTE---------------" << endl; ///Esto no se si dejarlo o sacarlo
 
@@ -2630,9 +2739,24 @@ void ConsultaPorCliente()
         cin >> DniPaciente;
         cout << endl;
 
-        if (DniPaciente != 0)
+        if (DniPaciente == 0)
         {
-            MostrarPagosPorCliente(DniPaciente);
+            return;
+        }
+        if (!existeDNI(DniPaciente)) {
+            cout << "El DNI ingresado no existe. Vuelva a ingresar." << endl;
+            system("pause");
+            continue;
+        }
+        else {
+            if (cantRegistrosOk(DniPaciente) == 0) {
+                cout << "No existe registro de pagos de este cliente." << endl;
+                system("pause");
+                continue;
+            }
+            else {
+                MostrarPagosPorCliente(DniPaciente);
+            }
             system("pause");
             system("cls");
         }
@@ -2642,6 +2766,7 @@ void ConsultaPorCliente()
 }
 
 ///ESTA FUNCION PERTENECE A CONSULTA DE PAGOS
+
 void ConsultaPorObraSocial()
 {
 
@@ -2703,30 +2828,32 @@ void ConsultaPorAdministrativo()
         cin >> LegajoAdministrativo;
         cout << endl;
 
-        if (LegajoAdministrativo != 0)
+        if (LegajoAdministrativo == 0) { return; }
+
+        int Pos = 0;
+        while (reg.leerDeDisco(Pos) == true)
         {
-            int Pos = 0;
-            while (reg.leerDeDisco(Pos) == true)
+
+            if (reg.getLegajoAdministrativo() == LegajoAdministrativo)
             {
-
-                if (reg.getLegajoAdministrativo() == LegajoAdministrativo)
-                {
-                    Cont++;
-                    reg.Mostrar();
-                    cout << endl;
-                }
-                Pos++;
+                Cont++;
+                reg.Mostrar();
+                cout << endl;
             }
+            Pos++;
+        }
 
 
-            if (Cont == 0)
-            {
-                cout << "EL NUMERO DE LEGAJO INGRESADO NO EXISTE EN EL ARCHIVO DE PACIENTES, INGRESE OTRO NUMERO" << endl;
-            }
-
-            system("pause");
+        if (Cont == 0)
+        {
+            cout << "EL NUMERO DE LEGAJO INGRESADO NO EXISTE EN EL ARCHIVO DE PACIENTES, INGRESE OTRO NUMERO" << endl;
+            //system("pause");
             system("cls");
         }
+
+        system("pause");
+        system("cls");
+
 
     }
 }
@@ -2736,28 +2863,34 @@ void ConsultaPorAdministrativo()
 ///----------------------------------------------------------------------------------------------
 ///ESTAS FUNCIONES PERTENECE A INFORMES
 void mostrarCantTurnosAsignadosEnMes(int cont, int mes, int anio) {
+    //system("cls");
     Cadena meses[12] = { "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre",
     "Noviembre", "Diciembre" };
     cout << "MES\t\tTURNOS TOTALES" << endl;
+    //ACA hay que cambiar el mostrar
     meses[mes - 1].Mostrar();
-    cout << "\t\t" << cont << endl;
+    cout <<"\t\t" << cont << endl;
 }
 
 void CantidadTurnosAsignadosEnMes() {
     int anio = 1, mes = 2, pos = 0, cont = 0;
     Turno reg;
-    Fecha f;
+    Fecha f, hoy;
+
+    cargarFechaHoy(hoy);
+
     while (anio != 0 || mes != 0) {
         while (true) {
             cout << "------------------Informe cantidad de turnos------------------" << endl;
-            cout << "Ingrese el anio o mes (cero) para volver al menu anterior: ";
+            cout << "Ingrese el anio (cero) para volver al menu anterior: ";
             cin >> anio;
             if (anio == 0) return;
             cout << "Ingrese el mes o 0 (cero) para volver al menu anterior: ";
             cin >> mes;
             if (mes == 0) return;
-            if (f.esCorrecta(1, mes, anio)) {
-
+            if (f.esCorrecta(1, mes, anio) == true && hoy.getAnio() == anio) {
+                pos = 0;
+                cont = 0;
                 while (reg.leerDeDisco(pos++))
                 {
                     if (reg.getFechaTurno().getAnio() == anio && reg.getFechaTurno().getMes() == mes) {
@@ -2767,10 +2900,14 @@ void CantidadTurnosAsignadosEnMes() {
                 break;
             }
             else {
-                cout << "LA FECHA ES INCORRECTA. VUELVA A INGRESAR." << endl;
+                cout << "LA FECHA ES INCORRECTA O NO EXISTE EN EL ARCHIVO. VUELVA A INGRESAR." << endl;
+                system("pause");
+                system("cls");
             }
         }
         mostrarCantTurnosAsignadosEnMes(cont, mes, anio);
+        system("pause");
+        system("cls");
     }
 }
 ///------------------------------------------------------------------------------------------------------------
@@ -2778,39 +2915,50 @@ void mostrarAusenciasATurnosEnMes(int cont, int mes, int anio) {
     Cadena meses[12] = { "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre",
     "Noviembre", "Diciembre" };
     cout << "MES\t\t CANTIDAD DE PERSONAS QUE NO ASISTIERON A LOS TURNOS" << endl;
+    //Falta validar el mostrar
     meses[mes - 1].Mostrar();
     cout << "\t\t" << cont << endl;
 }
 
 void AusenciasTurnosMes() {
-    int anio, mes, pos = 0, cont = 0;
+    int anio = 1, mes = 1, pos = 0, cont = 0;
     Turno reg;
     Fecha f, hoy;
-    cargarFechaHoy(hoy);
-    while (true) {
-        cout << "------------------Informe ausencias pacientes por mes------------------" << endl;
-        cout << "Ingrese el anio o 0 (cero) para volver al menu anterior: ";
-        cin >> anio;
-        if (anio == 0) return;
-        cout << "Ingrese el mes o 0 (cero) para volver al menu anterior: ";
-        cin >> mes;
-        if (mes == 0) return;
-        if (f.esCorrecta(1, mes, anio)) {
 
-            while (reg.leerDeDisco(pos++))
-            {
-                if (reg.getFechaTurno().getAnio() == anio && reg.getFechaTurno().getMes() == mes && !reg.getAsistencia() &&
-                    reg.getFechaTurno() < hoy) {
-                    cont++;
+
+    cargarFechaHoy(hoy);
+    while (anio != 0 || mes != 0) {
+        while (true) {
+            cout << "------------------Informe ausencias pacientes por mes------------------" << endl;
+            cout << "Ingrese el anio o 0 (cero) para volver al menu anterior: ";
+            cin >> anio;
+            if (anio == 0) return;
+            cout << "Ingrese el mes o 0 (cero) para volver al menu anterior: ";
+            cin >> mes;
+            if (mes == 0) return;
+            if (f.esCorrecta(1, mes, anio) == true && anio == hoy.getAnio()) {
+                pos = 0;
+                cont = 0;
+                while (reg.leerDeDisco(pos++))
+                {
+                    if (reg.getFechaTurno().getAnio() == anio && reg.getFechaTurno().getMes() == mes && !reg.getAsistencia() &&
+                        reg.getFechaTurno() < hoy) {
+                        cont++;
+                    }
                 }
+                break;
             }
-            break;
+            else {
+                cout << "LA FECHA ES INCORRECTA O NO EXISTE EN EL ARCHIVO. VUELVA A INGRESAR." << endl;
+                system("pause");
+                system("cls");
+            }
         }
-        else {
-            cout << "LA FECHA ES INCORRECTA. VUELVA A INGRESAR." << endl;
-        }
+        mostrarAusenciasATurnosEnMes(cont, mes, anio);
+        system("pause");
+        system("cls");
+
     }
-    mostrarAusenciasATurnosEnMes(cont, mes, anio);
 }
 ///------------------------------------------------------------------------------------------------------------
 
@@ -2821,17 +2969,24 @@ void RecaudacionMensual()
     int MesIngresado;
     while (AnioIngresado != 0)
     {
+        system("cls");
         cout << "------------------Recaudacion Mensual------------------" << endl;
         cout << "Ingrese el anio en el quiera ver la recaudacion total de ese anio (Ingrese 0 para volver al menu)" << endl;
         cin >> AnioIngresado;
         cout << endl;
-
+        if (AnioIngresado < 2010 || AnioIngresado>2030) {
+            cout << "Anio ingresado es incorrecto. Vuelva a intentar." << endl;
+            system("pause");
+            continue;
+        }
         if (AnioIngresado == 0) { return; }
 
 
         cout << "Ingrese el mes en el que quiera ver la recaudacion total de ese anio" << endl;
         cin >> MesIngresado;
         cout << endl;
+
+        if (MesIngresado == 0) { return; }
 
         ///Puedo usar el ftell()
         //int CantRegistros = ContarCantidadRegistrosPacientes();
@@ -2858,11 +3013,11 @@ void RecaudacionMensual()
             }
 
             cout << "Anio: " << AnioIngresado << endl << endl;
-            cout << "RECAUDACION DEL MES\t\t\t\tRECAUACION" << endl;
+            cout << "RECAUDACION DEL MES\t\t\t\tRECAUDACION" << endl;
             cout << "------------------------------------------------------------" << endl;
 
             ///Muestra la recaudacion del anio y mes que se ingresaron por teclado
-            cout << MesIngresado << "\t\t\t\t\t\t   " << RecaudacioMensual << endl << endl;
+            cout << MesIngresado << "\t\t\t\t\t\t   " <<"$" << RecaudacioMensual << endl << endl;
 
         }
 
@@ -2927,11 +3082,11 @@ void RecaudacionAnual()
             cout << "-------------------------------------------------------" << endl;
             for (int x = 0; x < 12; x++)
             {
-                cout << x + 1 << "\t\t\t\t   " << RecaudacionesMensuales[x] << endl;
+                cout << x + 1 << "\t\t\t\t   " << "$" << RecaudacionesMensuales[x] << endl;
             }
 
             cout << "-------------------------------------------------------" << endl;
-            cout << "TOTAL:\t\t\t\t   " << RecaudacionTotal << endl << endl;
+            cout << "TOTAL:\t\t\t\t   " <<"$" << RecaudacionTotal << endl << endl;
         }
 
         else
@@ -3015,7 +3170,8 @@ void RecaudacionPorCliente()
                 cout << "No existe niguna factura con el numero de dni ingresado, intente con otro numero" << endl << endl;
             }
 
-
+            system("pause");
+            system("cls");
 
         }
 
@@ -3027,12 +3183,12 @@ void mostrarRecaudacion(float* vTotalPorEspecialidad) {
     Especialidad reg;
     Cadena especialidades[10] = { "Pediatria", "Kinesiologia", "Oftalmologia", "Traumatologia", "Obstetricia", "Psicologia",
         "Nutricion", "Psiquiatria", "Dermatologia", "Cardiologia" };
-    cout << "ESPECIALIDAD\t\t TOTAL RECAUDADO" << endl;
+    cout << "ESPECIALIDAD\t\t   TOTAL RECAUDADO" << endl;
     cout << "---------------------------------------------------------------------------" << endl;
     for (int i = 0; i < 10; i++)
     {
         especialidades[i].Mostrar();
-        cout << "\t\t" << vTotalPorEspecialidad[i] << endl;
+        cout << "\t\t\t$" << vTotalPorEspecialidad[i] << endl;
     }
 }
 
@@ -3044,7 +3200,7 @@ void RecaudacionPorEspecialidad() {
     while (reg.leerDeDisco(pos++))
     {
         nroEspecialidad = obtenerEspecialidad(reg.getLegajoMedico());
-        vTotalPorEspecialidad[nroEspecialidad-2] += reg.getPrecioConsulta();
+        vTotalPorEspecialidad[nroEspecialidad - 2] += reg.getPrecioConsulta();
     }
     mostrarRecaudacion(vTotalPorEspecialidad);
 }
@@ -3347,7 +3503,7 @@ void AgregarUnUsuario()
     cout << "Ingrese el tipo de empleado (1- Administrativo, 2- Medico, 99-Administrador): " << endl;
     cin >> TipoEmpleadoUsuario;
     cout << endl;
-    
+
     if (TipoEmpleadoUsuario == 1) {
         NumeroEspecialidadUsuario = 1;
     }
@@ -3380,7 +3536,7 @@ void AgregarUnUsuario()
     reg.setEmail(EmailUsuario);
     reg.setTipoEmpleado(TipoEmpleadoUsuario);
     especialidad.setIDEmpleado(reg.getLegajo());
-    especialidad.setNEspecialidades(NumeroEspecialidadUsuario+1);
+    especialidad.setNEspecialidades(NumeroEspecialidadUsuario + 1);
     reg.setEspecialidad(especialidad);
     hE.setIDEmpleado(reg.getLegajo());
     bool dias[7] = { 1,1,1,1,1,0,0 };
@@ -3405,7 +3561,7 @@ void AgregarUnUsuario()
     reg.setHoraEntradaSalida(hE);
     reg.setEstado(true);
     reg.grabarEnDisco();
-    
+
 
 }
 //-------------------------------------------------------------------------------------------------
@@ -3613,7 +3769,7 @@ void ModificarUsuario()
                         cout << endl;
                     }
                     else if (TipoEmpleadoUsuario == 1) NumeroEspecialidadUsuario = 1;
-                    else if(TipoEmpleadoUsuario==99) NumeroEspecialidadUsuario=0;
+                    else if (TipoEmpleadoUsuario == 99) NumeroEspecialidadUsuario = 0;
 
 
                     /*cout << "Ingrese el ID del empleado del horario" << endl;///No estoy muy seguro de esto, revisar bien
@@ -3797,7 +3953,7 @@ void CopiaSeguridadTurnos() {
         else {
             cout << "ERROR. VUELVA A INTENTAR." << endl;
             system("pause");
-        }    
+        }
     }
     Turno turno;
     string carpeta("Backup/Turnos/");
@@ -4018,14 +4174,14 @@ bool seRepite(const char* nombre, const char* ruta) {
 }
 
 int cantRutasOk(const char* ruta) {
-    
+
     Archivo reg;
     int pos = 0, cont = 0;
     int aux = cantRegistros(ruta);
-    
+
     //cout << aux;
 
-    for (int i = 0; i < aux; i++){
+    for (int i = 0; i < aux; i++) {
         reg.leerDeDisco(i, ruta);
         if (existe(reg)) {
             if (seRepite(reg.getNombre(), ruta)) {
@@ -4078,7 +4234,7 @@ void migrarBKPacientes(Archivo& ruta, int cant, const char* nombre) {
         cout << "ERROR DE ARCHIVO" << endl;
         return;
     }
-    while (reg.leerCopiaDeDisco(pos++,ruta.getNombre())){
+    while (reg.leerCopiaDeDisco(pos++, ruta.getNombre())) {
         reg.GrabarEnDisco();
     }
     fclose(p);
@@ -4099,12 +4255,12 @@ void RestaurarCopiaSeguridadPacientes() {
         system("cls");
         for (int i = 1; i <= cant; i++)
         {
-            cout << i << ". " << vA[i-1].getNombre() << endl;
+            cout << i << ". " << vA[i - 1].getNombre() << endl;
         }
         cout << "Ingrese una opcion para restaurar: ";
         cin >> opcion;
         if (opcion > 0 && opcion <= cant) {
-            migrarBKPacientes(vA[opcion-1], cant, "Pacientes.dat");
+            migrarBKPacientes(vA[opcion - 1], cant, "Pacientes.dat");
             cout << "El archivo ha sido restaurado" << endl;
             delete[] vA;
             return;
@@ -4495,7 +4651,7 @@ void ExportarEmpleados()
     }
 
 
-        ///Aca tengo un problema con _especialidad > Esoecialidades
+    ///Aca tengo un problema con _especialidad > Esoecialidades
     File << "Legajo" << ";" << "Password" << ";" << "Email" << ";" << "Tipo de Empleado";
     File << ";" << "Especialidad" << endl;
     while (reg.leerDeDisco(pos))

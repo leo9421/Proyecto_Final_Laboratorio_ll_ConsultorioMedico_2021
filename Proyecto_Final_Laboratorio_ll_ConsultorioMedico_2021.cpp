@@ -59,6 +59,7 @@ int main()
     //ModificarTurno();
     //EliminarTurno();
     login();
+    //todo: CONSULTA DE TURNOS POR RANGO DE FECHA..REVISAR 9 DICIEMBRE
     //MostrarPagosPorCliente(468464);
     /*Turno t;
     Fecha f(7, 12, 2021);
@@ -103,16 +104,18 @@ int main()
     //reg.grabarEnDisco(0);
     //obj.grabarEnDisco(0);
     //cout << endl;
-    /*FacturaConsulta t;
+    FacturaConsulta t;
     int pos = 0;
 
     while (t.leerDeDisco(pos++)) {
         //if (t.getEstado()) {
-            t.Mostrar();
+        //int dni = obtenerDNIPaciente(t.getIDPaciente());
+        //cout << dni << endl;
+        t.Mostrar();
             //cout << t.getEstado() << endl;
             cout << endl; 
         //}
-    }*/
+    }
     /*FILE* p;
     p = fopen("Turnos.dat", "rb");
     fseek(p, 0, 2);

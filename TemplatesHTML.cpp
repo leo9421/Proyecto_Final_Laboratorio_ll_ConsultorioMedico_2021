@@ -567,12 +567,14 @@ void MostrarTurnosPorEspecialidad(int especialidad) {
     file << "	</thead>" << endl;
     file << "	<tbody>" << endl;
     int pos = 0;
-
+    //Especialidad e;
+    Cadena especialidades[10] = { "Pediatria","Kinesiologia","Oftalmologia","Traumatologia","Obstetricia",
+        "Psicologia","Nutricion","Psiquiatria","Dermatologia","Cardiologia" };
     while (turno.leerDeDisco(pos++))
     {
         if (obtenerEspecialidad(turno.getLegajoMedico()) == especialidad && turno.getEstado()) {
             file << "	<tr>" << endl;
-            file << "	<td class=\"column4\">" << especialidad << "</td >" << endl;
+            file << "	<td class=\"column4\">" << especialidades[especialidad-2].getCadena() << "</td >" << endl;
             file << "	<td class=\"column1\">" << turno.getID() << "</td >" << endl;
             file << "	<td class=\"column2\">" << obtenerDNIPaciente(turno.getIDPaciente()) << "</td>" << endl;
             char nombre[100];
@@ -686,7 +688,7 @@ void MostrarConsultaPagosPorRangoFecha(Fecha& fecha1, Fecha& fecha2) {
             file << "	<td class=\"column4\">" << facturaConsulta.getFechaTurno().getDia() << "/" << facturaConsulta.getFechaTurno().getMes() << "/"
                 << facturaConsulta.getFechaTurno().getAnio() << "</td>" << endl;
             file << "	<td class=\"column4\">" << facturaConsulta.getLegajoAdministrativo() << "</td>" << endl;
-            switch (facturaConsulta.getLegajoAdministrativo()) {
+            switch (facturaConsulta.getFormaPago()) {
             case 1:
                 file << "	<td class=\"column3\">Efectivo</td>" << endl;
                 break;

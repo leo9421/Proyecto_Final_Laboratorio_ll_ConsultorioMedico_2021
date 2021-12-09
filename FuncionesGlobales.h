@@ -1,5 +1,6 @@
 #pragma once
 #include "TemplatesHTML.h"
+//#include "rtuil.h"
 //#include "Empleado.h"
 
 void cargarCadena(char* pal, int tam);

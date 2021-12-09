@@ -67,7 +67,8 @@ int  Fecha::getAnio() {
 }
 bool Fecha::esCorrecta(int dia, int mes, int anio) {
 	int vectorDiasMes[12] = { 31,29,31,30,31,30,31,31,30,31,30,31 };
-	if (anio == 0) return false;
+	if (anio < 1900 && anio > 2030) return false;
+	if (anio < 0) return false;
 	if (dia <= 0 || dia > 31) return false;
 	if (mes <= 0 || mes > 12) return false;
 	if (mes == 2 && dia > 29) return false;
@@ -133,7 +134,7 @@ void Fecha::Mostrar() {
 ///SOBREVARGAS
 bool Fecha :: operator > (Fecha& f)
 {
-	/*if (_anio > f.getAnio()) {
+	if (_anio > f.getAnio()) {
 		return true;
 	}
 	if (_anio < f.getAnio()) {
@@ -154,12 +155,12 @@ bool Fecha :: operator > (Fecha& f)
 				return false;
 			}
 		}
-	}*/
+	}
 
-	if (_anio < f.getAnio()) return false;
+	/*if (_anio < f.getAnio()) return false;
 	if (_anio == f.getAnio() && _mes < f.getMes()) return false;
 	if (_anio == f.getAnio() && _mes == f.getMes() && _dia < f.getDia()) return false;
-	return true;
+	return true;*/
 }
 
 

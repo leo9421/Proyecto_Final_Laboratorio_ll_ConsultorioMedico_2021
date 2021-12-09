@@ -57,6 +57,8 @@ int cantRegistrosRango(int edadInicial, int edadTope);
 void GestionarPagos(int usuario);
 int generarIDFacturaConsulta();
 bool buscarLegajoMedico(int legajoMedico);
+int cantRegistrosOk(Fecha& fechaInicial, Fecha& FechaFinal);
+int cantRegistrosOk(int DniPaciente);
 
 void VerTurnosDelDia(int usuario);
 void AgregaRegistroDeHistoriaClinica(int usuario);

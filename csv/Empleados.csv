@@ -5,3 +5,10 @@ Legajo;Password;Email;Tipo de Empleado;Especialidad
 4;123456789;msanchez@gmail.com;Administrativo;Administrativo
 5;123456789;jmartinez@gmail.com;Administrador;Administrativo
 5;123456789;jperez@hotmail.com;Administrador;Administrador
+6;123456789;jperez@gmail.com;Medico;Obstetricia
+7;123456789;blara@gmail.com;Administrador;Administrativo
+8;123456789;msanchez@gamil.com;Administrativo;Administrativo
+9;123456789;jramirez@gmail.com;Administrativo;Administrativo
+10;123456789;mdiaz@gmail.com;Administrativo;Administrativo
+11;123456789;mcamisani@gmail.com;Medico;Psiquiatria
+12;123456789;jmartinez@gmail.com;Medico;Pediatria
