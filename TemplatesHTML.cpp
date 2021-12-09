@@ -797,7 +797,7 @@ void MostrarPagosPorCliente(int DniPaciente) {
             file << "	<td class=\"column4\">" << facturaConsulta.getFechaTurno().getDia() << "/" << facturaConsulta.getFechaTurno().getMes() << "/"
                 << facturaConsulta.getFechaTurno().getAnio() << "</td>" << endl;
             file << "	<td class=\"column4\">" << facturaConsulta.getLegajoAdministrativo() << "</td>" << endl;
-            switch (facturaConsulta.getLegajoAdministrativo()) {
+            switch (facturaConsulta.getFormaPago()) {
             case 1:
                 file << "	<td class=\"column3\">Efectivo</td>" << endl;
                 break;

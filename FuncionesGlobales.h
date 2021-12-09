@@ -6,7 +6,7 @@ void cargarCadena(char* pal, int tam);
 int buscarUsuarioYContrasenia(int usuario, char* password);
 
 void login();
-void menuAdministrativo();
+void menuAdministrativo(int usuario);
 void menuMedico(int usuario);
 void menuAdministrador();
 void Listados();

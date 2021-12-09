@@ -14,7 +14,7 @@ public:
 
 	void Mostrar();
 private:
-	char _nombre[41];
+	char _nombre[60];
 	bool _estado;
 };
 

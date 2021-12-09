@@ -54,7 +54,9 @@ void modificarFechaTurno(Turno& t);
 bool existeDNI(int dni);
 void obtenerEmpleado(int usuario, Empleado& e);
 int cantRegistrosRango(int edadInicial, int edadTope);
-void GestionarPagos();
+void GestionarPagos(int usuario);
+int generarIDFacturaConsulta();
+bool buscarLegajoMedico(int legajoMedico);
 
 void VerTurnosDelDia(int usuario);
 void AgregaRegistroDeHistoriaClinica(int usuario);

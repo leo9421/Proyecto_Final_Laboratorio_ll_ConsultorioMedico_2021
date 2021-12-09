@@ -59,6 +59,7 @@ int main()
     //ModificarTurno();
     //EliminarTurno();
     login();
+    //MostrarPagosPorCliente(468464);
     /*Turno t;
     Fecha f(7, 12, 2021);
     Hora h(17, 30);
@@ -102,7 +103,7 @@ int main()
     //reg.grabarEnDisco(0);
     //obj.grabarEnDisco(0);
     //cout << endl;
-    /*Turno t;
+    /*FacturaConsulta t;
     int pos = 0;
 
     while (t.leerDeDisco(pos++)) {

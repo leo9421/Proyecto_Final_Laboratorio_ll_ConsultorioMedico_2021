@@ -76,7 +76,7 @@ void login() {
 
         switch (tipoEmpleado) {
         case 1:
-            menuAdministrativo();
+            menuAdministrativo(usuario);
             break;
         case 2:
             menuMedico(usuario);
@@ -91,7 +91,7 @@ void login() {
     }
 }
 
-void menuAdministrativo() {
+void menuAdministrativo(int usuario) {
     int opc;
     while (true)
     {
@@ -132,7 +132,7 @@ void menuAdministrativo() {
 
         case 5:
             system("cls");
-            GestionarPagos();
+            GestionarPagos(usuario);
             break;
         case 6:
             system("cls");
@@ -987,7 +987,7 @@ void Informes() {
     while (true)
     {
         cout << "¿QUE INFORNE DESEA VER?" << endl;
-        cout << "1-CANTIDAD DE TURNOS ASIGANADOS EN EL MES." << endl;
+        cout << "1-CANTIDAD DE TURNOS ASIGNADOS EN EL MES." << endl;
         cout << "2-CANTIDAD DE PACIENTES QUE FUERON A LOS TURNOS." << endl;
         cout << "3-RECAUDACION MENSUAL." << endl;
         cout << "4-RECAUDACION ANUAL." << endl;

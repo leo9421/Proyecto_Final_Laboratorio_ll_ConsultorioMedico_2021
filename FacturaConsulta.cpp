@@ -7,7 +7,7 @@ FacturaConsulta::FacturaConsulta() {
 	_ID = 0;
 	_precioConsulta = 0;
 	_IDPaciente = 0;
-	_obraSocial = 0;
+	_obraSocial = -1;
 	_legajoAdministrativo = 0;
 	_formaPago = 0;
 	_legajoMedico = 0;

@@ -5,7 +5,7 @@ class FacturaConsulta
 public:
 	FacturaConsulta();
 	FacturaConsulta(Fecha fechaFactura, Fecha fechaTurno, int ID = 0, float precioConsulta=0, int IDPaciente = 0,
-		int obraSocial = 0, int legajoAdministrativo = 0, int formaPago = 0, int legajoMedico=0);
+		int obraSocial = -1, int legajoAdministrativo = 0, int formaPago = 0, int legajoMedico=0);
 	~FacturaConsulta();
 
 	void setID(int id);

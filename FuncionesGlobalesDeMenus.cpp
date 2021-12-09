@@ -307,9 +307,12 @@ void turnosDisponiblesPorMedico(int legajoMedico, Fecha& f, Hora* vHorarios, Tur
 //todo: corregir bugs..cuando elijo un turno del dia siguiente me toma el turno de la misma hora del dia de "hoy"
 void AsignarTurno() {
 	int dia, mes, anio, hora, minuto, idTurno, idPaciente, DNIPaciente, obraSocial, especialidad = -1, legajoMedico = 0, opcion, opcionTurnoDia;
-	bool b = false, x = false, b1 = true;
+	bool b = false, x = false, b1 = true, xx = true;
 	Turno t;
 	Fecha f, fechaAsignacion, fechaHoy, fechaMax;
+    Empleado reg;
+    Turno turnito;
+    int Pocision = 0;
 
 	Fecha vFechas[60];
 	Hora h;
@@ -327,13 +330,19 @@ void AsignarTurno() {
 		cout << "1. Medico." << endl;
 		cout << "2.Especialidad." << endl;
 		cout << "---------------------------------" << endl;
-		cout << "Ingrese opcion: ";
+		cout << "Ingrese opcion (o 0 para volver al menu anterior): ";
 		cin >> opcion;
+        if (opcion == 0) break;
+        else if (opcion != 1 && opcion != 2) {
+            cout << "Opcion Incorrecta. Vuelva a intentar." << endl;
+            system("pause");
+        }
 		switch (opcion) {
 		case 1:
-			system("cls");
-			cout << "Ingrese legajo del Medico: ";
+            system("cls");
+			cout << "Ingrese legajo del Medico (o 0 para volver al menu anterior): ";
 			cin >> legajoMedico;
+            if (legajoMedico == 0) break;
 			if (!buscarLegajoMedico(legajoMedico, t))
 			{
 				b1 = false;
@@ -346,10 +355,13 @@ void AsignarTurno() {
 					system("cls");
 					cout << "Ingrese dia: ";
 					cin >> dia;
+                    if (dia == 0) break;
 					cout << "Ingrese mes: ";
 					cin >> mes;
+                    if (mes == 0) break;
 					cout << "Ingrese anio: ";
 					cin >> anio;
+                    if (anio == 0) break;
 					if (f.esCorrecta(dia, mes, anio)) {
 						f.setFecha(dia, mes, anio);
 					}
@@ -361,16 +373,30 @@ void AsignarTurno() {
 						x = true;
 						//cout << "Ingrese ID Paciente: ";
 						//cin >> idPaciente;
-						cout << "Ingrese DNI del Paciente: ";
+						cout << "Ingrese DNI del Paciente(o 0 para volver al menu de turnos): ";
 						cin >> DNIPaciente;
+                        if (DNIPaciente == 0)break;
                         if (!existeDNI(DNIPaciente)) {
                             cout << "El DNI no se encuentra registrado en la base de pacientes." << endl;
+                            cout << "Debera agregar al paciente manualmente." << endl;
+                            //cin.ignore();
+                            int o;
+                            cout << "Ingrese 1 para agregar paciente o 0 para volver al menu administrativo: ";
+                            cin >> o;
                             cin.ignore();
-                            AgregarPaciente(DNIPaciente);
+                            if (o == 0) return;
+                            else if(o==1) AgregarPaciente(DNIPaciente);
 
                         }
-						cout << "Ingrese Obra Social: ";
-						cin >> obraSocial;
+                        while (true)
+                        {
+                            cout << "Ingrese Obra Social (1-10): ";
+						    cin >> obraSocial;
+                            if (obraSocial < 1 || obraSocial>10) {
+                                cout << "Numero ingresado no valido. Intente nuevamente" << endl;
+                            }
+                            else break;
+                        }
 						t.setFechaAsignacionTurno();
 						t.setID(generarIDTurno());
 
@@ -378,7 +404,7 @@ void AsignarTurno() {
 						//t.setDNIPaciente(DNIPaciente);
 						t.setObraSocial(obraSocial);
 						//t.setEspecialidad(especialidad);
-						t.setFechaTurno(f);
+						//t.setFechaTurno(f);
 						//t.setLegajoMedico(legajoMedico);
 						t.setEstado(true);
 						if (t.grabarEnDisco()) {
@@ -401,13 +427,168 @@ void AsignarTurno() {
 			}
 			break;
 		case 2:
-			cout << "Ingrese especialidad: ";
+			/*cout << "Ingrese especialidad: ";
 			cin >> especialidad;
 			if (!existeEspecialidad(especialidad, t)) {
 				cout << "La especialidad no existe." << endl;
 				system("pause");
 				break;
-			}
+			}*/
+            while (true)
+            {
+                system("cls");
+                cout << "Ingrese especialidad (o 0 para volver al menu anterior): ";
+                cin >> especialidad;
+                cout << endl;
+                if (especialidad == 0) break;
+                if (!existeEspecialidad(especialidad, t)) {
+                    cout << "La especialidad no existe." << endl;
+                    system("pause");
+                    //break;
+                }
+                else {
+                    cout << "Ingrese los datos requeridos (o 0 para volver al menu anterior)" << endl;
+                    cout << "Ingrese el dia: ";
+                    cin >> dia;
+                    if (dia == 0) break;
+                    cout << endl;
+
+                    cout << "Ingrese el Mes: ";
+                    cin >> mes;
+                    if (mes == 0) break;
+                    cout << endl;
+
+                    cout << "Ingrese el Anio: ";
+                    cin >> anio;
+                    if (anio == 0) break;
+                    cout << endl;
+
+                    if (f.esCorrecta(dia, mes, anio)) {
+                        f.setFecha(dia, mes, anio);
+                    }
+                    else {
+                        cout << "La fecha ingresada se encuentra fuera del rango permitido. Vuelva a ingresar." << endl;
+                        system("pause");
+                        //break;
+                    }
+                    //todo:Faltan ver cosas aca
+                    if (estaEnRangoFecha(dia, mes, anio, vFechas)) {
+                        while (reg.leerDeDisco(Pocision) == true) {
+                            if (reg.getEspecialidad().getNEspecialidades() == especialidad) {
+                                int Pos2 = 0;
+                                int TurnosOcupados = 0;
+                                //todo:ACA PUEDO USAR LA FUNCION DE LEANDRO PARA VER SI HAY UN TURNO DISPONIBLE
+                                ///todo: ACA PIDE LOS DATOS ALREVEZ 
+                                while (turnito.leerDeDisco(Pos2) == true) {
+                                    if (reg.getLegajo() == turnito.getLegajoMedico() && dia == turnito.getFechaTurno().getDia()
+                                        && mes == turnito.getFechaTurno().getMes() && anio == turnito.getFechaTurno().getAnio()
+                                        && turnito.getHoraTurno().getHora() == vHorarios[TurnosOcupados].getHora()
+                                        && turnito.getHoraTurno().getMinuto() == vHorarios[TurnosOcupados].getMinuto()) {
+                                        TurnosOcupados++;
+                                    }
+                                    Pos2++;
+                                }
+
+                                //cout <<"Turno Ocupado: " <<  TurnosOcupados << endl;
+
+                                if (TurnosOcupados > 0 && xx) {
+                                    cout << "Apellido" << " " << "Nombre" << " " << "Legajo" << endl << endl;
+                                    xx = false;
+                                }
+                                if (TurnosOcupados != 20) {
+                                    cout << reg.getApellidos() << "      " << reg.getNombres() << "      " << reg.getLegajo() << endl << endl;
+                                }
+
+                            }
+                            Pocision++;
+                        }
+
+                        cout << "Ingrese el legajo del medico con el que quiera sacar el turno ";
+                        cout<<"(o 0 para volver al menu de turnos): ";
+                        cin >> legajoMedico;
+                        if (legajoMedico == 0)break;
+                        cout << endl;
+
+                        //CREO QUE ESTA VALIDACIO ACA ESTA DE MAS 
+                        if (!buscarLegajoMedico(legajoMedico, t))
+                        {
+                            b1 = false;
+                            cout << "El legajo no existe. " << endl;
+                            system("pause");
+
+                        }
+
+                        else {
+                            while (true) {
+                                system("cls");
+                                if (f.esCorrecta(dia, mes, anio)) {
+                                    f.setFecha(dia, mes, anio);
+                                }
+
+                                if (estaEnRangoFecha(dia, mes, anio, vFechas)) {
+                                    b = true;
+                                    if (legajoMedico != 0) {
+                                        turnosDisponiblesPorMedico(legajoMedico, f, vHorarios, t, vFechas);
+                                    }
+                                    x = true;
+
+
+                                    cout << "Ingrese DNI del Paciente (o 0 para volver al menu anterior): ";
+                                    cin >> DNIPaciente;
+                                    if (DNIPaciente == 0)break;
+                                    if (!existeDNI(DNIPaciente)) {
+                                        cout << "El DNI no se encuentra registrado en la base de pacientes." << endl;
+                                        //cin.ignore();
+                                        int o;
+                                        cout << "Ingrese 1 para agregar paciente o 0 para volver al menu administrativo: ";
+                                        cin >> o;
+                                        cin.ignore();
+                                        if (o == 0) return;
+                                        else if (o == 1) AgregarPaciente(DNIPaciente);
+
+                                    }
+
+                                    cout << "Ingrese Obra Social: ";
+                                    cin >> obraSocial;
+                                    t.setFechaAsignacionTurno();
+                                    t.setID(generarIDTurno());
+
+                                    t.setIDPaciente(obtenerID(DNIPaciente));
+                                    //t.setDNIPaciente(DNIPaciente);
+                                    t.setObraSocial(obraSocial);
+                                    //t.setEspecialidad(especialidad);
+                                    t.setFechaTurno(f);
+                                    //t.setLegajoMedico(legajoMedico);
+                                    t.setEstado(true);
+                                    if (t.grabarEnDisco(0)) {
+                                        cout << "El turno ha sido reservado." << endl;
+                                        //system("pause");
+                                        return;
+                                    }
+
+                                }
+
+                                else if (!b) {
+                                    cout << "La fecha ingresada se encuentra fuera del rango permitido. Ingrese nuevamente." << endl;
+                                    system("pause");
+                                    continue;
+                                }
+
+                            }
+                        }
+
+                    }
+                    else {
+                        cout << "La fecha que ingreso se encuentra fuera del rango de fecha o es incorrecta, ingrese otra fecha" << endl;
+                        system("pause");
+                    }
+
+                }
+
+                
+            }
+            
+            //system("pause");
 			break;
 		case 0:
 			return;
@@ -476,11 +657,13 @@ void modificarTurnoDNI(Turno& t) {
     int DNI;
     while (true)
     {
-        cout << "Ingrese el nuevo DNI: ";
+        cout << "Ingrese el nuevo DNI (o 0 para volver al menu de turnos): ";
         cin >> DNI;
+        if (DNI == 0) return;
         if (existeDNI(DNI)) {
             t.setIDPaciente(obtenerID(DNI));
-
+            cout << "Turno modificado!" << endl;
+            //system("pause");
             return;
         }
         else {
@@ -489,7 +672,7 @@ void modificarTurnoDNI(Turno& t) {
         }
         system("cls");
     }
-}
+}//todo: con esta validacion
 void modificarFechaTurno(Turno& t) {
     Fecha aux, vFechas[60], fechaHoy, fechaMax;
     Hora vHorarios[20], h;
@@ -530,12 +713,14 @@ void modificarFechaTurno(Turno& t) {
         cout << "Solo puede asignar turnos hasta el: ";
         fechaMax.Mostrar();
         turnosDisponiblesPorMedico(t.getLegajoMedico(), aux, vHorarios, t, vFechas);
+        cout << "Turno modificado!" << endl;
+        //system("pause");
 
 }
 
 bool horaValida(Hora& h) {
     if (h.getHora() < 8 || h.getHora() > 17) return false;
-    if (h.getMinuto() != 0 && h.getMinuto() != 59) return false;
+    if (h.getMinuto()< 0 && h.getMinuto() >59) return false;
     return true;
 }
 
@@ -549,19 +734,41 @@ void ModificarTurno()
     while (true)
     {
         system("cls");
-        cout << "Ingrese DNI del paciente: ";
+        cout << "Ingrese DNI del paciente (o 0 para volver al menu anterior): ";
         cin >> dni;
+        if (dni == 0) {
+            //system("pause");
+            return;
+        }
         if (existeDNI(dni)) {
-            cout << "Ingrese dia de turno:";
+            system("cls");
+            cout << "Ingrese los datos requeridos o 0 para volver al menu anterior." << endl;
+            cout << "Ingrese dia de turno: ";
             cin >> dia;
-            cout << "Ingrese mes de turno:";
+            if (dia == 0) {
+                system("pause");
+                continue;
+            }
+            cout << "Ingrese mes de turno: ";
             cin >> mes;
-            cout << "Ingrese anio de turno:";
+            if (mes == 0) {
+                system("pause");
+                continue;
+            }
+            cout << "Ingrese anio de turno: ";
             cin >> anio;
+            if (anio == 0) {
+                system("pause");
+                continue;
+            }
             if (f.esCorrecta(dia, mes, anio)) {
                 cout << "Ingrese horario del turno: " << endl;
                 cout << "Hora: ";
                 cin >> hora;
+                if (hora == 0) {
+                    system("pause");
+                    continue;
+                }
                 cout << "Minutos: ";
                 cin >> minuto;
                 Hora h(hora, minuto);
@@ -576,6 +783,7 @@ void ModificarTurno()
                             cout << "1. Modificar DNI: " << endl;
                             cout << "2. Modificar fecha: " << endl;
                             cout << "0. Salir. " << endl << endl;
+                            cout << "Ingrese una opcion: ";
                             cin >> opcion;
 
                             switch (opcion) {
@@ -583,13 +791,13 @@ void ModificarTurno()
                                 system("cls");
                                 modificarTurnoDNI(t);
                                 modificarTurnoPaciente(t);
-                                cout << "Turno modificado!" << endl;
+                                //cout << "Turno modificado!" << endl;
                                 return;
                             case 2:
                                 system("cls");
                                 modificarFechaTurno(t);
                                 modificarTurnoPaciente(t);
-                                cout << "Turno modificado!" << endl;
+                                //cout << "Turno modificado!" << endl;
                                 return;
                             case 0:
                                 return;
@@ -655,19 +863,39 @@ void EliminarTurno() {
     while (true)
     {
         system("cls");
-        cout << "Ingrese DNI del paciente: ";
+        cout << "Ingrese DNI del paciente (o 0 para volver al menu de turnos): ";
         cin >> dni;
+        if (dni == 0)return;
         if (existeDNI(dni)) {
-            cout << "Ingrese dia de turno:";
+            system("cls");
+            cout << "Ingrese los datos requeridos. Para volver al menu anterior presione 0." << endl;
+            cout << "Ingrese dia de turno: ";
             cin >> dia;
-            cout << "Ingrese mes de turno:";
+            if (dia == 0) {
+                system("pause");
+                continue;
+            }
+            cout << "Ingrese mes de turno: ";
             cin >> mes;
-            cout << "Ingrese anio de turno:";
+            if (mes == 0) {
+                system("pause");
+                continue;
+            }
+            cout << "Ingrese anio de turno: ";
             cin >> anio;
+            if (anio == 0) {
+                system("pause");
+                continue;
+            }
+            cout << endl;
             if (f.esCorrecta(dia, mes, anio)) {
                 cout << "Ingrese horario del turno: " << endl;
                 cout << "Hora: ";
                 cin >> hora;
+                if (hora == 0) {
+                    system("pause");
+                    continue;
+                }
                 cout << "Minutos: ";
                 cin >> minuto;
                 Hora h(hora, minuto);
@@ -677,7 +905,7 @@ void EliminarTurno() {
                     if (existeTurno(t, dni, f, h)) {
                         eliminarTurnoPaciente(t);
                         cout << "El turno ha sido eliminado!" << endl;
-                        system("pause");
+                        //system("pause");
                         return;
                     }
                     else {
@@ -779,40 +1007,60 @@ void AgregarPaciente(int dni) {
     int dia, mes, anio;
     char nombres[50], apellidos[50], telefono[30], email[50], calle[30], localidad[40], partido[30],
         provincia[30], codigoPostal[30], pais[30] = { "Argentina" };
-    if (dni==0)
+        
+    while (true)
     {
-        while (true)
-        {
-            system("cls");
-            cout << "Ingrese los datos del nuevo paciente: " << endl;
-            cout << "DNI: ";
-            cin >> dni;
-            cin.ignore();
-            if (noExistePaciente(dni)) {
-                break;
-            }
-            else {
-                cout << "El DNI ingresado ya existe en la base de pacientes." << endl;
-                system("pause");
-            }
+        system("cls");
+        cout << "Ingrese los datos del nuevo paciente (o 0 para volver al menu administrativo): " << endl;
+        cout << "DNI: ";
+        cin >> dni;
+        if (dni == 0)return;
+        cin.ignore();
+        if (noExistePaciente(dni)) {
+            break;
+        }
+        else {
+            cout << "El DNI ingresado ya existe en la base de pacientes." << endl;
+            system("pause");
         }
     }
-    
     cout << "Nombre/s: ";
     cargarCadena(nombres, 49);
     cout << "Apellido/s: ";
     cargarCadena(apellidos, 49);
-    cout << "Ingrese fecha de nacimiento:" << endl;
-    cout << "Dia: ";
-    cin >> dia;
-    cout << "Mes: ";
-    cin >> mes;
-    cout << "Anio: ";
-    cin >> anio;
-    cin.ignore();
-    if (f.esCorrecta(dia, mes, anio)) {
+    while (true)
+    {
+        system("cls");
+        cout << "Ingrese fecha de nacimiento (o 0 para volver al menu administrativo):" << endl;
+        cout << "Dia: ";
+        cin >> dia;
+        if (dia == 0) {
+            system("pause");
+            return;
+        }
+        cout << "Mes: ";
+        cin >> mes;
+        if (mes == 0) {
+            system("pause");
+            return;
+        }
+        cout << "Anio: ";
+        cin >> anio;
+        if (anio == 0) {
+            system("pause");
+            return;
+        }
+        if (f.esCorrecta(dia, mes, anio)) {
         f.setFecha(dia, mes, anio);
+        break;
+        }
+        else {
+            cout << "Fecha incorrecta. Vuelva a intentar." << endl;
+            system("pause");
+        }
     }
+    cin.ignore();
+    
     cout << "Telefono: ";
     cargarCadena(telefono, 29);
     cout << "Email: ";
@@ -901,18 +1149,42 @@ else
 //-------------------------------------------------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------------------------------------------------------------
-void GestionarPagos() {
+int generarIDFacturaConsulta() {
+    int nro, pos = 0, cont = 0;
+    FacturaConsulta reg;
+    FILE* p;
+    p = fopen("FacturaConsulta.dat", "rb");
+    if (p == NULL) return 1;
+    while (reg.leerDeDisco(pos++)) {
+        //if (reg.getEstado() == false)
+        cont++;
+    }
+    fseek(p, 0, 2);
+    nro = (ftell(p) / sizeof(FacturaConsulta) - cont);
+    fclose(p);
+    return nro + 1;
+}
 
-    int dia, mes, anio, hora, minuto;
+bool buscarLegajoMedico(int legajoMedico) {
+    Empleado reg;
+    int pos = 0;
+    while (reg.leerDeDisco(pos++)){
+        if (reg.getLegajo() == legajoMedico) return true;
+    }
+    return false;
+}
+void GestionarPagos(int usuario) {
+
+    int dia, mes, anio, hora = 1, minuto = 1, legajoMedico = 1;
     Fecha f;
     cout << "-------------------------Gestionar Pagos-------------------------" << endl;
-    cout << "Ingrese la fecha del turno para pasarle asistencia" << endl;
+    cout << "Ingrese la hora del turno para pasarle asistencia" << endl;
     //todo:aca puedo usar la funcion cargarfechaHoy
 
 
     //cargarFechaHoy(f)
 
-    cout << "Ingrese el dia: ";
+    /*cout << "Ingrese el dia: ";
     cin >> dia;
     cout << endl;
 
@@ -922,19 +1194,77 @@ void GestionarPagos() {
 
     cout << "Ingrese el anio: ";
     cin >> anio;
-    cout << endl;
+    cout << endl;*/
+    while (hora!=0 || minuto!=0 || legajoMedico!=0)
+    {
+        system("cls");
+        cout << "Ingrese los datos requeridos o 0 (cero) para volver al menu anterior." << endl;
+        cargarFechaHoy(f);
+        cout << "Ingrese la hora: ";
+        cin >> hora;
+        if (hora == 0) {
+            //system("pause");
+            return;
+        }
+        else if (hora < 0 || hora>24) {
+            cout << "Hora ingresada incorrecta. Vuelva a intentar" << endl;
+            system("pause");
+            continue;
+        }
+        cout << endl;
 
-    cout << "Ingrese la hora: ";
-    cin >> hora;
-    cout << endl;
+        cout << "Ingrese los minutos: ";
+        cin >> minuto;
+        cout << endl;
+        if (minuto != 0 && minuto != 30) {
+            cout << "Minuto ingresado incorrecto. Vuelva a intentar" << endl;
+            system("pause");
+            continue;
+        }
+        if (minuto < 0 || minuto > 59) {
+            cout << "Minuto ingresado incorrecto. Vuelva a intentar" << endl;
+            system("pause");
+            continue;
+        }
+        Hora h(hora, minuto);
+        //if (!horaValida(h)) {
+        //    cout << "Hora ingresada incorrecta. Vuelva a intentar" << endl;
+        //    system("pause");
+        //    continue;
+        //}
+        cout << "Ingrese legajo del Medico tratante: " << endl;
+        cin >> legajoMedico;
+        if (legajoMedico == 0) {
+            //system("pause");
+            return;
+        }
+        cout << endl;
+        if (buscarLegajoMedico(legajoMedico)) break;
+        else {
+            cout << "No existe el legajo del medico ingresado." << endl;
+            system("pause");
+        }
 
-    cout << "Ingrese los minutos: ";
-    cin >> minuto;
-    cout << endl;
+    }
 
     Turno reg;
+    int pos = 0;
+    while (reg.leerDeDisco(pos++))
+    {
+        if (reg.getFechaTurno().getDia() == f.getDia() && reg.getFechaTurno().getMes() == f.getMes() &&
+            reg.getFechaTurno().getAnio() == f.getAnio() && reg.getHoraTurno().getHora() == hora
+            && reg.getHoraTurno().getMinuto() == minuto && reg.getLegajoMedico() == legajoMedico) {
+            reg.setAsistencia(true);
+            //reg.setEstado(false);
+            reg.grabarEnDisco(pos);
+            break;
+        }
+    }
+    cout << endl;
+    cout << "La asistencia del turno ha sido actualizada correctamente." << endl;
 
-    int Pos = 0;
+
+    /*int Pos = 0;
     int Posicion = 0;
     while (reg.leerDeDisco(Pos)) {
         if (reg.getFechaTurno().getDia() == dia && reg.getFechaTurno().getMes() == mes && reg.getFechaTurno().getAnio() == anio && reg.getHoraTurno().getHora() == hora && reg.getHoraTurno().getMinuto() == minuto) {
@@ -946,6 +1276,8 @@ void GestionarPagos() {
 
     reg.leerDeDisco(Posicion);
     reg.setEstado(true);
+    reg.setAsistencia(true);
+    
     FILE* p;
     p = fopen("FacturaConsulta.dat", "ab"); ///No me acuerdo si era rb o ab
     if (p == NULL) {
@@ -957,7 +1289,7 @@ void GestionarPagos() {
     fseek(p, sizeof(FacturaConsulta) * Posicion, 0);
     fwrite(&reg, sizeof(FacturaConsulta), 1, p);
     //obj.grabarEnDisco(Cont);
-    fclose(p);
+    fclose(p);*/
 
 
     FacturaConsulta obj;
@@ -980,19 +1312,43 @@ void GestionarPagos() {
 
 
     //todo:falta validaciones para todos los ingresos de datos
-    cout << "Ingrese el ID del turno" << endl; //todo:esto es un autonumerico
+    /*cout << "Ingrese el ID del turno" << endl; //todo:esto es un autonumerico
     cin >> IDFactura;
-    cout << endl;
+    cout << endl;*/
+    while (true)
+    {
+        cout << "Ingrese el precio del turno: " << endl;
+        cin >> precioConsultaFactura;
+        cout << endl;
+        if (precioConsultaFactura < 1) {
+            cout << "El valor introducido es incorrecto. Vuelva a intentar." << endl;
+            system("pause");
+            system("cls");
+            continue;
+        }
+        else break;
 
-    cout << "Ingrese el precio del turno" << endl;
-    cin >> precioConsultaFactura;
-    cout << endl;
+    }
 
-    cout << "Ingrese el ID del paciente" << endl;
+    /*/cout << "Ingrese el ID del paciente" << endl;
     cin >> IDPacienteFactura;
-    cout << endl;
+    cout << endl;*/
+    while (true)
+    {
+        cout << "Ingrese Obra Social (1-10): " << endl;
+        cin >> obraSocialFactura;
+        cout << endl;
+        if (obraSocialFactura < 1 || obraSocialFactura > 10) {
+            cout << "El valor introducido es incorrecto. Vuelva a intentar." << endl;
+            system("pause");
+            system("cls");
+            continue;
+        }
+        else break;
 
-    cout << "Ingrese el dia de la factura" << endl;
+    }
+
+    /*cout << "Ingrese el dia de la factura" << endl;
     cin >> diaFactura;
     cout << endl;
 
@@ -1002,9 +1358,11 @@ void GestionarPagos() {
 
     cout << "Ingrese el anio de la factura" << endl;
     cin >> anioFactura;
-    cout << endl;
+    cout << endl;*/
+    //Fecha f(dia, mes, anio);
+    //cargarFechaHoy(f);
 
-    cout << "Ingrese el dia del turno" << endl;
+    /*cout << "Ingrese el dia del turno" << endl;
     cin >> diaTurno;
     cout << endl;
 
@@ -1014,31 +1372,51 @@ void GestionarPagos() {
 
     cout << "Ingrese el anio del turno" << endl;
     cin >> anioTurno;
-    cout << endl;
+    cout << endl;*/
 
     //todo:Esto tiene que ser a utonumerico creo
-    cout << "Ingrese su numero de legajo" << endl;
+    /*cout << "Ingrese su numero de legajo" << endl;
     cin >> legajoAdministrativoFactura;
-    cout << endl;
+    cout << endl;*/
 
-    cout << "Ingrese la forma de pago de la factura" << endl;
-    cin >> formaPagoFactura;
-    cout << endl;
+    while (true)
+    {
+        cout << "Ingrese la forma de pago de la factura (1-Efectivo 2-Tarjeta Debito 3-Tarjeta Credito): " << endl;
+        cin >> formaPagoFactura;
+        cout << endl;
+        if (formaPagoFactura!=1 && formaPagoFactura!=2 && formaPagoFactura!=3) {
+            cout << "El valor introducido es incorrecto. Vuelva a intentar." << endl;
+            system("pause");
+            system("cls");
+            continue;
+        }
+        else break;
 
-    cout << "Ingrese el numero de legajo del medico con el que se tuvo el turno" << endl;
+    }
+
+    /*cout << "Ingrese el numero de legajo del medico con el que se tuvo el turno" << endl;
     cin >> legajoMedicoFactura;
-    cout << endl;
+    cout << endl;*/
 
-    obj.setID(IDFactura);
-    obj.setPrecioConsulta(precioConsultaFactura);
-    obj.setIDPaciente(IDPacienteFactura);
-    Fecha FechaFactura, FechaTurno;
-    FechaFactura.setFecha(diaFactura, mesFactura, anioFactura);
-    obj.setFechaFactura(FechaFactura);
-    FechaTurno.setFecha(diaTurno, mesTurno, anioTurno);
-    obj.setLegajoAdministrativo(legajoAdministrativoFactura);
+    obj.setID(generarIDFacturaConsulta());
+    if (obraSocialFactura < 1 && obraSocialFactura>10) {
+        obj.setPrecioConsulta(precioConsultaFactura);
+    }
+    else {
+        cout << "Se ha realizado un 20% de descuento por obra social" << endl;
+        obj.setPrecioConsulta(precioConsultaFactura*0.8);
+        
+    }
+    obj.setObraSocial(obraSocialFactura);
+    obj.setIDPaciente(reg.getID());
+    //Fecha FechaFactura, FechaTurno;
+    //FechaFactura.setFecha(diaFactura, mesFactura, anioFactura);
+    obj.setFechaFactura(f);
+    obj.setFechaTurno(f);
+    //FechaTurno.setFecha(diaTurno, mesTurno, anioTurno);
+    obj.setLegajoAdministrativo(usuario);
     obj.setFormaPago(formaPagoFactura);
-    obj.setLegajoMedico(legajoMedicoFactura);
+    obj.setLegajoMedico(legajoMedico);
 
     if (obj.grabarEnDisco() == true) {
         cout << "La factura se agrego correctamente" << endl;
@@ -3533,7 +3911,7 @@ void CopiaSeguridadHC() {
     generarNombreBK(nombre);
     string extension(".dat");
     string r;
-    char ruta[41];
+    char ruta[60];
     r += carpeta;
     r += nombre;
     r += extension;

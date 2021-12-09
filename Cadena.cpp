@@ -12,7 +12,7 @@ Cadena::Cadena(const char* cad) {
 }
 
 void Cadena::Mostrar() {
-    cout << p << endl;
+    cout << p;
 }
 void Cadena::setValor(const char* cad) {
     delete p;
